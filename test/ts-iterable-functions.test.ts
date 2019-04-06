@@ -1,65 +1,65 @@
 import { Date } from './Date'
-import { deepEqualityComparer } from 'ts-equality-comparer'
-import { range } from '../src/generators/range'
-import { aggregate } from '../src/transformers/aggregate'
-import { average } from '../src/transformers/average'
-import { concat } from '../src/transformers/concat'
-import { count } from '../src/transformers/count'
-import { elementAt } from '../src/transformers/elementAt'
-import { except } from '../src/transformers/except'
-import { first } from '../src/transformers/first'
-import { firstOrDefault } from '../src/transformers/firstOrDefault'
-import { last } from '../src/transformers/last'
-import { lastOrDefault } from '../src/transformers/lastOrDefault'
-import { forEach } from '../src/transformers/forEach'
-import { intersect } from '../src/transformers/intersect'
-import { isSubsetOf } from '../src/transformers/isSubsetOf'
-import { isSupersetOf } from '../src/transformers/isSupersetOf'
-import { max } from '../src/transformers/max'
-import { maxBy } from '../src/transformers/maxBy'
-import { minBy } from '../src/transformers/minBy'
-import { min } from '../src/transformers/min'
-import { reverse } from '../src/transformers/reverse'
-import { groupBy } from '../src/transformers/groupBy'
-import { groupAdjacent } from '../src/transformers/groupAdjacent'
-import { groupJoin } from '../src/transformers/groupJoin'
-import { fullOuterGroupJoin } from '../src/transformers/fullOuterGroupJoin'
-import { fullOuterJoin } from '../src/transformers/fullOuterJoin'
-import { join } from '../src/transformers/join'
-import { leftOuterJoin } from '../src/transformers/leftOuterJoin'
-import { all } from '../src/transformers/all'
-import { some } from '../src/transformers/some'
-import { where } from '../src/transformers/where'
-import { select } from '../src/transformers/select'
-import { selectMany } from '../src/transformers/selectMany'
-import { flatten } from '../src/transformers/flatten'
-import { single } from '../src/transformers/single'
-import { singleOrDefault } from '../src/transformers/singleOrDefault'
-import { skip } from '../src/transformers/skip'
-import { skipWhile } from '../src/transformers/skipWhile'
-import { take } from '../src/transformers/take'
-import { takeWhile } from '../src/transformers/takeWhile'
-import { union } from '../src/transformers/union'
-import { sum } from '../src/transformers/sum'
-import { zip } from '../src/transformers/zip'
-import { zipAll } from '../src/transformers/zipAll'
-import { append } from '../src/transformers/append'
-import { prepend } from '../src/transformers/preprend'
-import { distinctBy } from '../src/transformers/distinctBy'
-import { orderBy } from '../src/transformers/orderBy'
-import { orderByDescending } from '../src/transformers/orderByDescending'
-import { thenBy } from '../src/transformers/thenBy'
-import { thenByDescending } from '../src/transformers/thenByDescending'
-import { sequenceEqual } from '../src/transformers/sequenceEqual'
-import { toArray } from '../src/transformers/toArray'
-import { toSet } from '../src/transformers/toSet'
-import { toMap } from '../src/transformers/toMap'
-import { toLookup } from '../src/transformers/toLookup'
-import { $p } from 'ts-functional-pipe'
-import { repeat } from '../src/generators/repeat'
-import { repeatGenerate } from '../src/generators/repeatGenerate'
-import { defaultComparer } from 'ts-comparer-builder'
+import {
+  range,
+  where,
+  select,
+  distinctBy,
+  count,
+  deepEqualityComparer,
+  orderByDescending,
+  thenByDescending,
+  orderBy,
+  thenBy,
+  toArray,
+  selectMany,
+  repeat,
+  repeatGenerate,
+  sequenceEqual,
+  aggregate,
+  all,
+  some,
+  concat,
+  average,
+  single,
+  singleOrDefault,
+  elementAt,
+  except,
+  first,
+  firstOrDefault,
+  last,
+  lastOrDefault,
+  forEach,
+  intersect,
+  isSubsetOf,
+  isSupersetOf,
+  max,
+  defaultComparer,
+  min,
+  reverse,
+  toLookup,
+  toMap,
+  toSet,
+  groupBy,
+  groupJoin,
+  fullOuterGroupJoin,
+  skip,
+  fullOuterJoin,
+  join,
+  leftOuterJoin,
+  take,
+  sum,
+  union,
+  zip,
+  maxBy,
+  minBy,
+  append,
+  prepend,
+  flatten,
+  zipAll,
+  groupAdjacent
+} from '../src/ts-iterable-functions'
 import getIdentity from '../src/transformers/helpers/getIdentity'
+import { $p } from 'ts-functional-pipe'
 
 describe('blinq test', () => {
   it('RangeIterable generates range', () => {
