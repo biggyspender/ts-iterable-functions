@@ -1,6 +1,6 @@
 import getIdentity from '../src/transformers/helpers/getIdentity'
-import { Date } from './Date'
 import {
+  $p,
   aggregate,
   all,
   append,
@@ -36,6 +36,7 @@ import {
   orderByDescending,
   prepend,
   range,
+  reduce,
   repeat,
   repeatGenerate,
   reverse,
@@ -58,8 +59,9 @@ import {
   where,
   zip,
   zipAll,
-  $p
+  reduceRight
 } from '../src/ts-iterable-functions'
+import { Date } from './Date'
 
 describe('blinq test', () => {
   it('RangeIterable generates range', () => {
@@ -172,6 +174,17 @@ describe('blinq test', () => {
   it('aggregate', () => {
     const v = $p(range(0, 4), aggregate(0, (prev, curr) => prev + curr))
     expect(v).toEqual(6)
+  })
+  it('reduce', () => {
+    const v = $p(range(0, 4), reduce((prev, curr) => prev + curr, 0))
+    expect(v).toEqual(6)
+  })
+  it('reduceRight', () => {
+    const v = $p(
+      [[0, 1], [2, 3], [4, 5]],
+      reduceRight((prev, curr) => prev.concat(curr), new Array<number>())
+    )
+    expect(v).toEqual([4, 5, 2, 3, 0, 1])
   })
   it('all', () => {
     const fourZeroes = repeat(0, 4)
