@@ -2,7 +2,7 @@ import { IndexedSelector } from '../types/IndexedSelector'
 import { EqualityComparer } from 'ts-equality-comparer'
 import { deferP0 } from 'ts-functional-pipe'
 import { _toLookup } from './toLookup'
-import { toIterable } from './toIterable'
+import { toIterable } from '../helpers/toIterable'
 
 export function _groupJoin<T, TInner, TKey, TOut>(
   src: Iterable<T>,

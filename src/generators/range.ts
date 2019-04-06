@@ -1,4 +1,4 @@
-import { toIterable } from '../transformers/toIterable'
+import { toIterable } from '../helpers/toIterable'
 export function range(start: number, range: number): Iterable<number> {
   if (Math.trunc(start) !== start) {
     throw Error('start must be an integral value')

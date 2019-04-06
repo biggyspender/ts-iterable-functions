@@ -1,6 +1,6 @@
 import { IndexedSelector } from '../types/IndexedSelector'
 import { EqualityComparer } from 'ts-equality-comparer'
-import { toIterable } from './toIterable'
+import { toIterable } from '../helpers/toIterable'
 import { deferP0 } from 'ts-functional-pipe'
 
 export function _groupAdjacent<TSource, TKey, TElement, TResult>(

@@ -1,4 +1,4 @@
-import { toIterable } from './toIterable'
+import { toIterable } from '../helpers/toIterable'
 import { IndexedPredicate } from '../types/IndexedPredicate'
 import { deferP0 } from 'ts-functional-pipe'
 

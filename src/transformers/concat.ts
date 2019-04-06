@@ -1,4 +1,4 @@
-import { toIterable } from './toIterable'
+import { toIterable } from '../helpers/toIterable'
 import { deferP0 } from 'ts-functional-pipe'
 
 export function _concat<T>(src: Iterable<T>, ...sequences: Array<Iterable<T>>): Iterable<T> {

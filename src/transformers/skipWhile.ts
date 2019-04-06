@@ -1,5 +1,5 @@
 import { IndexedPredicate } from '../types/IndexedPredicate'
-import { toIterable } from './toIterable'
+import { toIterable } from '../helpers/toIterable'
 import { deferP0 } from 'ts-functional-pipe'
 
 export function _skipWhile<T>(src: Iterable<T>, pred: IndexedPredicate<T>): Iterable<T> {
