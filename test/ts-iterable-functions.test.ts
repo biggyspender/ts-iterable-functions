@@ -57,9 +57,9 @@ import {
   union,
   where,
   zip,
-  zipAll
+  zipAll,
+  $p
 } from '../src/ts-iterable-functions'
-import { $p } from 'ts-functional-pipe'
 
 describe('blinq test', () => {
   it('RangeIterable generates range', () => {
