@@ -18,8 +18,8 @@ export default class OrderedIterable<T> implements Iterable<T> {
     this.src = src
     this.comparerBuilder = comparerBuilder
   }
-  createNewFrom(builder: ThenComparerBuilder<T>) {
-    return new OrderedIterable<T>(this.src, builder)
+  createNewFrom(b: (builder: ThenComparerBuilder<T>) => ThenComparerBuilder<T>) {
+    return new OrderedIterable<T>(this.src, b(this.comparerBuilder))
   }
   // public thenBy<TCmp>(selector: (x: T) => TCmp): OrderedIterable<T> {
   //   const newBuilder = this.comparerBuilder.thenKey(selector)

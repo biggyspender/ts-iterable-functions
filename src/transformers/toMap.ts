@@ -1,8 +1,5 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import {
-  EqualityComparer,
-  isEqualityComparer
-} from 'ts-equality-comparer/dist/types/EqualityComparer'
+import { EqualityComparer, isEqualityComparer } from 'ts-equality-comparer'
 import { isIndexedSelector } from './helpers/isIndexedSelector'
 import getIdentity from './helpers/getIdentity'
 import { createComparerMap } from 'ts-hashmap'

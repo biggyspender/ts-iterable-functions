@@ -5,7 +5,6 @@ export function _thenBy<T, TCmp>(
   src: OrderedIterable<T>,
   selector: (x: T) => TCmp
 ): OrderedIterable<T> {
-  const newBuilder = src.comparerBuilder.thenKey(selector)
-  return src.createNewFrom(newBuilder)
+  return src.createNewFrom(builder => builder.thenKey(selector))
 }
 export const thenBy = deferP0(_thenBy)
