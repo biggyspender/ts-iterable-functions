@@ -8044,10 +8044,10 @@ ts-equality-comparer@^1.0.0:
     ts-deep-equal "^1.1.0"
     ts-gethashcode "^1.0.0"
 
-ts-functional-pipe@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/ts-functional-pipe/-/ts-functional-pipe-1.2.4.tgz#2a39d5ca226464aac335df9c64252f3ac4244fe9"
-  integrity sha512-9ahi+Fm0M9mcYGRdM0Tt5m0Kzj1g0kr+bmaIyAsdyK56LK/bkd+X+KP6kbArB4PqViFftJ8XC5l56OfuoBq9oA==
+ts-functional-pipe@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/ts-functional-pipe/-/ts-functional-pipe-1.3.0.tgz#48f6c3fdc005cf05ca501be9f520ea2e37e8ba92"
+  integrity sha512-dROUwhK9r5LM4KjG5NqV5uYCs7FBDyJd7alP7F29aP7/QgXGbV874djTdmRqx0OL4cu1gHtlwFU1ZFZN2Vbamw==
 
 ts-gethashcode@^1.0.0:
   version "1.0.0"

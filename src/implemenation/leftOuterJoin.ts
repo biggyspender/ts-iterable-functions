@@ -1,7 +1,7 @@
 import { IndexedSelector } from '../types/IndexedSelector'
 import { EqualityComparer } from 'ts-equality-comparer'
 import { _groupJoin, groupJoin } from './groupJoin'
-import { pipeValue, pipe, deferP0 } from 'ts-functional-pipe'
+import { $p, deferP0 } from 'ts-functional-pipe'
 import { selectMany } from './selectMany'
 import { defaultIfEmpty } from './defaultIfEmpty'
 import { select } from './select'
@@ -14,7 +14,8 @@ export function _leftOuterJoin<T, TInner, TKey, TOut>(
   selector: (outer: T, inner: TInner | undefined) => TOut,
   equalityComparer?: EqualityComparer<TKey>
 ): Iterable<TOut> {
-  return pipeValue(src).into(
+  return $p(
+    src,
     groupJoin(
       innerSeq,
       outerKeySelector,
@@ -26,7 +27,7 @@ export function _leftOuterJoin<T, TInner, TKey, TOut>(
       equalityComparer
     ),
     selectMany(({ outer, innerSeq }) =>
-      pipeValue(innerSeq).into(defaultIfEmpty(), select(i => selector(outer, i)))
+      $p(innerSeq, defaultIfEmpty(), select(i => selector(outer, i)))
     )
   )
 }
