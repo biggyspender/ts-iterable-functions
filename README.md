@@ -47,14 +47,22 @@ const carsPerManufacturer = $p(
   cars,
   groupBy(c => c.manufacturer),
   map(g => ({
-    manufacturer:g.key, 
-    count:g.count()
+    count: _count(g),
+    manufacturer: g.key
   })),
-  orderBy(c => c.manufacturer)
+  orderByDescending(c => c.count),
+  thenBy(c => c.manufacturer)
 );
 for(var c of carsPerManufacturer){
   console.log(`${c.manufacturer} : ${c.count}`);
 }
+```
+to give
+```
+Ford : 3
+Fiat : 1
+Renault : 1
+Vauxhall : 1
 ```
 
 ## Functions for iterable sequences
