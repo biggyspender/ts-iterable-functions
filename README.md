@@ -2,6 +2,9 @@
 
 A collection of type-safe functions for operating over iterable sequences, with specialized versions that generate unary functions for use in pipes. Will feel immediately familiar for users of MS LINQ-to-objects.
 
+[![npm version](http://img.shields.io/npm/v/ts-iterable-functions.svg?style=flat)](https://npmjs.org/package/ts-iterable-functions "View this project on npm")
+[![Build Status](https://travis-ci.org/biggyspender/ts-iterable-functions.svg?branch=master)](https://travis-ci.org/biggyspender/ts-iterable-functions)
+
 ## Usage
 
 Let's make a collection of cars
@@ -82,7 +85,7 @@ const src = [1, 2, 3]
 We can use the `_map` function to transform this as follows:
 
 ```typescript
-const times2 = _map(s, x => x + x)
+const times2 = _map(src, x => x + x)
 ```
 
 ### Two forms of the same function
@@ -99,7 +102,7 @@ and by convention is prefixed with an `_underscore`. While handy in their own wa
 
 ```typescript
 //this looks awful
-const times2squared = _map(_map(s, x => x + x), x => x * x)
+const times2squared = _map(_map(src, x => x + x), x => x * x)
 ```
 
 ### The pipeable function
