@@ -2,6 +2,61 @@
 
 A collection of type-safe functions for operating over iterable sequences, with specialized versions that generate unary functions for use in pipes. Will feel immediately familiar for users of MS LINQ-to-objects.
 
+## Usage
+
+Let's make a collection of cars
+
+```typescript
+const cars = [{
+    manufacturer:"Ford",
+    model:"Escort"
+  },{
+    manufacturer:"Ford",
+    model:"Cortina"
+  },{
+    manufacturer:"Renault",
+    model:"Clio"
+  },{
+    manufacturer:"Vauxhall",
+    model:"Corsa"
+  },{
+    manufacturer:"Ford",
+    model:"Fiesta"
+  },{
+    manufacturer:"Fiat",
+    model:"500"
+  }
+];
+```
+
+...and sort them by manufacturer, and then by model:
+
+```typescript
+const orderedCars = $p(
+  cars,
+  orderBy(c => c.manufacturer),
+  thenBy(c => c.model),
+  toArray()
+);
+```
+
+Or we could count the number of cars for each manufacturer:
+
+```typescript
+const carsPerManufacturer = $p(
+  cars,
+  groupBy(c => c.manufacturer),
+  map(g => ({
+    manufacturer:g.key, 
+    count:g.count()
+  })),
+  orderBy(c => c.manufacturer)
+);
+for(var c of carsPerManufacturer){
+  console.log(`${c.manufacturer} : ${c.count}`);
+}
+```
+
 ## Functions for iterable sequences
 
 Almost every function in this collection is designed to work over `Iterable<T>`.
@@ -97,15 +152,14 @@ More coming soon...
 
 ## Generators
 
-```
-range, repeat, repeatGenerate
-```
+
+`range`, `repeat`, `repeatGenerate`
+
 
 ## Transformers
 
-```
-aggregate, all/every, append, average, concat, count, defaultIfEmpty, distinctBy, distinct, elementAt, except, firstOrDefault, first, flatten, forEach, fullOuterGroupJoin, fullOuterJoin, groupAdjacent, groupBy, groupJoin, intersect, isSubsetOf, isSupersetOf, join, lastOrDefault, last, leftOuterJoin, maxBy, max, minBy, min, orderByDescending, orderBy, preprend, reduce, reduceRight, reverse, selectMany/flapMap, select/map, sequenceEqual, singleOrDefault, single, skip, skipWhile, some, sum, take, takeWhile, thenByDescending, thenBy, toArray, toLookup, toMap, toSet, union, where/filter, zipAll, zip
-```
+
+`aggregate`, `all`/`every`, `append`, `average`, `concat`, `count`, `defaultIfEmpty`, `distinctBy`, `distinct`, `elementAt`, `except`, `firstOrDefault`, `first`, `flatten`, `forEach`, `fullOuterGroupJoin`, `fullOuterJoin`, `groupAdjacent`, `groupBy`, `groupJoin`, `intersect`, `isSubsetOf`, `isSupersetOf`, `join`, `lastOrDefault`, `last`, `leftOuterJoin`, `maxBy`, `max`, `minBy`, `min`, `orderByDescending`, `orderBy`, `preprend`, `reduce`, `reduceRight`, `reverse`, `selectMany`/`flapMap`, `select`/`map`, `sequenceEqual`, `singleOrDefault`, `single`, `skip`, `skipWhile`, `some`, `sum`, `take`, `takeWhile`, `thenByDescending`, `thenBy`, `toArray`, `toLookup`, `toMap`, `toSet`, `union`, `where`/`filter`, `zipAll`, `zip`
 
 
 ### acknowledgements
