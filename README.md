@@ -88,10 +88,12 @@ const toStringRepeated = $p(
     src,
     map(x => x.toString()), // here x is number
     map(s => s + s)         // here s is string
-)
+)                           // returns a string
 ```
 
 and all types are correctly inferred.
+
+More coming soon...
 
 ## Generators
 
