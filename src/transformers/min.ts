@@ -8,11 +8,11 @@ import { pp, deferP0 } from 'ts-functional-pipe'
 
 const identity = getIdentity()
 
-export function _min<T, TOut>(
+export function _min<T, TOut = T>(
   src: Iterable<T>,
-  selector: IndexedSelector<T, T | TOut> = identity,
-  comparer: Comparer<T | TOut> = defaultComparer
-): T | TOut | undefined {
+  selector: IndexedSelector<T, TOut> = x => (x as unknown) as TOut,
+  comparer: Comparer<TOut> = defaultComparer
+): TOut | undefined {
   return pp(
     src,
     select(selector),
