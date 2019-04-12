@@ -2,7 +2,7 @@ import getIdentity from './helpers/getIdentity'
 import { IndexedSelector } from '../types/IndexedSelector'
 import { EqualityComparer } from 'ts-equality-comparer'
 import { _fullOuterGroupJoin, fullOuterGroupJoin } from './fullOuterGroupJoin'
-import { deferP0, $p } from 'ts-functional-pipe'
+import { deferP0, pp } from 'ts-functional-pipe'
 import { defaultIfEmpty } from './defaultIfEmpty'
 import { select } from './select'
 import { selectMany } from './selectMany'
@@ -17,17 +17,17 @@ export function _fullOuterJoin<T, TRight, TKey, TOut>(
   selector: (o: T | undefined, v: TRight | undefined, k: TKey) => TOut,
   equalityComparer?: EqualityComparer<TKey>
 ): Iterable<TOut> {
-  return $p(
+  return pp(
     src,
     fullOuterGroupJoin(
       rightSeq,
       leftKeySelector,
       rightKeySelector,
       (lft, rgt, i) =>
-        $p(
+        pp(
           lft,
           defaultIfEmpty(),
-          selectMany(l => $p(rgt, defaultIfEmpty(), select(r => selector(l, r, i))))
+          selectMany(l => pp(rgt, defaultIfEmpty(), select(r => selector(l, r, i))))
         ),
       equalityComparer
     ),

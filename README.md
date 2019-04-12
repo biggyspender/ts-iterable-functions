@@ -35,7 +35,7 @@ const cars = [{
 ...and sort them by manufacturer, and then by model:
 
 ```typescript
-const orderedCars = $p(
+const orderedCars = pp(
   cars,
   orderBy(c => c.manufacturer),
   thenBy(c => c.model),
@@ -46,7 +46,7 @@ const orderedCars = $p(
 Or we could count the number of cars for each manufacturer:
 
 ```typescript
-const carsPerManufacturer = $p(
+const carsPerManufacturer = pp(
   cars,
   groupBy(c => c.manufacturer),
   map(g => ({
@@ -129,15 +129,15 @@ All functions that transform `Iterable<T>` in the library exist in the two forms
 
 ## Usage with pipes
 
-This library re-exports the `$p` function from [ts-functional-pipe](https://github.com/biggyspender/ts-functional-pipe), and there is good information about how it works in the [`README`](https://github.com/biggyspender/ts-functional-pipe/blob/master/README.md) over there.
+This library re-exports the `pp` function from [ts-functional-pipe](https://github.com/biggyspender/ts-functional-pipe), and there is good information about how it works in the [`README`](https://github.com/biggyspender/ts-functional-pipe/blob/master/README.md) over there.
 
 ### Making `times2squared` readable
 
-Let's use `$p` to pipe our iterable into a chain of unary functions, generated (in this case) using the `map` function discussed above:
+Let's use `pp` to pipe our iterable into a chain of unary functions, generated (in this case) using the `map` function discussed above:
 
 ```typescript
 const src = [1, 2, 3]
-const times2squared = $p(
+const times2squared = pp(
     src,
     map(x => x + x),
     map(x => x * x)
@@ -150,7 +150,7 @@ Due to some funky type-definitions in [ts-functional-pipe](https://github.com/bi
 
 ```typescript
 const src = [1, 2, 3]
-const toStringRepeated = $p(
+const toStringRepeated = pp(
     src,
     map(x => x.toString()), // here x is number
     map(s => s + s)         // here s is string

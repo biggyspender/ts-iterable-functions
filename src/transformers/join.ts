@@ -1,6 +1,6 @@
 import { IndexedSelector } from '../types/IndexedSelector'
 import { EqualityComparer } from 'ts-equality-comparer'
-import { $p, deferP0 } from 'ts-functional-pipe'
+import { pp, deferP0 } from 'ts-functional-pipe'
 import { groupJoin } from './groupJoin'
 import { selectMany } from './selectMany'
 import { _select } from './select'
@@ -13,7 +13,7 @@ export function _join<T, TInner, TKey, TOut>(
   selector: (outer: T, inner: TInner) => TOut,
   equalityComparer?: EqualityComparer<TKey>
 ): Iterable<TOut> {
-  return $p(
+  return pp(
     src,
     groupJoin(
       innerSeq,

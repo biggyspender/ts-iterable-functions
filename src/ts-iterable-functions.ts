@@ -1,6 +1,6 @@
 export { defaultComparer } from 'ts-comparer-builder'
 export { deepEqualityComparer, EqualityComparer } from 'ts-equality-comparer'
-export { $p } from 'ts-functional-pipe'
+export { pp } from 'ts-functional-pipe'
 export { range } from './generators/range'
 export { repeat } from './generators/repeat'
 export { repeatGenerate } from './generators/repeatGenerate'

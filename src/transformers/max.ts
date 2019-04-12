@@ -4,7 +4,7 @@ import { IndexedSelector } from '../types/IndexedSelector'
 import { minMaxByImpl } from './helpers/minMaxByImpl'
 import { _select, select } from './select'
 import { _firstOrDefault, firstOrDefault } from './firstOrDefault'
-import { $p, deferP0 } from 'ts-functional-pipe'
+import { pp, deferP0 } from 'ts-functional-pipe'
 
 const identity = getIdentity()
 
@@ -13,7 +13,7 @@ export function _max<T, TOut>(
   selector: IndexedSelector<T, T | TOut> = identity,
   comparer: Comparer<T | TOut> = defaultComparer
 ): T | TOut | undefined {
-  return $p(src, select(selector), minMaxByImpl(x => x, (a, b) => comparer(a, b)), firstOrDefault())
+  return pp(src, select(selector), minMaxByImpl(x => x, (a, b) => comparer(a, b)), firstOrDefault())
 }
 
 export const max = deferP0(_max)
