@@ -1,4 +1,6 @@
 import { ThenComparerBuilder } from 'ts-comparer-builder/dist/types/ComparerBuilder'
+import { _map, map } from '../../ts-iterable-functions'
+import { pp } from 'ts-functional-pipe'
 
 export default class OrderedIterable<T> implements Iterable<T> {
   private src: Iterable<T>
@@ -9,7 +11,13 @@ export default class OrderedIterable<T> implements Iterable<T> {
     /* istanbul ignore next */
     {
       this[Symbol.iterator] = function*() {
-        const arr = [...src].sort(comparer)
+        const arr = pp(
+          [..._map(src, (item, idx) => ({ item, idx }))].sort((a, b) => {
+            const comp = comparer(a.item, b.item)
+            return comp === 0 ? a.idx - b.idx : comp
+          }),
+          map(({ item }) => item)
+        )
         for (const x of arr) {
           yield x
         }

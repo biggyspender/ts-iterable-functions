@@ -59,7 +59,8 @@ import {
   where,
   zip,
   zipAll,
-  reduceRight
+  reduceRight,
+  map
 } from '../src/ts-iterable-functions'
 import { Date } from './Date'
 
@@ -146,6 +147,14 @@ describe('blinq test', () => {
     expect(pp([1, 2], orderByDescending(x => x), toArray())).toEqual([2, 1])
     expect(pp([2, 1], orderByDescending(x => x), toArray())).toEqual([2, 1])
     expect(pp([0, 0], orderByDescending(x => x), toArray())).toEqual([0, 0])
+
+    const items = pp(
+      range(0, 100),
+      map(x => ({ a: 1, idx: x })),
+      orderBy(x => x.a),
+      map(x => x.idx)
+    )
+    expect(pp(items, sequenceEqual(range(0, 100)))).toBeTruthy()
   })
   it('can compose', () => {
     const it = range(0, 3)
