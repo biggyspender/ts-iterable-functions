@@ -691,4 +691,15 @@ describe('blinq test', () => {
   it('skipWhile', () => {
     expect(pp([1, 2, 3, 4, 1, 5], skipWhile(x => x < 3), toArray())).toEqual([3, 4, 1, 5])
   })
+  it('randomOrder', () => {
+    // test('1', () => {
+    //   const randomOrder = range(0, 20).orderBy(x => Math.random())
+    //   expect(randomOrder.orderBy(x => x).sequenceEqual(range(0, 20))).toBeTruthy()
+    // })
+    const _range = range(0, 200)
+    const randomOrder = pp(_range, orderBy(_ => Math.random()))
+    expect(pp(randomOrder, sequenceEqual(_range))).toBeFalsy()
+    const reordered = pp(randomOrder, orderBy(x => x))
+    expect(pp(reordered, sequenceEqual(_range))).toBeTruthy()
+  })
 })
