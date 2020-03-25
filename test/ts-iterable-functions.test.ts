@@ -60,7 +60,8 @@ import {
   zip,
   zipAll,
   reduceRight,
-  map
+  map,
+  skipWhile
 } from '../src/ts-iterable-functions'
 import { Date } from './Date'
 
@@ -686,5 +687,8 @@ describe('blinq test', () => {
         toArray()
       )
     ).toEqual([[1, 1], [2, 2, 2], [3, 3, 3, 3], [2, 2]])
+  })
+  it('skipWhile', () => {
+    expect(pp([1, 2, 3, 4, 1, 5], skipWhile(x => x < 3), toArray())).toEqual([3, 4, 1, 5])
   })
 })
