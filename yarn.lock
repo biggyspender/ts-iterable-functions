@@ -8022,6 +8022,13 @@ ts-deep-equal@^1.1.0:
   dependencies:
     ts-entries "^1.1.0"
 
+ts-deep-equal@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/ts-deep-equal/-/ts-deep-equal-1.1.2.tgz#9ad00940169eeff912e8bacac5956d18398a1185"
+  integrity sha512-oAg8fVhmO6B7jnZaVcXlgxQMPsdoXA3NLvMlL2cBzbap5mimZY51zYQqLSvkhRnDzlrjvjgIvLTAxTM5L/XKVA==
+  dependencies:
+    ts-entries "^1.1.0"
+
 ts-entries@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/ts-entries/-/ts-entries-1.1.0.tgz#915544e408402919dcc79c20d7d9be776cd8c623"
@@ -8033,6 +8040,14 @@ ts-equality-comparer@^1.0.0:
   integrity sha512-Y0uZtnDVz5gqefI/2RhsCWPDsvpPB+QHc6xz7yaDRVyGsFZahnc5tJy7gYQ8xKPXuGX8i5T+roSFBXmtm951JA==
   dependencies:
     ts-deep-equal "^1.1.0"
+    ts-gethashcode "^1.0.0"
+
+ts-equality-comparer@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ts-equality-comparer/-/ts-equality-comparer-1.0.1.tgz#fb33294f86653b41d6bf19b1e1f391c7086115a4"
+  integrity sha512-mJTVOdJot2J62HKo0yYwDonTHSXeaN3nRon/UhBs+f3U1jZRiGg/0TO+3WyZpjy43BhHfCU+xbLZvPr69Dh5fA==
+  dependencies:
+    ts-deep-equal "^1.1.2"
     ts-gethashcode "^1.0.0"
 
 ts-functional-pipe@^2.0.0:

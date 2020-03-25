@@ -1,4 +1,5 @@
 import getIdentity from '../src/transformers/helpers/getIdentity'
+import { toPrettyJson } from '../src/helpers/toPrettyJson'
 import {
   pp,
   aggregate,
@@ -6,6 +7,7 @@ import {
   append,
   average,
   concat,
+  cartesian,
   count,
   deepEqualityComparer,
   defaultComparer,
@@ -692,14 +694,22 @@ describe('blinq test', () => {
     expect(pp([1, 2, 3, 4, 1, 5], skipWhile(x => x < 3), toArray())).toEqual([3, 4, 1, 5])
   })
   it('randomOrder', () => {
-    // test('1', () => {
-    //   const randomOrder = range(0, 20).orderBy(x => Math.random())
-    //   expect(randomOrder.orderBy(x => x).sequenceEqual(range(0, 20))).toBeTruthy()
-    // })
     const _range = range(0, 200)
     const randomOrder = pp(_range, orderBy(_ => Math.random()))
     expect(pp(randomOrder, sequenceEqual(_range))).toBeFalsy()
     const reordered = pp(randomOrder, orderBy(x => x))
     expect(pp(reordered, sequenceEqual(_range))).toBeTruthy()
+  })
+  it('cartesian', () => {
+    const data: Iterable<Iterable<string>> = [['red', 'blue'], ['candy', 'car']]
+    const result: Iterable<Iterable<string>> = [
+      ['red', 'candy'],
+      ['red', 'car'],
+      ['blue', 'candy'],
+      ['blue', 'car']
+    ]
+    const cart = pp(data, cartesian)
+    expect(pp(cart, isSubsetOf(result, deepEqualityComparer))).toBeTruthy()
+    expect(pp(cart, isSupersetOf(result, deepEqualityComparer))).toBeTruthy()
   })
 })
