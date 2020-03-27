@@ -120,7 +120,7 @@
   "dependencies": {
     "ts-comparer-builder": "^1.1.1",
     "ts-equality-comparer": "^1.0.3",
-    "ts-functional-pipe": "^2.0.1",
+    "ts-functional-pipe": "^2.1.1",
     "ts-hashmap": "^2.0.3"
   },
   "husky": {

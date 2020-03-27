@@ -2,7 +2,7 @@
 
 A collection of type-safe functions for operating over iterable sequences, with specialized versions that generate unary functions for use in pipes. Will feel immediately familiar for users of MS LINQ-to-objects.
 
-[![npm version](http://img.shields.io/npm/v/ts-iterable-functions.svg?style=flat)](https://npmjs.org/package/ts-iterable-functions "View this project on npm")
+[![npm version](https://img.shields.io/npm/v/ts-iterable-functions.svg?style=flat)](https://npmjs.org/package/ts-iterable-functions "View this project on npm")
 [![Build Status](https://travis-ci.org/biggyspender/ts-iterable-functions.svg?branch=master)](https://travis-ci.org/biggyspender/ts-iterable-functions)
 
 ## Usage
@@ -129,7 +129,7 @@ All functions that transform `Iterable<T>` in the library exist in the two forms
 
 ## Usage with pipes
 
-This library re-exports the `pp` function from [ts-functional-pipe](https://github.com/biggyspender/ts-functional-pipe), and there is good information about how it works in the [`README`](https://github.com/biggyspender/ts-functional-pipe/blob/master/README.md) over there.
+This library re-exports the `pp/pipeInto, pipeValue, compose & typedCompose` functions from [ts-functional-pipe](https://github.com/biggyspender/ts-functional-pipe), and there is good information about how these work in the [`README`](https://github.com/biggyspender/ts-functional-pipe/blob/master/README.md) over there.
 
 ### Making `times2squared` readable
 
