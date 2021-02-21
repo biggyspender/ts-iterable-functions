@@ -1,8 +1,8 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import { EqualityComparer } from 'ts-equality-comparer'
 import { deferP0 } from 'ts-functional-pipe'
 import { _toLookup } from './toLookup'
 import { toIterable } from '../helpers/toIterable'
+import { MapFactory } from "../types/MapFactory"
 
 export function _groupJoin<T, TInner, TKey, TOut>(
   src: Iterable<T>,
@@ -10,10 +10,10 @@ export function _groupJoin<T, TInner, TKey, TOut>(
   outerKeySelector: IndexedSelector<T, TKey>,
   innerKeySelector: IndexedSelector<TInner, TKey>,
   selector: (o: T, v: Iterable<TInner>) => TOut,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): Iterable<TOut> {
   const innerSeqIt = innerSeq
-  const lookup = _toLookup(innerSeqIt, innerKeySelector, equalityComparer)
+  const lookup = _toLookup(innerSeqIt, innerKeySelector, mapFactory)
   const outerSeq = src
 
   return toIterable(function*() {

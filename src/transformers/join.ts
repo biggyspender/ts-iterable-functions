@@ -1,9 +1,9 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import { EqualityComparer } from 'ts-equality-comparer'
 import { pp, deferP0 } from 'ts-functional-pipe'
 import { groupJoin } from './groupJoin'
 import { selectMany } from './selectMany'
 import { _select } from './select'
+import { MapFactory } from "../types/MapFactory"
 
 export function _join<T, TInner, TKey, TOut>(
   src: Iterable<T>,
@@ -11,7 +11,7 @@ export function _join<T, TInner, TKey, TOut>(
   outerKeySelector: IndexedSelector<T, TKey>,
   innerKeySelector: IndexedSelector<TInner, TKey>,
   selector: (outer: T, inner: TInner) => TOut,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): Iterable<TOut> {
   return pp(
     src,
@@ -23,7 +23,7 @@ export function _join<T, TInner, TKey, TOut>(
         outer,
         innerSeq
       }),
-      equalityComparer
+      mapFactory
     ),
     selectMany(({ outer, innerSeq }) => _select(innerSeq, i => selector(outer, i)))
   )

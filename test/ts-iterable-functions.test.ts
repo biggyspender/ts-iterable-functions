@@ -9,8 +9,6 @@ import {
   concat,
   cartesian,
   count,
-  deepEqualityComparer,
-  defaultComparer,
   distinctBy,
   elementAt,
   except,
@@ -66,6 +64,12 @@ import {
   skipWhile
 } from '../src/ts-iterable-functions'
 import { Date } from './Date'
+import { deepEqualityComparer } from "ts-equality-comparer"
+import { createComparerMap, createComparerSet } from "ts-hashmap"
+import { defaultComparer } from 'ts-comparer-builder'
+
+const createSetFactory = <K>() => ({ createSet: () => createComparerSet<K>(deepEqualityComparer) })
+const createMapFactory = <K>() => ({ createMap: <T>() => createComparerMap<K, T>(deepEqualityComparer) })
 
 describe('blinq test', () => {
   it('RangeIterable generates range', () => {
@@ -103,7 +107,7 @@ describe('blinq test', () => {
   })
   it('distinctBy with comparer', () => {
     const nums = pp(range(0, 1000), select(x => (x / 5) | 0))
-    expect(pp(nums, distinctBy(d => d, deepEqualityComparer), count())).toBe(200)
+    expect(pp(nums, distinctBy(d => d, createSetFactory()), count())).toBe(200)
   })
   it('orderBy', () => {
     const values = [{ a: 1, b: 1 }, { a: 1, b: 2 }, { a: 2, b: 1 }, { a: 2, b: 2 }]
@@ -282,7 +286,7 @@ describe('blinq test', () => {
     expect([...pp(range(0, 5), intersect(range(3, 10)))]).toEqual([3, 4])
   })
   it('intersect with comparer', () => {
-    expect([...pp(range(0, 5), intersect(range(3, 10), deepEqualityComparer))]).toEqual([3, 4])
+    expect([...pp(range(0, 5), intersect(range(3, 10), createSetFactory()))]).toEqual([3, 4])
   })
 
   it('isSubsetOf', () => {
@@ -341,10 +345,10 @@ describe('blinq test', () => {
     expect(pp(range(0, 2), sequenceEqual([0, 1, 2]))).toBeFalsy()
   })
   it('sequenceEqual with comparer', () => {
-    expect(pp(range(0, 3), sequenceEqual([0, 1, 2], deepEqualityComparer))).toBeTruthy()
-    expect(pp(range(0, 3), sequenceEqual([0, 1, 4], deepEqualityComparer))).toBeFalsy()
-    expect(pp(range(0, 3), sequenceEqual([0, 1], deepEqualityComparer))).toBeFalsy()
-    expect(pp(range(0, 2), sequenceEqual([0, 1, 2], deepEqualityComparer))).toBeFalsy()
+    expect(pp(range(0, 3), sequenceEqual([0, 1, 2], deepEqualityComparer.equals))).toBeTruthy()
+    expect(pp(range(0, 3), sequenceEqual([0, 1, 4], deepEqualityComparer.equals))).toBeFalsy()
+    expect(pp(range(0, 3), sequenceEqual([0, 1], deepEqualityComparer.equals))).toBeFalsy()
+    expect(pp(range(0, 2), sequenceEqual([0, 1, 2], deepEqualityComparer.equals))).toBeFalsy()
   })
   it('toArray', () => {
     expect(pp(range(0, 2), toArray())).toEqual([0, 1])
@@ -352,18 +356,18 @@ describe('blinq test', () => {
   it('toLookup', () => {
     const lookup = pp(range(0, 10), toLookup(x => x % 2))
     expect(pp(lookup, count())).toBe(2)
-    expect([...lookup.get(0)]).toEqual([0, 2, 4, 6, 8])
-    expect([...lookup.get(1)]).toEqual([1, 3, 5, 7, 9])
+    expect([...(lookup.get(0) ?? [])]).toEqual([0, 2, 4, 6, 8])
+    expect([...(lookup.get(1) ?? [])]).toEqual([1, 3, 5, 7, 9])
   })
   it('toLookup with comparer', () => {
-    const lookup = pp(range(0, 10), toLookup(x => x % 2, deepEqualityComparer))
+    const lookup = pp(range(0, 10), toLookup(x => x % 2, createMapFactory()))
     expect(pp(lookup, count())).toBe(2)
-    expect([...lookup.get(0)]).toEqual([0, 2, 4, 6, 8])
-    expect([...lookup.get(1)]).toEqual([1, 3, 5, 7, 9])
-    const lookup2 = pp(range(0, 10), toLookup(x => x % 2, x => x * 2, deepEqualityComparer))
+    expect([...(lookup.get(0) ?? [])]).toEqual([0, 2, 4, 6, 8])
+    expect([...(lookup.get(1) ?? [])]).toEqual([1, 3, 5, 7, 9])
+    const lookup2 = pp(range(0, 10), toLookup(x => x % 2, x => x * 2, createMapFactory()))
     expect(pp(lookup2, count())).toBe(2)
-    expect([...lookup2.get(0)]).toEqual([0, 4, 8, 12, 16])
-    expect([...lookup2.get(1)]).toEqual([2, 6, 10, 14, 18])
+    expect([...(lookup2.get(0) ?? [])]).toEqual([0, 4, 8, 12, 16])
+    expect([...(lookup2.get(1) ?? [])]).toEqual([2, 6, 10, 14, 18])
   })
   it('toMap', () => {
     const map = pp(range(0, 10), toMap(x => x, x => x / 2))
@@ -376,7 +380,7 @@ describe('blinq test', () => {
     )
     expect(map.get(10)).toBeUndefined()
     expect(() => pp([0, 0], toMap(x => x, x => x))).toThrow()
-    expect(() => pp(range(0, 10), toMap(x => (x / 2) | 0, deepEqualityComparer))).toThrow()
+    expect(() => pp(range(0, 10), toMap(x => (x / 2) | 0, createMapFactory()))).toThrow()
   })
   it('toSet', () => {
     const set = pp(range(0, 10), toSet(x => x))
@@ -389,11 +393,11 @@ describe('blinq test', () => {
     expect(pp(set2, count())).toBe(10)
 
     expect(set2.has(10)).toBeFalsy()
-    const set3 = pp(range(0, 10), toSet(deepEqualityComparer))
+    const set3 = pp(range(0, 10), toSet(createSetFactory()))
     expect(pp(set3, count())).toBe(10)
 
     expect(set3.has(10)).toBeFalsy()
-    expect(() => pp(range(0, 10), toSet(x => (x / 2) | 0, deepEqualityComparer))).toThrow()
+    expect(() => pp(range(0, 10), toSet(x => (x / 2) | 0, createSetFactory()))).toThrow()
   })
   it('groupBy', () => {
     const output = pp(
@@ -418,7 +422,7 @@ describe('blinq test', () => {
     const seq2 = pp(range(3, 5), selectMany(x => repeat(x, 2)))
     const joined = pp(
       seq1,
-      groupJoin(seq2, x => x, x => x, (k, v) => ({ k, v }), deepEqualityComparer)
+      groupJoin(seq2, x => x, x => x, (k, v) => ({ k, v }), createMapFactory())
     )
     expect([...pp(joined, select(x => x.k))]).toEqual([0, 1, 2, 3, 4])
     expect([...pp(joined, select(x => x.k))]).toEqual([0, 1, 2, 3, 4])
@@ -608,7 +612,7 @@ describe('blinq test', () => {
         innerItem => innerItem.id,
         (outerItem, innerItem) =>
           outerItem.value + ' ' + (innerItem ? innerItem.value : 'no match'),
-        deepEqualityComparer
+        createMapFactory()
       )
     )
 
@@ -685,7 +689,7 @@ describe('blinq test', () => {
     expect(
       pp(
         [1, 1, 2, 2, 2, 3, 3, 3, 3, 2, 2],
-        groupAdjacent(x => x, x => x, (key, items) => [...items], deepEqualityComparer),
+        groupAdjacent(x => x, x => x, (key, items) => [...items], deepEqualityComparer.equals),
         toArray()
       )
     ).toEqual([[1, 1], [2, 2, 2], [3, 3, 3, 3], [2, 2]])
@@ -709,7 +713,7 @@ describe('blinq test', () => {
       ['blue', 'car']
     ]
     const cart = pp(data, cartesian)
-    expect(pp(cart, isSubsetOf(result, deepEqualityComparer))).toBeTruthy()
-    expect(pp(cart, isSupersetOf(result, deepEqualityComparer))).toBeTruthy()
+    expect(pp(cart, isSubsetOf(result, createSetFactory()))).toBeTruthy()
+    expect(pp(cart, isSupersetOf(result, createSetFactory()))).toBeTruthy()
   })
 })

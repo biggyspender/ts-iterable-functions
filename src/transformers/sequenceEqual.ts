@@ -1,13 +1,12 @@
-import { EqualityComparer } from 'ts-equality-comparer'
 import { deferP0 } from 'ts-functional-pipe'
 export function _sequenceEqual<T>(
   src: Iterable<T>,
   seq: Iterable<T>,
-  equalityComparer?: EqualityComparer<T>
+  equalityComparer?: (a: T | undefined, b: T | undefined) => boolean
 ): boolean {
   const eq = equalityComparer
     ? (a: T | undefined, b: T | undefined) =>
-        typeof a !== 'undefined' && typeof b !== 'undefined' && equalityComparer.equals(a, b)
+        typeof a !== 'undefined' && typeof b !== 'undefined' && equalityComparer(a, b)
     : (a: T | undefined, b: T | undefined) =>
         typeof a !== 'undefined' && typeof b !== 'undefined' && a === b
   const it1 = src[Symbol.iterator]()

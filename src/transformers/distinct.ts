@@ -1,12 +1,12 @@
-import { EqualityComparer } from 'ts-equality-comparer'
 import { deferP0 } from 'ts-functional-pipe'
 import { _distinctBy } from './distinctBy'
+import { SetFactory } from "../types/SetFactory"
 
 export function _distinct<T>(
   src: Iterable<T>,
-  equalityComparer?: EqualityComparer<T>
+  setFactory?: SetFactory<T>
 ): Iterable<T> {
-  return _distinctBy(src, x => x, equalityComparer)
+  return _distinctBy(src, x => x, setFactory)
 }
 
 export const distinct = deferP0(_distinct)
