@@ -99,7 +99,7 @@
     "jest-config": "^26.6.3",
     "lint-staged": "^10.5.4",
     "lodash.camelcase": "^4.3.0",
-    "marked": "^1.2.9",
+    "marked": "^2.0.0",
     "prettier": "^2.2.1",
     "prompt": "^1.1.0",
     "replace-in-file": "^6.2.0",
