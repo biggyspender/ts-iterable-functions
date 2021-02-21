@@ -1,5 +1,4 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import { EqualityComparer } from 'ts-equality-comparer'
 import { toIterable } from '../helpers/toIterable'
 import { deferP0 } from 'ts-functional-pipe'
 
@@ -8,12 +7,12 @@ export function _groupAdjacent<TSource, TKey, TElement, TResult>(
   keySelector: IndexedSelector<TSource, TKey>,
   elementSelector: IndexedSelector<TSource, TElement>,
   resultSelector: (key: TKey, items: Iterable<TElement>) => TResult,
-  equalityComparer?: EqualityComparer<TKey>
+  equalityComparer?: (a: TKey | undefined, b: TKey | undefined) => boolean
 ): Iterable<TResult> {
   const source = src
   const eq = equalityComparer
     ? (a: TKey | undefined, b: TKey | undefined) =>
-        typeof a !== 'undefined' && typeof b !== 'undefined' && equalityComparer.equals(a, b)
+        typeof a !== 'undefined' && typeof b !== 'undefined' && equalityComparer(a, b)
     : (a: TKey | undefined, b: TKey | undefined) =>
         typeof a !== 'undefined' && typeof b !== 'undefined' && a === b
   // nasty coverage edge-case whereby transformation to ES5 destroys istanbul comment, so we need to put

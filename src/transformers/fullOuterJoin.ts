@@ -1,11 +1,11 @@
 import getIdentity from './helpers/getIdentity'
 import { IndexedSelector } from '../types/IndexedSelector'
-import { EqualityComparer } from 'ts-equality-comparer'
 import { _fullOuterGroupJoin, fullOuterGroupJoin } from './fullOuterGroupJoin'
 import { deferP0, pp } from 'ts-functional-pipe'
 import { defaultIfEmpty } from './defaultIfEmpty'
 import { select } from './select'
 import { selectMany } from './selectMany'
+import { MapFactory } from "../types/MapFactory"
 
 const identity = getIdentity()
 
@@ -15,7 +15,7 @@ export function _fullOuterJoin<T, TRight, TKey, TOut>(
   leftKeySelector: IndexedSelector<T, TKey>,
   rightKeySelector: IndexedSelector<TRight, TKey>,
   selector: (o: T | undefined, v: TRight | undefined, k: TKey) => TOut,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): Iterable<TOut> {
   return pp(
     src,
@@ -29,7 +29,7 @@ export function _fullOuterJoin<T, TRight, TKey, TOut>(
           defaultIfEmpty(),
           selectMany(l => pp(rgt, defaultIfEmpty(), select(r => selector(l, r, i))))
         ),
-      equalityComparer
+      mapFactory
     ),
     selectMany(identity)
   )

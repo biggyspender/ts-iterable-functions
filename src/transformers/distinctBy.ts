@@ -1,16 +1,15 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import { EqualityComparer } from 'ts-equality-comparer'
 import { toIterable } from '../helpers/toIterable'
-import { createComparerSet } from 'ts-hashmap'
 import { deferP0 } from 'ts-functional-pipe'
+import { SetFactory } from '../types/SetFactory';
 
 export function _distinctBy<T, TKey>(
   src: Iterable<T>,
   selector: IndexedSelector<T, TKey>,
-  equalityComparer?: EqualityComparer<TKey>
+  setFactory: SetFactory<TKey> = {createSet:() => new Set()}
 ): Iterable<T> {
-  return toIterable(function*() {
-    const set = createComparerSet<TKey>(equalityComparer)
+  return toIterable(function* () {
+    const set = setFactory.createSet();
     let i = 0
     for (const x of src) {
       const idx = i++
@@ -25,3 +24,4 @@ export function _distinctBy<T, TKey>(
 }
 
 export const distinctBy = deferP0(_distinctBy)
+

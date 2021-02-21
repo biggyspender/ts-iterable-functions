@@ -1,34 +1,33 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import { EqualityComparer, isEqualityComparer } from 'ts-equality-comparer'
 import { isIndexedSelector } from './helpers/isIndexedSelector'
 import getIdentity from './helpers/getIdentity'
-import { createComparerMap } from 'ts-hashmap'
+import { MapFactory } from "../types/MapFactory"
 
 export function _toMap<T, TKey>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): Map<TKey, T>
 export function _toMap<T, TKey, TValue>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
   valueSelector: IndexedSelector<T, TValue>,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): Map<TKey, TValue>
 export function _toMap<T, TKey, TValue = T>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
-  valueSelectorOrEqualityComparer?: IndexedSelector<T, TValue> | EqualityComparer<TKey>,
-  equalityComparer?: EqualityComparer<TKey>
+  valueSelectorOrMapFactory?: IndexedSelector<T, TValue> | MapFactory<TKey>,
+  mapFactoryMaybe?: MapFactory<TKey>
 ): Map<TKey, TValue> {
-  const vs: IndexedSelector<T, TValue> = (isIndexedSelector(valueSelectorOrEqualityComparer)
-    ? valueSelectorOrEqualityComparer
+  const vs: IndexedSelector<T, TValue> = (isIndexedSelector(valueSelectorOrMapFactory)
+    ? valueSelectorOrMapFactory
     : getIdentity()) as IndexedSelector<T, TValue>
-  const eqCom = isEqualityComparer(valueSelectorOrEqualityComparer)
-    ? valueSelectorOrEqualityComparer
-    : equalityComparer
+  const mapFactory = typeof valueSelectorOrMapFactory==="object"
+    ? valueSelectorOrMapFactory
+    : mapFactoryMaybe
 
-  const map = createComparerMap<TKey, TValue>(eqCom)
+  const map = mapFactory?.createMap<TValue>()??new Map<TKey,TValue>()
   let i = 0
   for (const x of src) {
     const key = keySelector(x, i++)
@@ -42,23 +41,23 @@ export function _toMap<T, TKey, TValue = T>(
 
 export function toMap<T, TKey>(
   keySelector: IndexedSelector<T, TKey>,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): (src: Iterable<T>) => Map<TKey, T>
 export function toMap<T, TKey, TValue>(
   keySelector: IndexedSelector<T, TKey>,
   valueSelector: IndexedSelector<T, TValue>,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): (src: Iterable<T>) => Map<TKey, TValue>
 export function toMap<T, TKey, TValue = T>(
   keySelector: IndexedSelector<T, TKey>,
-  valueSelectorOrEqualityComparer?: IndexedSelector<T, TValue> | EqualityComparer<TKey>,
-  equalityComparer?: EqualityComparer<TKey>
+  valueSelectorOrMapFactory?: IndexedSelector<T, TValue> | MapFactory<TKey>,
+  mapFactoryMaybe?: MapFactory<TKey>
 ): (src: Iterable<T>) => Map<TKey, TValue> {
-  const vs: IndexedSelector<T, TValue> = (isIndexedSelector(valueSelectorOrEqualityComparer)
-    ? valueSelectorOrEqualityComparer
+  const vs: IndexedSelector<T, TValue> = (isIndexedSelector(valueSelectorOrMapFactory)
+    ? valueSelectorOrMapFactory
     : getIdentity()) as IndexedSelector<T, TValue>
-  const eqCom = isEqualityComparer(valueSelectorOrEqualityComparer)
-    ? valueSelectorOrEqualityComparer
-    : equalityComparer
+  const eqCom = typeof valueSelectorOrMapFactory==="object"
+    ? valueSelectorOrMapFactory
+    : mapFactoryMaybe
   return (src: Iterable<T>) => _toMap(src, keySelector, vs, eqCom)
 }

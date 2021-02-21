@@ -1,13 +1,12 @@
 import { pp, deferP0 } from 'ts-functional-pipe'
 import { concat } from './concat'
 import { distinct } from './distinct'
-import { EqualityComparer } from 'ts-equality-comparer'
-
+import { SetFactory } from '../types/SetFactory'
 export function _union<T>(
   src: Iterable<T>,
   seq: Iterable<T>,
-  equalityComparer?: EqualityComparer<T>
+  setFactory?: SetFactory<T>
 ): Iterable<T> {
-  return pp(src, concat(seq), distinct(equalityComparer))
+  return pp(src, concat(seq), distinct(setFactory))
 }
 export const union = deferP0(_union)

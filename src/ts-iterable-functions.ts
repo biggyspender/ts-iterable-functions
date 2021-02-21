@@ -1,6 +1,5 @@
-export { defaultComparer } from 'ts-comparer-builder'
-export { deepEqualityComparer, EqualityComparer } from 'ts-equality-comparer'
 export { pp, compose, UnaryFunction, pipeInto, pipeValue, typedCompose } from 'ts-functional-pipe'
+export {MapFactory} from "./types/MapFactory"
 export { range } from './generators/range'
 export { repeat } from './generators/repeat'
 export { repeatGenerate } from './generators/repeatGenerate'

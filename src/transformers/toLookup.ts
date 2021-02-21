@@ -1,47 +1,46 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import { EqualityComparer, isEqualityComparer } from 'ts-equality-comparer'
-import { createComparerMap } from 'ts-hashmap'
+import { MapFactory } from "../types/MapFactory"
 
-const isValueSelector = <T, TValue>(obj: any): obj is IndexedSelector<T, TValue> =>
-  typeof obj === 'function'
 
 export function _toLookup<T, TKey>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): Map<TKey, Iterable<T>>
 export function _toLookup<T, TKey, TValue>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
   valueSelector: IndexedSelector<T, TValue>,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): Map<TKey, Iterable<TValue>>
-export function _toLookup<T, TKey, TValue = TKey>(
+export function _toLookup<T, TKey, TValue = T>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
-  valueSelectorOrEqualityComparer?: IndexedSelector<T, TValue> | EqualityComparer<TKey>,
-  equalityComparer?: EqualityComparer<TKey>
-): Map<TKey, Iterable<T | TValue>> {
-  let comparer: EqualityComparer<TKey> | undefined
+  valueSelectorOrMapFactory?: IndexedSelector<T, TValue> | MapFactory<TKey>,
+  mapFactoryMaybe?: MapFactory<TKey>
+): Map<TKey, Iterable<T|TValue>> {
+  let mapFactory: MapFactory<TKey> | undefined
+
   let valueSelector: IndexedSelector<T, TValue> | undefined
-  if (isEqualityComparer(valueSelectorOrEqualityComparer)) {
-    comparer = valueSelectorOrEqualityComparer
+  if (typeof valueSelectorOrMapFactory === "object") {
+    mapFactory = valueSelectorOrMapFactory
   } else {
-    comparer = equalityComparer
-    if (isValueSelector<T, TValue>(valueSelectorOrEqualityComparer)) {
-      valueSelector = valueSelectorOrEqualityComparer
+    mapFactory = mapFactoryMaybe
+    if (typeof valueSelectorOrMapFactory === "function") {
+      valueSelector = valueSelectorOrMapFactory
     }
   }
+  let mapFac: () => Map<TKey,Iterable<T|TValue>> = mapFactory?.createMap ?? (()=> new Map());
 
-  const vs: (v: T, i: number) => T | TValue = valueSelector || (x => x)
+  const vs: (v: T, i: number) => T|TValue = valueSelector ?? (x => x)
 
-  const map: Map<TKey, Array<T | TValue>> = createComparerMap(comparer)
+  const map: Map<TKey, Iterable<T | TValue>> = mapFac()
   let i = 0
   for (const item of src) {
     let currentIdx = i++
     const key = keySelector(item, currentIdx)
     let arr: Array<T | TValue>
-    arr = map.get(key) || new Array<T | TValue>()
+    arr = (map.get(key) as Array<T | TValue>) || new Array<T | TValue>()
     map.set(key, arr)
     arr.push(vs(item, currentIdx))
   }
@@ -50,29 +49,31 @@ export function _toLookup<T, TKey, TValue = TKey>(
 
 export function toLookup<T, TKey>(
   keySelector: IndexedSelector<T, TKey>,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): (src: Iterable<T>) => Map<TKey, Iterable<T>>
 export function toLookup<T, TKey, TValue>(
   keySelector: IndexedSelector<T, TKey>,
   valueSelector: IndexedSelector<T, TValue>,
-  equalityComparer?: EqualityComparer<TKey>
+  mapFactory?: MapFactory<TKey>
 ): (src: Iterable<T>) => Map<TKey, Iterable<TValue>>
-export function toLookup<T, TKey, TValue = TKey>(
+export function toLookup<T, TKey, TValue = T>(
   keySelector: IndexedSelector<T, TKey>,
-  valueSelectorOrEqualityComparer?: IndexedSelector<T, TValue> | EqualityComparer<TKey>,
-  equalityComparer?: EqualityComparer<TKey>
+  valueSelectorOrMapFactory?: IndexedSelector<T, TValue> | MapFactory<TKey>,
+  mapFactoryMaybe?: MapFactory<TKey>
 ): (src: Iterable<T>) => Map<TKey, Iterable<T | TValue>> {
-  let comparer: EqualityComparer<TKey> | undefined
+  let mapFactory: MapFactory<TKey> | undefined
+
   let valueSelector: IndexedSelector<T, TValue> | undefined
-  if (isEqualityComparer(valueSelectorOrEqualityComparer)) {
-    comparer = valueSelectorOrEqualityComparer
+  if (typeof valueSelectorOrMapFactory === "object") {
+    mapFactory = valueSelectorOrMapFactory
   } else {
-    comparer = equalityComparer
-    if (isValueSelector<T, TValue>(valueSelectorOrEqualityComparer)) {
-      valueSelector = valueSelectorOrEqualityComparer
+    mapFactory = mapFactoryMaybe
+    if (typeof valueSelectorOrMapFactory === "function") {
+      valueSelector = valueSelectorOrMapFactory
     }
   }
+
   return valueSelector
-    ? src => _toLookup(src, keySelector, valueSelector!, comparer)
-    : src => _toLookup(src, keySelector, comparer)
+    ? src => _toLookup(src, keySelector, valueSelector!, mapFactory)
+    : src => _toLookup(src, keySelector, mapFactory)
 }
