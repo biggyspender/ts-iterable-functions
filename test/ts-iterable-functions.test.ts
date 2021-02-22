@@ -61,7 +61,8 @@ import {
   zipAll,
   reduceRight,
   map,
-  skipWhile
+  skipWhile,
+  _select
 } from '../src/ts-iterable-functions'
 import { Date } from './Date'
 import { deepEqualityComparer } from "ts-equality-comparer"
@@ -718,5 +719,8 @@ describe('blinq test', () => {
     const cart = pp(data, cartesian)
     expect(pp(cart, isSubsetOf(result, createSetFactory()))).toBeTruthy()
     expect(pp(cart, isSupersetOf(result, createSetFactory()))).toBeTruthy()
+  })
+  it('iterable toJSON', () => {
+    expect(JSON.stringify(_select([1, 2, 3], identity))).toBe(JSON.stringify([1, 2, 3]))
   })
 })
