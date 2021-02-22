@@ -1,5 +1,4 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import { isIndexedSelector } from './helpers/isIndexedSelector'
 import getIdentity from './helpers/getIdentity'
 import { MapFactory } from "../types/MapFactory"
 
@@ -20,14 +19,14 @@ export function _toMap<T, TKey, TValue = T>(
   valueSelectorOrMapFactory?: IndexedSelector<T, TValue> | MapFactory<TKey>,
   mapFactoryMaybe?: MapFactory<TKey>
 ): Map<TKey, TValue> {
-  const vs: IndexedSelector<T, TValue> = (isIndexedSelector(valueSelectorOrMapFactory)
+  const vs: IndexedSelector<T, TValue> = (!(typeof valueSelectorOrMapFactory === "object")
     ? valueSelectorOrMapFactory
     : getIdentity()) as IndexedSelector<T, TValue>
-  const mapFactory = typeof valueSelectorOrMapFactory==="object"
+  const mapFactory = typeof valueSelectorOrMapFactory === "object"
     ? valueSelectorOrMapFactory
     : mapFactoryMaybe
 
-  const map = mapFactory?.createMap<TValue>()??new Map<TKey,TValue>()
+  const map = mapFactory?.createMap<TValue>() ?? new Map<TKey, TValue>()
   let i = 0
   for (const x of src) {
     const key = keySelector(x, i++)
@@ -53,10 +52,10 @@ export function toMap<T, TKey, TValue = T>(
   valueSelectorOrMapFactory?: IndexedSelector<T, TValue> | MapFactory<TKey>,
   mapFactoryMaybe?: MapFactory<TKey>
 ): (src: Iterable<T>) => Map<TKey, TValue> {
-  const vs: IndexedSelector<T, TValue> = (isIndexedSelector(valueSelectorOrMapFactory)
+  const vs: IndexedSelector<T, TValue> = (!(typeof valueSelectorOrMapFactory === "object")
     ? valueSelectorOrMapFactory
     : getIdentity()) as IndexedSelector<T, TValue>
-  const eqCom = typeof valueSelectorOrMapFactory==="object"
+  const eqCom = typeof valueSelectorOrMapFactory === "object"
     ? valueSelectorOrMapFactory
     : mapFactoryMaybe
   return (src: Iterable<T>) => _toMap(src, keySelector, vs, eqCom)

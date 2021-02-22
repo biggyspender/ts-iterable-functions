@@ -1,5 +1,4 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import { isIndexedSelector } from './helpers/isIndexedSelector'
 import getIdentity from './helpers/getIdentity'
 import { SetFactory } from "../types/SetFactory"
 
@@ -14,7 +13,7 @@ export function _toSet<T, TKey = T>(
   keySelectorOrSetFactory?: IndexedSelector<T, TKey> | SetFactory<TKey>,
   setFactoryMaybe?: SetFactory<TKey>
 ): Set<TKey> {
-  const ks: IndexedSelector<T, TKey> = (isIndexedSelector(keySelectorOrSetFactory)
+  const ks: IndexedSelector<T, TKey> = ((typeof keySelectorOrSetFactory === "function")
     ? keySelectorOrSetFactory
     : getIdentity()) as IndexedSelector<T, TKey>
   const setFactory = typeof keySelectorOrSetFactory === "object"
@@ -41,10 +40,10 @@ export function toSet<T, TKey = T>(
   keySelectorOrSetFactory?: IndexedSelector<T, TKey> | SetFactory<TKey>,
   setFactoryMaybe?: SetFactory<TKey>
 ): (src: Iterable<T>) => Set<TKey> {
-  const ks: IndexedSelector<T, TKey> = (isIndexedSelector(keySelectorOrSetFactory)
+  const ks: IndexedSelector<T, TKey> = (!(typeof keySelectorOrSetFactory === "object")
     ? keySelectorOrSetFactory
     : getIdentity()) as IndexedSelector<T, TKey>
-  const setFactory = typeof keySelectorOrSetFactory==="object"
+  const setFactory = typeof keySelectorOrSetFactory === "object"
     ? keySelectorOrSetFactory
     : setFactoryMaybe
 

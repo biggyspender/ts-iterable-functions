@@ -162,7 +162,11 @@ describe('blinq test', () => {
       map(x => x.idx)
     )
     expect(pp(items, sequenceEqual(range(0, 100)))).toBeTruthy()
+    
+    const randomOrder = pp(range(0, 20), orderBy(x => Math.random()))
+    expect(pp(randomOrder, orderBy(x => x), sequenceEqual(range(0, 20)))).toBeTruthy()
   })
+
   it('can compose', () => {
     const it = range(0, 3)
     const selected = pp(it, select(x => x * 2))

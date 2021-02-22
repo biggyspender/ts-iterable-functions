@@ -1,5 +1,5 @@
 export { pp, compose, UnaryFunction, pipeInto, pipeValue, typedCompose } from 'ts-functional-pipe'
-export {MapFactory} from "./types/MapFactory"
+export { MapFactory } from "./types/MapFactory"
 export { range } from './generators/range'
 export { repeat } from './generators/repeat'
 export { repeatGenerate } from './generators/repeatGenerate'
@@ -27,6 +27,7 @@ export { fullOuterJoin, _fullOuterJoin } from './transformers/fullOuterJoin'
 export { groupAdjacent, _groupAdjacent } from './transformers/groupAdjacent'
 export { groupBy, _groupBy } from './transformers/groupBy'
 export { groupJoin, _groupJoin } from './transformers/groupJoin'
+export { indexed, _indexed, unwrapIndexed, _unwrapIndexed } from './transformers/indexed'
 export { intersect, _intersect } from './transformers/intersect'
 export { isSubsetOf, _isSubsetOf } from './transformers/isSubsetOf'
 export { isSupersetOf, _isSupersetOf } from './transformers/isSupersetOf'
