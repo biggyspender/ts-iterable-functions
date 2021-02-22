@@ -12,11 +12,12 @@ export function _groupJoin<T, TInner, TKey, TOut>(
   selector: (o: T, v: Iterable<TInner>) => TOut,
   mapFactory?: MapFactory<TKey>
 ): Iterable<TOut> {
-  const innerSeqIt = innerSeq
-  const lookup = _toLookup(innerSeqIt, innerKeySelector, mapFactory)
-  const outerSeq = src
 
   return toIterable(function*() {
+    const innerSeqIt = innerSeq
+    const lookup = _toLookup(innerSeqIt, innerKeySelector, mapFactory)
+    const outerSeq = src
+  
     let i = 0
     for (const outerItem of outerSeq) {
       let idx = i++
