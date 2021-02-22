@@ -1,5 +1,6 @@
-import { deferP0 } from 'ts-functional-pipe';
-import { _select } from './select';
+import { deferP0, pp } from 'ts-functional-pipe';
+import { orderBy } from './orderBy';
+import { select, _select } from './select';
 
 
 export interface Indexed<T> {
@@ -11,8 +12,8 @@ export function _indexed<T>(src: Iterable<T>): Iterable<Indexed<T>> {
 }
 export const indexed = deferP0(_indexed);
 
-export function _unwrapIndexed<T>(src:Iterable<Indexed<T>>):Iterable<T>{
-  return _select(src, ({value}) => value);
+export function _unwrapIndexed<T>(src: Iterable<Indexed<T>>): Iterable<T> {
+  return pp(src, orderBy(({ value }) => value), select(({ value }) => value));
 }
 
 export const unwrapIndexed = deferP0(_unwrapIndexed);

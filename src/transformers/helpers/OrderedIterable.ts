@@ -11,13 +11,13 @@ export default class OrderedIterable<T> implements Iterable<T> {
     const comparer = comparerBuilder.build()
     /* istanbul ignore next */
     {
-      this[Symbol.iterator] = function*() {
+      this[Symbol.iterator] = function* () {
         const arr = pp(
           [..._indexed(src)].sort((a, b) => {
             const comp = comparer(a.value, b.value)
             return comp === 0 ? a.index - b.index : comp
           }),
-          _unwrapIndexed
+          select(({ value }) => value)
         )
         for (const x of arr) {
           yield x
