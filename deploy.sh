@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -e
-./build.sh
+npm run build
 npm run semantic-release
