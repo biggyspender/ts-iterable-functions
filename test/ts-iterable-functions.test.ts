@@ -701,7 +701,7 @@ describe('blinq test', () => {
     expect(pp([1, 2, 3, 4, 1, 5], skipWhile(x => x < 3), toArray())).toEqual([3, 4, 1, 5])
   })
   it('orderBy impure selector', () => {
-    const _range = range(0, 200)
+    const _range = range(0, 1000)
     const randomOrder = pp(_range, orderBy(_ => Math.random()))
     expect(pp(randomOrder, sequenceEqual(_range))).toBeFalsy()
     expect(pp(randomOrder, sequenceEqual(randomOrder))).toBeFalsy()
