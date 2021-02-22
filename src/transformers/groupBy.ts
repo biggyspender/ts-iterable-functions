@@ -4,6 +4,7 @@ import { _select } from './select'
 import { deferP0 } from 'ts-functional-pipe'
 import { MapFactory } from "../types/MapFactory"
 import { GroupedIterable } from '../types/GroupedIterable'
+import { toIterable } from '../helpers/toIterable'
 
 function createGroupedIterable<K, V>(key: K, value: Iterable<V>): GroupedIterable<K, V> {
   return {
@@ -22,11 +23,12 @@ export function _groupBy<T, TKey>(
   keySelector: IndexedSelector<T, TKey>,
   mapFactory?: MapFactory<TKey>
 ): Iterable<GroupedIterable<TKey, T>> {
-  const lookup = _toLookup(src, keySelector, mapFactory)
-
-  return _select(lookup, ([key, value]) => {
-    const returnValue = createGroupedIterable(key, value)
-    return returnValue
+  return toIterable(function* () {
+    const lookup = _toLookup(src, keySelector, mapFactory)
+    for (const [key, value] of lookup) {
+      yield createGroupedIterable(key, value)
+    }
   })
+
 }
 export const groupBy = deferP0(_groupBy)
