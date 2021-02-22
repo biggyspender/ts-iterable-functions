@@ -13,8 +13,8 @@ export function _intersect<T>(
     for (const item of seq) {
       set.add(item)
     }
-    for(const item of src){
-      if(set.has(item)){
+    for (const item of src) {
+      if (set.has(item)) {
         yield item;
       }
     }
