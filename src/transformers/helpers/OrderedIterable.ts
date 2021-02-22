@@ -1,7 +1,7 @@
 import { ThenComparerBuilder } from 'ts-comparer-builder/dist/types/ComparerBuilder'
 import { _select, select } from '../select'
 import { pp } from 'ts-functional-pipe'
-import { _indexed, _unwrapIndexed } from '../indexed';
+import { _indexed } from '../indexed';
 
 export default class OrderedIterable<T> implements Iterable<T> {
   private src: Iterable<T>
