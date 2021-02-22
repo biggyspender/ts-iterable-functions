@@ -3,19 +3,17 @@ import { _toLookup } from './toLookup'
 import { _select } from './select'
 import { deferP0 } from 'ts-functional-pipe'
 import { MapFactory } from "../types/MapFactory"
-
-interface GroupedIterable<K, V> extends Iterable<V> {
-  key: K
-}
+import { GroupedIterable } from '../types/GroupedIterable'
 
 function createGroupedIterable<K, V>(key: K, value: Iterable<V>): GroupedIterable<K, V> {
   return {
-    [Symbol.iterator]: function*() {
+    [Symbol.iterator]: function* () {
       for (const x of value) {
         yield x
       }
     },
-    key
+    key,
+    toJSON: () => [...value]
   }
 }
 

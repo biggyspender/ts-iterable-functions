@@ -27,6 +27,9 @@ export default class OrderedIterable<T> implements Iterable<T> {
     this.src = src
     this.comparerBuilder = comparerBuilder
   }
+  toJSON(): T[] {
+    return [...this[Symbol.iterator]()]
+  }
   createNewFrom(b: (builder: ThenComparerBuilder<T>) => ThenComparerBuilder<T>) {
     return new OrderedIterable<T>(this.src, b(this.comparerBuilder))
   }
