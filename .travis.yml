@@ -11,15 +11,10 @@ node_js:
   #- '6'
 jobs:
   include:
-    - stage: build
-      node_js:
-        - '10'
-        - '11'
-      script: npm run test:prod && npm run build
     - stage: deploy
-      node_js:
-        - '11'
       script: npm run semantic-release
+script:
+  - npm run test:prod && npm run build
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
