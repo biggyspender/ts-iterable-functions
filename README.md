@@ -159,7 +159,7 @@ const toStringRepeated = pp(
 
 and all types are correctly inferred.
 
-More coming soon...
+More coming soon.
 
 ## Generators
 
