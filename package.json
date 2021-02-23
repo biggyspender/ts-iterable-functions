@@ -8,7 +8,7 @@
   "module": "dist/ts-iterable-functions.es5.js",
   "typings": "dist/types/ts-iterable-functions.d.ts",
   "files": [
-    "dist/*/**"
+    "dist/**/*"
   ],
   "author": "Chris Sperry <christophermartinsperry@gmail.com>",
   "repository": {
