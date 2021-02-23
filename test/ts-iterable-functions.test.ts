@@ -1,7 +1,6 @@
 import getIdentity from '../src/transformers/helpers/getIdentity'
-import { toPrettyJson } from '../src/helpers/toPrettyJson'
+import { pp } from 'ts-functional-pipe'
 import {
-  pp,
   aggregate,
   all,
   append,
