@@ -1,5 +1,9 @@
-export { pp, compose, UnaryFunction, pipeInto, pipeValue, typedCompose } from 'ts-functional-pipe'
-export { MapFactory } from "./types/MapFactory"
+export { GroupedIterable } from './types/GroupedIterable';
+export { IndexedPredicate } from './types/IndexedPredicate'
+export { IndexedSelector } from './types/IndexedSelector'
+export { Indexed } from './types/Indexed'
+export { MapFactory } from './types/MapFactory'
+export { SetFactory } from './types/SetFactory'
 export { range } from './generators/range'
 export { repeat } from './generators/repeat'
 export { repeatGenerate } from './generators/repeatGenerate'

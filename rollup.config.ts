@@ -9,14 +9,18 @@ const pkg = require('./package.json')
 
 const libraryName = 'ts-iterable-functions'
 
+const externals = ["tslib", "ts-functional-pipe", "ts-comparer-builder"]
+
+const umdGlobals = externals => externals.map(moduleName => [moduleName, camelCase(moduleName)]).reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
+
 export default {
   input: `src/${libraryName}.ts`,
   output: [
-    { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true, globals: { tslib: "tslib" } },
+    { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true, globals: umdGlobals(externals) },
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: ["tslib"],
+  external: externals,
   watch: {
     include: 'src/**',
   },
