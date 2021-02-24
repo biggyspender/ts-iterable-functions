@@ -1,4 +1,4 @@
-import { getIdentity } from './helpers/getIdentity'
+import getIdentity from './helpers/getIdentity'
 import { IndexedSelector } from '../types/IndexedSelector'
 import { _fullOuterGroupJoin, fullOuterGroupJoin } from './fullOuterGroupJoin'
 import { deferP0, pp } from 'ts-functional-pipe'

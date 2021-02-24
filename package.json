@@ -4,11 +4,11 @@
   "description": "",
   "keywords": [],
   "sideEffects": false,
-  "module": "lib/ts-iterable-functions.js",
-  "typings": "lib/ts-iterable-functions.d.ts",
+  "main": "dist/ts-iterable-functions.umd.js",
+  "module": "dist/ts-iterable-functions.es5.js",
+  "typings": "dist/types/ts-iterable-functions.d.ts",
   "files": [
-    "dist/**/*",
-    "lib/**/*"
+    "dist/**/*"
   ],
   "author": "Chris Sperry <christophermartinsperry@gmail.com>",
   "repository": {
@@ -21,9 +21,8 @@
   },
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-    "prebuild": "rimraf build lib",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts",
-    "build-docs": "typedoc",
+    "prebuild": "rimraf dist",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
@@ -94,7 +93,6 @@
     "coveralls": "^3.1.0",
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
-    "glob": "^7.1.6",
     "husky": "^4.3.8",
     "jest": "^26.6.3",
     "jest-config": "^26.6.3",

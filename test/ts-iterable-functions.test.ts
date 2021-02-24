@@ -1,4 +1,4 @@
-import { getIdentity } from '../src/transformers/helpers/getIdentity'
+import getIdentity from '../src/transformers/helpers/getIdentity'
 import { pp } from 'ts-functional-pipe'
 import {
   aggregate,

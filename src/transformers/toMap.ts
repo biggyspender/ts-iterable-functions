@@ -1,5 +1,5 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import { getIdentity } from './helpers/getIdentity'
+import getIdentity from './helpers/getIdentity'
 import { MapFactory } from "../types/MapFactory"
 
 export function _toMap<T, TKey>(

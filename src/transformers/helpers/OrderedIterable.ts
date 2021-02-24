@@ -3,7 +3,7 @@ import { _select, select } from '../select'
 import { pp } from 'ts-functional-pipe'
 import { _indexed } from '../indexed';
 
-export class OrderedIterable<T> implements Iterable<T> {
+export default class OrderedIterable<T> implements Iterable<T> {
   private src: Iterable<T>
   comparerBuilder: ThenComparerBuilder<T>;
   [Symbol.iterator]: () => IterableIterator<T>

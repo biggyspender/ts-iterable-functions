@@ -1,4 +1,4 @@
-import { getIdentity } from './helpers/getIdentity'
+import getIdentity from './helpers/getIdentity'
 import { defaultComparer, Comparer } from 'ts-comparer-builder'
 import { IndexedSelector } from '../types/IndexedSelector'
 import { minMaxByImpl } from './helpers/minMaxByImpl'
