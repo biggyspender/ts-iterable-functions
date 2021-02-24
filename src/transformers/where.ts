@@ -1,16 +1,4 @@
-import { toIterable } from '../helpers/toIterable'
-import { IndexedPredicate } from '../types/IndexedPredicate'
-import { deferP0 } from 'ts-functional-pipe'
+import { filter, _filter } from './filter'
 
-export function _where<T>(src: Iterable<T>, pred: IndexedPredicate<T>): Iterable<T> {
-  return toIterable(function*() {
-    let i = 0
-    for (const x of src) {
-      if (pred(x, i++)) {
-        yield x
-      }
-    }
-  })
-}
-
-export const where = deferP0(_where)
+export const where = filter
+export const _where = _filter

@@ -1,4 +1,1 @@
-export interface Indexed<T> {
-  value: T;
-  index: number;
-}
+export type Indexed<T> = readonly [T, number]

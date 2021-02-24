@@ -1,8 +1,8 @@
 import { IndexedSelector } from '../types/IndexedSelector'
 import { _toLookup } from './toLookup'
-import { _select } from './select'
+import { _map } from './map'
 import { deferP0 } from 'ts-functional-pipe'
-import { MapFactory } from "../types/MapFactory"
+import { MapFactory } from '../types/MapFactory'
 import { GroupedIterable } from '../types/GroupedIterable'
 import { toIterable } from '../helpers/toIterable'
 
@@ -14,7 +14,7 @@ function createGroupedIterable<K, V>(key: K, value: Iterable<V>): GroupedIterabl
       }
     },
     key,
-    toJSON: () => [...value]
+    toJSON: () => [...value],
   }
 }
 
@@ -29,6 +29,5 @@ export function _groupBy<T, TKey>(
       yield createGroupedIterable(key, value)
     }
   })
-
 }
 export const groupBy = deferP0(_groupBy)

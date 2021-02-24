@@ -1,6 +1,6 @@
-import { _where } from './where'
+import { _filter } from './filter'
 import { deferP0 } from 'ts-functional-pipe'
-import { SetFactory } from "../types/SetFactory"
+import { SetFactory } from '../types/SetFactory'
 import { toIterable } from '../helpers/toIterable'
 
 export function _intersect<T>(
@@ -15,7 +15,7 @@ export function _intersect<T>(
     }
     for (const item of src) {
       if (set.has(item)) {
-        yield item;
+        yield item
       }
     }
   })

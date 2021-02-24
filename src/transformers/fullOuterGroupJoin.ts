@@ -1,10 +1,10 @@
 import { IndexedSelector } from '../types/IndexedSelector'
 import { _toLookup } from './toLookup'
 import { deferP0, pp } from 'ts-functional-pipe'
-import { select, _select } from './select'
+import { map, _map } from './map'
 import { distinct } from './distinct'
 import { concat } from './concat'
-import { MapFactory } from "../types/MapFactory"
+import { MapFactory } from '../types/MapFactory'
 import { toIterable } from '../helpers/toIterable'
 
 export function _fullOuterGroupJoin<T, TRight, TKey, TOut>(
@@ -19,24 +19,28 @@ export function _fullOuterGroupJoin<T, TRight, TKey, TOut>(
     const right = rightSeq
     const leftLookup = _toLookup(src, leftKeySelector, mapFactory)
     const rightLookup = _toLookup(right, rightKeySelector, mapFactory)
-    const rightLookupKeys = _select(rightLookup, ([key, _]) => key)
-    const allKeys = pp(leftLookup, select(([key, _]) => key), concat(rightLookupKeys), distinct())
+    const rightLookupKeys = _map(rightLookup, ([key, _]) => key)
+    const allKeys = pp(
+      leftLookup,
+      map(([key, _]) => key),
+      concat(rightLookupKeys),
+      distinct()
+    )
 
     const outputVals = pp(
       allKeys,
-      select(key => ({ key, leftItem: leftLookup.get(key) || [] })),
-      select(({ key, leftItem }) => ({
+      map((key) => ({ key, leftItem: leftLookup.get(key) || [] })),
+      map(({ key, leftItem }) => ({
         key,
         leftItem,
-        rightItem: rightLookup.get(key) || []
+        rightItem: rightLookup.get(key) || [],
       })),
-      select(x => selector(x.leftItem, x.rightItem, x.key))
+      map((x) => selector(x.leftItem, x.rightItem, x.key))
     )
     for (const v of outputVals) {
-      yield v;
+      yield v
     }
   })
-
 }
 
 export const fullOuterGroupJoin = deferP0(_fullOuterGroupJoin)

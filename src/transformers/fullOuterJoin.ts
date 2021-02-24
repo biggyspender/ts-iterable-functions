@@ -3,9 +3,9 @@ import { IndexedSelector } from '../types/IndexedSelector'
 import { _fullOuterGroupJoin, fullOuterGroupJoin } from './fullOuterGroupJoin'
 import { deferP0, pp } from 'ts-functional-pipe'
 import { defaultIfEmpty } from './defaultIfEmpty'
-import { select } from './select'
-import { selectMany } from './selectMany'
-import { MapFactory } from "../types/MapFactory"
+import { map } from './map'
+import { flatMap } from './flatMap'
+import { MapFactory } from '../types/MapFactory'
 
 const identity = getIdentity()
 
@@ -27,11 +27,17 @@ export function _fullOuterJoin<T, TRight, TKey, TOut>(
         pp(
           lft,
           defaultIfEmpty(),
-          selectMany(l => pp(rgt, defaultIfEmpty(), select(r => selector(l, r, i))))
+          flatMap((l) =>
+            pp(
+              rgt,
+              defaultIfEmpty(),
+              map((r) => selector(l, r, i))
+            )
+          )
         ),
       mapFactory
     ),
-    selectMany(identity)
+    flatMap(identity)
   )
 }
 

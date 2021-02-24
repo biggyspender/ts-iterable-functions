@@ -1,7 +1,7 @@
 import { _aggregate } from './aggregate'
 import { _zip } from './zip'
 import { _append } from './append'
-import { _select } from './select'
+import { _map } from './map'
 import { deferP0 } from 'ts-functional-pipe'
 
 export function _zipAll<TT>(src: Iterable<Iterable<TT>>): Iterable<Iterable<TT>> {
@@ -9,9 +9,7 @@ export function _zipAll<TT>(src: Iterable<Iterable<TT>>): Iterable<Iterable<TT>>
     src,
     undefined,
     (acc, curr) =>
-      typeof acc === 'undefined'
-        ? _select(curr, x => [x])
-        : _zip(acc, curr, (a, c) => _append(a, c))
+      typeof acc === 'undefined' ? _map(curr, (x) => [x]) : _zip(acc, curr, (a, c) => _append(a, c))
   )
   /* istanbul ignore next */
   return typeof v === 'undefined' ? [] : v

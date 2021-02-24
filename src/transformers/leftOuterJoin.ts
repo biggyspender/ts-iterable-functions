@@ -1,10 +1,10 @@
 import { IndexedSelector } from '../types/IndexedSelector'
 import { _groupJoin, groupJoin } from './groupJoin'
 import { pp, deferP0 } from 'ts-functional-pipe'
-import { selectMany } from './selectMany'
+import { flatMap } from './flatMap'
 import { defaultIfEmpty } from './defaultIfEmpty'
-import { select } from './select'
-import { MapFactory } from "../types/MapFactory"
+import { map } from './map'
+import { MapFactory } from '../types/MapFactory'
 
 export function _leftOuterJoin<T, TInner, TKey, TOut>(
   src: Iterable<T>,
@@ -22,12 +22,16 @@ export function _leftOuterJoin<T, TInner, TKey, TOut>(
       innerKeySelector,
       (outer, innerSeq) => ({
         outer,
-        innerSeq
+        innerSeq,
       }),
       mapFactory
     ),
-    selectMany(({ outer, innerSeq }) =>
-      pp(innerSeq, defaultIfEmpty(), select(i => selector(outer, i)))
+    flatMap(({ outer, innerSeq }) =>
+      pp(
+        innerSeq,
+        defaultIfEmpty(),
+        map((i) => selector(outer, i))
+      )
     )
   )
 }

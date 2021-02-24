@@ -1,6 +1,6 @@
-import { _where } from './where'
+import { _filter } from './filter'
 import { deferP0 } from 'ts-functional-pipe'
-import { SetFactory } from "../types/SetFactory"
+import { SetFactory } from '../types/SetFactory'
 import { toIterable } from '../helpers/toIterable'
 
 export function _except<T>(
@@ -13,7 +13,7 @@ export function _except<T>(
     for (const item of seq) {
       set.add(item)
     }
-    const outputValues = _where(src, item => !set.has(item))
+    const outputValues = _filter(src, (item) => !set.has(item))
     for (const v of outputValues) {
       yield v
     }
