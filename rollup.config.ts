@@ -4,6 +4,8 @@ import sourceMaps from 'rollup-plugin-sourcemaps'
 import camelCase from 'lodash.camelcase'
 import typescript from 'rollup-plugin-typescript2'
 import json from '@rollup/plugin-json'
+import * as glob from 'glob'
+import * as path from 'path'
 
 const pkg = require('./package.json')
 
@@ -13,11 +15,18 @@ const externals = ["tslib", "ts-functional-pipe", "ts-comparer-builder"]
 
 const umdGlobals = externals => externals.map(moduleName => [moduleName, camelCase(moduleName)]).reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
 
+const files = glob.sync("src/**/*.ts")
+  .map(f => ({ parsed: path.parse(f), path: f }))
+  .map(f => ({ jsPath: path.relative("src", path.join(`${f.parsed.dir}`, `${f.parsed.name}`)), filePath: f.path }))
+  .reduce((acc, { jsPath, filePath }) => ({ ...acc, [jsPath]: filePath }), {})
+
+console.log(JSON.stringify(files, null, 2))
+
 export default {
-  input: `src/${libraryName}.ts`,
+  input: files,
   output: [
-    { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true, globals: umdGlobals(externals) },
-    { file: pkg.module, format: 'es', sourcemap: true },
+    //{ dir: "umd", name: camelCase(libraryName), format: 'umd', sourcemap: true, globals: umdGlobals(externals) },
+    { dir: "lib", format: 'cjs', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: externals,
@@ -38,5 +47,5 @@ export default {
 
     // Resolve source maps to the original source
     sourceMaps(),
-  ],
+  ]
 }

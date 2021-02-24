@@ -11,7 +11,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declarationDir": "lib",
-    "outDir": "lib",
+    "outDir": "build",
     "typeRoots": [
       "node_modules/@types"
     ],
