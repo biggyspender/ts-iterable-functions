@@ -1,4 +1,4 @@
-import OrderedIterable from './helpers/OrderedIterable'
+import { OrderedIterable } from './helpers/OrderedIterable'
 import { comparerBuilder } from 'ts-comparer-builder'
 import { deferP0 } from 'ts-functional-pipe'
 

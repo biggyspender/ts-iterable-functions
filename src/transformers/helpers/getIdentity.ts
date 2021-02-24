@@ -1,3 +1,3 @@
-export default function getIdentity() {
+export function getIdentity() {
   return <T>(t: T): T => t
 }

@@ -1,4 +1,4 @@
-import OrderedIterable from './helpers/OrderedIterable'
+import { OrderedIterable } from './helpers/OrderedIterable'
 import { deferP0 } from 'ts-functional-pipe'
 
 export function _thenBy<T, TCmp>(
