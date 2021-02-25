@@ -66,6 +66,7 @@ import {
   _sequenceEqual,
   _reduce,
   toIterable,
+  _first,
 } from '../src/ts-iterable-functions'
 import { Date } from './Date'
 import { deepEqualityComparer } from 'ts-equality-comparer'
@@ -1218,6 +1219,8 @@ describe('blinq test', () => {
     const iterable = getImpureIterable()
     expect([...iterable]).toEqual([0, 1, 2])
     expect([...iterable]).toEqual([1, 2, 3])
+    expect(_first(iterable)).toBe(2)
+    expect(_first(iterable)).toBe(3)
   })
 })
 function getImpureIterable() {
