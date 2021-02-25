@@ -64,6 +64,8 @@ import {
   _select,
   headTail,
   _sequenceEqual,
+  _reduce,
+  toIterable,
 } from '../src/ts-iterable-functions'
 import { Date } from './Date'
 import { deepEqualityComparer } from 'ts-equality-comparer'
@@ -268,6 +270,17 @@ describe('blinq test', () => {
       reduce((prev, curr) => prev + curr, 0)
     )
     expect(v).toEqual(6)
+    const v2 = pp(
+      range(0, 4),
+      reduce((prev, curr) => prev + curr)
+    )
+    expect(v2).toEqual(6)
+    const v3 = pp(
+      range(0, 4),
+      map((v) => v.toString()),
+      reduce((prev, curr) => `${prev}${curr}`)
+    )
+    expect(v3).toEqual('0123')
   })
   it('reduceRight', () => {
     const v = pp(
@@ -279,6 +292,17 @@ describe('blinq test', () => {
       reduceRight((prev, curr) => prev.concat(curr), new Array<number>())
     )
     expect(v).toEqual([4, 5, 2, 3, 0, 1])
+    const v2 = pp(
+      range(0, 4),
+      reduceRight((prev, curr) => prev + curr)
+    )
+    expect(v2).toEqual(6)
+    const v3 = pp(
+      range(0, 4),
+      map((v) => v.toString()),
+      reduceRight((prev, curr) => `${prev}${curr}`)
+    )
+    expect(v3).toEqual('3210')
   })
   it('all', () => {
     const fourZeroes = repeat(0, 4)
@@ -1180,11 +1204,29 @@ describe('blinq test', () => {
   })
   it('headTail', () => {
     const h = headTail(range(0, 10))
-    if (h == null) {
-      throw Error('bad')
-    }
     const [head, tail] = h
     expect(head).toBe(0)
     expect(_sequenceEqual(tail, range(1, 9))).toBe(true)
+    const x: number[] = []
+    expect(() => headTail(x)).toThrow()
+    const iterable = getImpureIterable()
+    const [h1, t1] = headTail(iterable)
+    expect(h1).toBe(0)
+    expect([...t1]).toEqual([1, 2])
+  })
+  it('impure iterable', () => {
+    const iterable = getImpureIterable()
+    expect([...iterable]).toEqual([0, 1, 2])
+    expect([...iterable]).toEqual([1, 2, 3])
   })
 })
+function getImpureIterable() {
+  let a = 0
+  const iterable = toIterable(function* () {
+    const start = a++
+    for (let i = 0; i < 3; i++) {
+      yield start + i
+    }
+  })
+  return iterable
+}
