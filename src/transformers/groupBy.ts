@@ -14,7 +14,9 @@ function createGroupedIterable<K, V>(key: K, value: Iterable<V>): GroupedIterabl
       }
     },
     key,
-    toJSON: () => [...value],
+    toJSON(): V[] {
+      return [...value]
+    },
   }
 }
 
