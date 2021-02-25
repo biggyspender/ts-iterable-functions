@@ -12,6 +12,7 @@ export { empty } from './generators/empty'
 export { fromSingleValue } from './generators/fromSingleValue'
 
 export { toIterable } from './helpers/toIterable'
+export { headTail } from './helpers/headTail'
 
 export { aggregate, _aggregate } from './transformers/aggregate'
 export { all, _all } from './transformers/all'
