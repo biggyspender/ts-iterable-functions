@@ -58,6 +58,7 @@ import {
   where,
   zip,
   zipAll,
+  zipAllToTuple,
   reduceRight,
   map,
   skipWhile,
@@ -67,31 +68,31 @@ import {
   _reduce,
   toIterable,
   _first,
+  _zipAllToTuple,
 } from '../src/ts-iterable-functions'
 import { Date } from './Date'
 import { deepEqualityComparer } from 'ts-equality-comparer'
 import { createComparerMap, createComparerSet } from 'ts-hashmap'
 import { defaultComparer } from 'ts-comparer-builder'
-import { assert } from 'console'
 
 const createSetFactory = <K>() => ({ createSet: () => createComparerSet<K>(deepEqualityComparer) })
 const createMapFactory = <K>() => ({
   createMap: <T>() => createComparerMap<K, T>(deepEqualityComparer),
 })
 
-describe('blinq test', () => {
-  it('RangeIterable generates range', () => {
+describe('ts-iterable-functions test', () => {
+  test('RangeIterable generates range', () => {
     const it = range(0, 3)
 
     expect([...it]).toEqual([0, 1, 2])
     expect([...it]).toEqual([0, 1, 2])
   })
-  it('RangeIterable args validation works', () => {
+  test('RangeIterable args validation works', () => {
     expect(() => range(0, -1)).toThrow()
     expect(() => range(0.1, 1)).toThrow()
     expect(() => range(0, 1.1)).toThrow()
   })
-  it('where works', () => {
+  test('where works', () => {
     const it = range(0, 3)
     const whereQ = pp(
       it,
@@ -100,7 +101,7 @@ describe('blinq test', () => {
     expect([...whereQ]).toEqual([1, 2])
     expect([...whereQ]).toEqual([1, 2])
   })
-  it('select works', () => {
+  test('select works', () => {
     const it = range(0, 3)
     const selected = pp(
       it,
@@ -109,7 +110,7 @@ describe('blinq test', () => {
     expect([...selected]).toEqual([0, 2, 4])
     expect([...selected]).toEqual([0, 2, 4])
   })
-  it('distinctBy', () => {
+  test('distinctBy', () => {
     const dates: Date[] = [
       { day: 1, month: 10, year: 2000 },
       { day: 1, month: 1, year: 2000 },
@@ -125,7 +126,7 @@ describe('blinq test', () => {
       )
     ).toBe(2)
   })
-  it('distinctBy with comparer', () => {
+  test('distinctBy with comparer', () => {
     const nums = pp(
       range(0, 1000),
       select((x) => (x / 5) | 0)
@@ -138,7 +139,7 @@ describe('blinq test', () => {
       )
     ).toBe(200)
   })
-  it('orderBy', () => {
+  test('orderBy', () => {
     const values = [
       { a: 1, b: 1 },
       { a: 1, b: 2 },
@@ -225,7 +226,7 @@ describe('blinq test', () => {
     expect(pp(items, sequenceEqual(range(0, 100)))).toBeTruthy()
   })
 
-  it('can compose', () => {
+  test('can compose', () => {
     const it = range(0, 3)
     const selected = pp(
       it,
@@ -238,7 +239,7 @@ describe('blinq test', () => {
     expect([...selectedFiltered]).toEqual([4])
     expect([...selectedFiltered]).toEqual([4])
   })
-  it('selectMany', () => {
+  test('selectMany', () => {
     const it = range(0, 2)
     const selected = pp(
       it,
@@ -247,25 +248,25 @@ describe('blinq test', () => {
     expect([...selected]).toEqual([1, 2, 1, 2])
   })
 
-  it('repeat', () => {
+  test('repeat', () => {
     const it = repeat(1, 2)
     expect([...it]).toEqual([1, 1])
   })
-  it('repeatGenerate', () => {
+  test('repeatGenerate', () => {
     const it = repeatGenerate((i) => i, 3)
     expect([...it]).toEqual([0, 1, 2])
 
     const src = repeatGenerate(() => Math.random(), 1000)
     expect(pp(src, sequenceEqual(src))).toBeFalsy()
   })
-  it('aggregate', () => {
+  test('aggregate', () => {
     const v = pp(
       range(0, 4),
       aggregate(0, (prev, curr) => prev + curr)
     )
     expect(v).toEqual(6)
   })
-  it('reduce', () => {
+  test('reduce', () => {
     const v = pp(
       range(0, 4),
       reduce((prev, curr) => prev + curr, 0)
@@ -283,7 +284,7 @@ describe('blinq test', () => {
     )
     expect(v3).toEqual('0123')
   })
-  it('reduceRight', () => {
+  test('reduceRight', () => {
     const v = pp(
       [
         [0, 1],
@@ -305,7 +306,7 @@ describe('blinq test', () => {
     )
     expect(v3).toEqual('3210')
   })
-  it('all', () => {
+  test('all', () => {
     const fourZeroes = repeat(0, 4)
     const val = pp(
       fourZeroes,
@@ -323,7 +324,7 @@ describe('blinq test', () => {
     )
     expect(val3).toEqual(false)
   })
-  it('some', () => {
+  test('some', () => {
     const fourZeroes = repeat(0, 4)
 
     expect(
@@ -341,14 +342,14 @@ describe('blinq test', () => {
     expect(pp(fourZeroes, some())).toBe(true)
     expect(pp([], some())).toBe(false)
   })
-  it('concat', () => {
+  test('concat', () => {
     expect([...pp([1, 2, 3], concat([4, 5], [6, 7]))]).toEqual([1, 2, 3, 4, 5, 6, 7])
   })
-  it('average', () => {
+  test('average', () => {
     expect(pp([1, 2, 3, 4], average())).toBe(2.5)
     expect(() => pp([], average())).toThrow()
   })
-  it('count', () => {
+  test('count', () => {
     expect(pp([1, 2, 3, 4], count())).toBe(4)
     expect(pp([], count())).toBe(0)
     expect(
@@ -358,7 +359,7 @@ describe('blinq test', () => {
       )
     ).toBe(2)
   })
-  it('single', () => {
+  test('single', () => {
     expect(pp([1], single())).toBe(1)
     expect(() => pp([], single())).toThrow()
     expect(() => pp([1, 2], single())).toThrow()
@@ -376,7 +377,7 @@ describe('blinq test', () => {
     ).toBe(2)
     expect(pp([false], single())).toEqual(false)
   })
-  it('singleOrDefault', () => {
+  test('singleOrDefault', () => {
     expect(pp([1], singleOrDefault())).toBe(1)
     expect(pp([], singleOrDefault())).toBeUndefined()
     expect(() => pp([1, 2], singleOrDefault())).toThrow()
@@ -394,15 +395,15 @@ describe('blinq test', () => {
     ).toBe(2)
     expect(pp([false], singleOrDefault())).toEqual(false)
   })
-  it('elementAt', () => {
+  test('elementAt', () => {
     expect(pp([1, 2, 3], elementAt(1))).toBe(2)
     expect(() => pp([1, 2, 3], elementAt(3))).toThrow()
   })
 
-  it('except', () => {
+  test('except', () => {
     expect([...pp([1, 2, 3], except([1, 3]))]).toEqual([2])
   })
-  it('first', () => {
+  test('first', () => {
     expect(pp(range(0, 3), first())).toBe(0)
     expect(
       pp(
@@ -418,7 +419,7 @@ describe('blinq test', () => {
     ).toThrow()
     expect(pp([false], first())).toEqual(false)
   })
-  it('firstOrDefault', () => {
+  test('firstOrDefault', () => {
     expect(pp(range(0, 3), firstOrDefault())).toBe(0)
     expect(
       pp(
@@ -434,7 +435,7 @@ describe('blinq test', () => {
     ).toBeUndefined()
     expect(pp([false], firstOrDefault())).toEqual(false)
   })
-  it('last', () => {
+  test('last', () => {
     expect(pp(range(0, 3), last())).toBe(2)
     expect(
       pp(
@@ -450,7 +451,7 @@ describe('blinq test', () => {
     ).toThrow()
     expect(() => pp([false], last())).not.toThrow()
   })
-  it('lastOrDefault', () => {
+  test('lastOrDefault', () => {
     expect(pp(range(0, 3), lastOrDefault())).toBe(2)
     expect(
       pp(
@@ -466,28 +467,28 @@ describe('blinq test', () => {
     ).toBeUndefined()
     expect(() => pp([false], lastOrDefault())).not.toThrow()
   })
-  it('forEach', () => {
+  test('forEach', () => {
     pp(
       range(0, 3),
       forEach((x, i) => expect(x).toBe(i))
     )
   })
-  it('intersect', () => {
+  test('intersect', () => {
     expect([...pp(range(0, 5), intersect(range(3, 10)))]).toEqual([3, 4])
   })
-  it('intersect with comparer', () => {
+  test('intersect with comparer', () => {
     expect([...pp(range(0, 5), intersect(range(3, 10), createSetFactory()))]).toEqual([3, 4])
   })
 
-  it('isSubsetOf', () => {
+  test('isSubsetOf', () => {
     expect(pp(range(0, 2), isSubsetOf([0, 1, 2, 3]))).toEqual(true)
     expect(pp(range(-2, 2), isSubsetOf([0, 1, 2, 3]))).toEqual(false)
   })
-  it('isSupersetOf', () => {
+  test('isSupersetOf', () => {
     expect(pp(range(0, 5), isSupersetOf([0, 1]))).toEqual(true)
     expect(pp(range(0, 5), isSupersetOf([6, 7]))).toEqual(false)
   })
-  it('max', () => {
+  test('max', () => {
     expect(() => pp([], max())).toThrow()
     expect(pp([1], max())).toBe(1)
     expect(pp([5, 4, 3, 2, 1], max())).toBe(5)
@@ -508,7 +509,7 @@ describe('blinq test', () => {
       )
     ).toBe(1)
   })
-  it('min', () => {
+  test('min', () => {
     expect(() => pp([], min())).toThrow()
     expect(pp([1], min())).toBe(1)
     expect(pp([5, 4, 3, 2, 1], min())).toBe(1)
@@ -530,13 +531,13 @@ describe('blinq test', () => {
       )
     ).toBe(5)
   })
-  it('defaultComparer', () => {
+  test('defaultComparer', () => {
     expect(defaultComparer(0, 1)).toBe(-1)
     expect(defaultComparer(1, 0)).toBe(1)
     expect(defaultComparer(0, 0)).toBe(0)
   })
   const identity = getIdentity()
-  it('identity', () => {
+  test('identity', () => {
     const src = repeatGenerate(() => Math.random(), 1000)
     pp(
       src,
@@ -553,25 +554,25 @@ describe('blinq test', () => {
       })
     )
   })
-  it('reverse', () => {
+  test('reverse', () => {
     expect([...pp([5, 4, 3, 2, 1], reverse())]).toEqual([1, 2, 3, 4, 5])
   })
-  it('sequenceEqual', () => {
+  test('sequenceEqual', () => {
     expect(pp(range(0, 3), sequenceEqual([0, 1, 2]))).toBeTruthy()
     expect(pp(range(0, 3), sequenceEqual([0, 1, 4]))).toBeFalsy()
     expect(pp(range(0, 3), sequenceEqual([0, 1]))).toBeFalsy()
     expect(pp(range(0, 2), sequenceEqual([0, 1, 2]))).toBeFalsy()
   })
-  it('sequenceEqual with comparer', () => {
+  test('sequenceEqual with comparer', () => {
     expect(pp(range(0, 3), sequenceEqual([0, 1, 2], deepEqualityComparer.equals))).toBeTruthy()
     expect(pp(range(0, 3), sequenceEqual([0, 1, 4], deepEqualityComparer.equals))).toBeFalsy()
     expect(pp(range(0, 3), sequenceEqual([0, 1], deepEqualityComparer.equals))).toBeFalsy()
     expect(pp(range(0, 2), sequenceEqual([0, 1, 2], deepEqualityComparer.equals))).toBeFalsy()
   })
-  it('toArray', () => {
+  test('toArray', () => {
     expect(pp(range(0, 2), toArray())).toEqual([0, 1])
   })
-  it('toLookup', () => {
+  test('toLookup', () => {
     const lookup = pp(
       range(0, 10),
       toLookup((x) => x % 2)
@@ -580,7 +581,7 @@ describe('blinq test', () => {
     expect([...(lookup.get(0) ?? [])]).toEqual([0, 2, 4, 6, 8])
     expect([...(lookup.get(1) ?? [])]).toEqual([1, 3, 5, 7, 9])
   })
-  it('toLookup with comparer', () => {
+  test('toLookup with comparer', () => {
     const lookup = pp(
       range(0, 10),
       toLookup((x) => x % 2, createMapFactory())
@@ -600,7 +601,7 @@ describe('blinq test', () => {
     expect([...(lookup2.get(0) ?? [])]).toEqual([0, 4, 8, 12, 16])
     expect([...(lookup2.get(1) ?? [])]).toEqual([2, 6, 10, 14, 18])
   })
-  it('toMap', () => {
+  test('toMap', () => {
     const map = pp(
       range(0, 10),
       toMap(
@@ -632,7 +633,7 @@ describe('blinq test', () => {
       )
     ).toThrow()
   })
-  it('toSet', () => {
+  test('toSet', () => {
     const set = pp(
       range(0, 10),
       toSet((x) => x)
@@ -662,7 +663,7 @@ describe('blinq test', () => {
       )
     ).toThrow()
   })
-  it('groupBy', () => {
+  test('groupBy', () => {
     const output = pp(
       range(0, 2),
       groupBy((x) => x % 2),
@@ -682,7 +683,7 @@ describe('blinq test', () => {
       [1, 1],
     ])
   })
-  it('groupJoin', () => {
+  test('groupJoin', () => {
     const seq1 = range(0, 5)
     const seq2 = pp(
       range(3, 5),
@@ -722,7 +723,7 @@ describe('blinq test', () => {
       ),
     ]).toEqual([[], [], [], [3, 3], [4, 4]])
   })
-  it('groupJoin with comparer', () => {
+  test('groupJoin with comparer', () => {
     const seq1 = range(0, 5)
     const seq2 = pp(
       range(3, 5),
@@ -763,7 +764,7 @@ describe('blinq test', () => {
       ),
     ]).toEqual([[], [], [], [3, 3], [4, 4]])
   })
-  it('fullOuterGroupJoin', () => {
+  test('fullOuterGroupJoin', () => {
     const seq1 = pp(
       range(0, 5),
       selectMany((x) => repeat(x, 2))
@@ -807,7 +808,7 @@ describe('blinq test', () => {
       })
     )
   })
-  it('fullOuterJoin', () => {
+  test('fullOuterJoin', () => {
     const seq1 = range(0, 5)
     const seq2 = range(1, 5)
     const j = pp(
@@ -831,7 +832,7 @@ describe('blinq test', () => {
     expect(r2.r === 1 && r2.l === 1).toBeTruthy()
   })
 
-  it('join', () => {
+  test('join', () => {
     let outerSeq: Array<{ id: number; value: string }> = [
       {
         id: 1,
@@ -879,7 +880,7 @@ describe('blinq test', () => {
     // expect([...items]).toEqual(["chris sperry", "chris pike", "andrew johnson"]);
   })
 
-  it('leftOuterJoin', () => {
+  test('leftOuterJoin', () => {
     let outerSeq: Array<{ id: number; value: string }> = [
       {
         id: 1,
@@ -930,7 +931,7 @@ describe('blinq test', () => {
       'not relevant no match',
     ])
   })
-  it('leftOuterJoin with comparer', () => {
+  test('leftOuterJoin with comparer', () => {
     let outerSeq: Array<{ id: number; value: string }> = [
       {
         id: 1,
@@ -984,20 +985,20 @@ describe('blinq test', () => {
     ])
   })
 
-  it('skip', () => {
+  test('skip', () => {
     expect([...pp([1, 2, 3], skip(1))]).toEqual([2, 3])
   })
-  it('take', () => {
+  test('take', () => {
     expect([...pp([1, 2, 3], take(2))]).toEqual([1, 2])
   })
-  it('sum', () => {
+  test('sum', () => {
     expect(pp([1, 2, 3], sum())).toEqual(6)
   })
-  it('union', () => {
+  test('union', () => {
     const u = pp(range(0, 10), union(range(5, 10)))
     expect([...u]).toEqual([...range(0, 15)])
   })
-  it('zip', () => {
+  test('zip', () => {
     expect(
       pp(
         [1, 2],
@@ -1029,7 +1030,7 @@ describe('blinq test', () => {
       [2, 1],
     ])
   })
-  it('maxBy, minBy', () => {
+  test('maxBy, minBy', () => {
     interface Person {
       name: string
       age: number
@@ -1091,13 +1092,13 @@ describe('blinq test', () => {
       ).name
     ).toBe('nicole')
   })
-  it('append', () => {
+  test('append', () => {
     expect(pp([1, 2], append(3), toArray())).toEqual([1, 2, 3])
   })
-  it('prepend', () => {
+  test('prepend', () => {
     expect(pp([1, 2], prepend(3), toArray())).toEqual([3, 1, 2])
   })
-  it('flatten', () => {
+  test('flatten', () => {
     expect(
       pp(
         [1, 2],
@@ -1107,7 +1108,7 @@ describe('blinq test', () => {
       )
     ).toEqual([1, 1, 2, 2])
   })
-  it('zipAll', () => {
+  test('zipAll', () => {
     const b = [
       [1, 2],
       [1, 2, 3],
@@ -1125,7 +1126,7 @@ describe('blinq test', () => {
       [2, 2],
     ])
   })
-  it('groupAdjacent', () => {
+  test('groupAdjacent', () => {
     expect(
       pp(
         [1, 1, 2, 2, 2, 3, 3, 3, 3, 2, 2],
@@ -1143,7 +1144,7 @@ describe('blinq test', () => {
       [2, 2],
     ])
   })
-  it('groupAdjacent with comparer', () => {
+  test('groupAdjacent with comparer', () => {
     expect(
       pp(
         [1, 1, 2, 2, 2, 3, 3, 3, 3, 2, 2],
@@ -1162,7 +1163,7 @@ describe('blinq test', () => {
       [2, 2],
     ])
   })
-  it('skipWhile', () => {
+  test('skipWhile', () => {
     expect(
       pp(
         [1, 2, 3, 4, 1, 5],
@@ -1171,7 +1172,7 @@ describe('blinq test', () => {
       )
     ).toEqual([3, 4, 1, 5])
   })
-  it('orderBy impure selector', () => {
+  test('orderBy impure selector', () => {
     const _range = range(0, 1000)
     const randomOrder = pp(
       _range,
@@ -1185,7 +1186,7 @@ describe('blinq test', () => {
     )
     expect(pp(reordered, sequenceEqual(_range))).toBeTruthy()
   })
-  it('cartesian', () => {
+  test('cartesian', () => {
     const data: Iterable<Iterable<string>> = [
       ['red', 'blue'],
       ['candy', 'car'],
@@ -1200,10 +1201,10 @@ describe('blinq test', () => {
     expect(pp(cart, isSubsetOf(result, createSetFactory()))).toBeTruthy()
     expect(pp(cart, isSupersetOf(result, createSetFactory()))).toBeTruthy()
   })
-  it('iterable toJSON', () => {
+  test('iterable toJSON', () => {
     expect(JSON.stringify(_select([1, 2, 3], identity))).toBe(JSON.stringify([1, 2, 3]))
   })
-  it('headTail', () => {
+  test('headTail', () => {
     const h = headTail(range(0, 10))
     const [head, tail] = h
     expect(head).toBe(0)
@@ -1215,12 +1216,29 @@ describe('blinq test', () => {
     expect(h1).toBe(0)
     expect([...t1]).toEqual([1, 2])
   })
-  it('impure iterable', () => {
+  test('impure iterable', () => {
     const iterable = getImpureIterable()
     expect([...iterable]).toEqual([0, 1, 2])
     expect([...iterable]).toEqual([1, 2, 3])
     expect(_first(iterable)).toBe(2)
     expect(_first(iterable)).toBe(3)
+  })
+  test('zipAllToTuple', () => {
+    const len = 50
+    const list1 = range(0, len + 100)
+    const list2 = pp(
+      range(0, len - 1),
+      map((x) => `number ${x}`)
+    )
+    const zipped = pp([list1, list2] as const, zipAllToTuple())
+
+    expect([...zipped]).toEqual(
+      pp(
+        range(0, len - 1),
+        map((i) => [i, `number ${i}`] as const),
+        toArray()
+      )
+    )
   })
 })
 function getImpureIterable() {
