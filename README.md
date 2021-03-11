@@ -2,34 +2,46 @@
 
 A collection of type-safe functions for operating over iterable sequences, with specialized versions that generate unary functions for use in pipes. Will feel immediately familiar for users of MS LINQ-to-objects.
 
-[![npm version](https://img.shields.io/npm/v/ts-iterable-functions.svg?style=flat)](https://npmjs.org/package/ts-iterable-functions "View this project on npm")
+[![npm version](https://img.shields.io/npm/v/ts-iterable-functions.svg?style=flat)](https://npmjs.org/package/ts-iterable-functions 'View this project on npm')
 [![Build Status](https://travis-ci.org/biggyspender/ts-iterable-functions.svg?branch=master)](https://travis-ci.org/biggyspender/ts-iterable-functions)
 
 ## Usage
 
+First, import `pipeInto` from [`ts-functional-pipe`](https://www.npmjs.com/package/ts-functional-pipe):
+
+```typescript
+import { pipeInto as pp } from 'ts-functional-pipe'
+```
+
 Let's make a collection of cars
 
 ```typescript
-const cars = [{
-    manufacturer:"Ford",
-    model:"Escort"
-  },{
-    manufacturer:"Ford",
-    model:"Cortina"
-  },{
-    manufacturer:"Renault",
-    model:"Clio"
-  },{
-    manufacturer:"Vauxhall",
-    model:"Corsa"
-  },{
-    manufacturer:"Ford",
-    model:"Fiesta"
-  },{
-    manufacturer:"Fiat",
-    model:"500"
-  }
-];
+const cars = [
+  {
+    manufacturer: 'Ford',
+    model: 'Escort',
+  },
+  {
+    manufacturer: 'Ford',
+    model: 'Cortina',
+  },
+  {
+    manufacturer: 'Renault',
+    model: 'Clio',
+  },
+  {
+    manufacturer: 'Vauxhall',
+    model: 'Corsa',
+  },
+  {
+    manufacturer: 'Ford',
+    model: 'Fiesta',
+  },
+  {
+    manufacturer: 'Fiat',
+    model: '500',
+  },
+]
 ```
 
 ...and sort them by manufacturer, and then by model:
@@ -37,10 +49,10 @@ const cars = [{
 ```typescript
 const orderedCars = pp(
   cars,
-  orderBy(c => c.manufacturer),
-  thenBy(c => c.model),
+  orderBy((c) => c.manufacturer),
+  thenBy((c) => c.model),
   toArray()
-);
+)
 ```
 
 Or we could count the number of cars for each manufacturer:
@@ -48,19 +60,21 @@ Or we could count the number of cars for each manufacturer:
 ```typescript
 const carsPerManufacturer = pp(
   cars,
-  groupBy(c => c.manufacturer),
-  map(g => ({
+  groupBy((c) => c.manufacturer),
+  map((g) => ({
     count: _count(g),
-    manufacturer: g.key
+    manufacturer: g.key,
   })),
-  orderByDescending(c => c.count),
-  thenBy(c => c.manufacturer)
-);
-for(var c of carsPerManufacturer){
-  console.log(`${c.manufacturer} : ${c.count}`);
+  orderByDescending((c) => c.count),
+  thenBy((c) => c.manufacturer)
+)
+for (var c of carsPerManufacturer) {
+  console.log(`${c.manufacturer} : ${c.count}`)
 }
 ```
+
 to give
+
 ```
 Ford : 3
 Fiat : 1
@@ -85,12 +99,12 @@ const src = [1, 2, 3]
 We can use the `_map` function to transform this as follows:
 
 ```typescript
-const times2 = _map(src, x => x + x)
+const times2 = _map(src, (x) => x + x)
 ```
 
 ### Two forms of the same function
 
-All of the functions that transform iterables in this library exist in two forms. 
+All of the functions that transform iterables in this library exist in two forms.
 
 The first form is the one we used above and looks like this:
 
@@ -102,7 +116,10 @@ and by convention is prefixed with an `_underscore`. While handy in their own wa
 
 ```typescript
 //this looks awful
-const times2squared = _map(_map(src, x => x + x), x => x * x)
+const times2squared = _map(
+  _map(src, (x) => x + x),
+  (x) => x * x
+)
 ```
 
 ### The pipeable function
@@ -113,7 +130,7 @@ If, instead, we had functions that look like this
 function someOperator<T, A, B, R>(a: A, b: B): (src: T) => R
 ```
 
-where the function returns a ***unary*** function of the form `(src: T) => R`, we can use them in pipes (where the output of one function is fed in to the input of the next function).
+where the function returns a **_unary_** function of the form `(src: T) => R`, we can use them in pipes (where the output of one function is fed in to the input of the next function).
 
 In fact, we can transform `_someOperator` into `someOperator` (preserving all type information) with the [`deferP0`](https://github.com/biggyspender/ts-functional-pipe/blob/master/src/deferP0.ts) function (from [ts-functional-pipe](https://github.com/biggyspender/ts-functional-pipe)):
 
@@ -129,18 +146,18 @@ All functions that transform `Iterable<T>` in the library exist in the two forms
 
 ## Usage with pipes
 
-This library re-exports the `pp/pipeInto, pipeValue, compose & typedCompose` functions from [ts-functional-pipe](https://github.com/biggyspender/ts-functional-pipe), and there is good information about how these work in the [`README`](https://github.com/biggyspender/ts-functional-pipe/blob/master/README.md) over there.
+The functions in this library are designed to be composed. Package [`ts-functional-pipe`](https://github.com/biggyspender/ts-functional-pipe) offers excellent type-inference for this purpose. There is good information about to use the `pipe`/`pipeInto`/`compose` functions it contains in the [`README`](https://github.com/biggyspender/ts-functional-pipe/blob/master/README.md) over there.
 
 ### Making `times2squared` readable
 
-Let's use `pp` to pipe our iterable into a chain of unary functions, generated (in this case) using the `map` function discussed above:
+Let's use `pipeInto` (imported above as `pp`) to pipe our iterable into a chain of unary functions, generated (in this case) using the `map` function discussed above:
 
 ```typescript
 const src = [1, 2, 3]
 const times2squared = pp(
-    src,
-    map(x => x + x),
-    map(x => x * x)
+  src,
+  map((x) => x + x),
+  map((x) => x * x)
 )
 ```
 
@@ -151,10 +168,10 @@ Due to some funky type-definitions in [ts-functional-pipe](https://github.com/bi
 ```typescript
 const src = [1, 2, 3]
 const toStringRepeated = pp(
-    src,
-    map(x => x.toString()), // here x is number
-    map(s => s + s)         // here s is string
-)                           // returns a string
+  src,
+  map((x) => x.toString()), // here x is number
+  map((s) => s + s) // here s is string
+) // returns a string
 ```
 
 and all types are correctly inferred.
@@ -163,15 +180,11 @@ More coming soon.
 
 ## Generators
 
-
 `range`, `repeat`, `repeatGenerate`
-
 
 ## Transformers
 
-
-`aggregate`, `all`/`every`, `append`, `average`, `concat`, `count`, `defaultIfEmpty`, `distinctBy`, `distinct`, `elementAt`, `except`, `firstOrDefault`, `first`, `flatten`, `forEach`, `fullOuterGroupJoin`, `fullOuterJoin`, `groupAdjacent`, `groupBy`, `groupJoin`, `intersect`, `isSubsetOf`, `isSupersetOf`, `join`, `lastOrDefault`, `last`, `leftOuterJoin`, `maxBy`, `max`, `minBy`, `min`, `orderByDescending`, `orderBy`, `preprend`, `reduce`, `reduceRight`, `reverse`, `selectMany`/`flapMap`, `select`/`map`, `sequenceEqual`, `singleOrDefault`, `single`, `skip`, `skipWhile`, `some`, `sum`, `take`, `takeWhile`, `thenByDescending`, `thenBy`, `toArray`, `toLookup`, `toMap`, `toSet`, `union`, `where`/`filter`, `zipAll`, `zip`
-
+`aggregate`, `all`/`every`, `append`, `average`, `concat`, `count`, `defaultIfEmpty`, `distinctBy`, `distinct`, `elementAt`, `except`, `firstOrDefault`, `first`, `flatten`, `forEach`, `fullOuterGroupJoin`, `fullOuterJoin`, `groupAdjacent`, `groupBy`, `groupJoin`, `intersect`, `isSubsetOf`, `isSupersetOf`, `join`, `lastOrDefault`, `last`, `leftOuterJoin`, `maxBy`, `max`, `minBy`, `min`, `orderByDescending`, `orderBy`, `preprend`, `reduce`, `reduceRight`, `reverse`, `selectMany`/`flapMap`, `select`/`map`, `sequenceEqual`, `singleOrDefault`, `single`, `skip`, `skipWhile`, `some`, `sum`, `take`, `takeWhile`, `thenByDescending`, `thenBy`, `toArray`, `toLookup`, `toMap`, `toSet`, `union`, `where`/`filter`, `zipAll`, `zip`, `zipMap`
 
 ### acknowledgements
 
