@@ -1,7 +1,7 @@
 import getIdentity from './helpers/getIdentity'
 import { IndexedSelector } from '../types/IndexedSelector'
 import { _fullOuterGroupJoin, fullOuterGroupJoin } from './fullOuterGroupJoin'
-import { deferP0, pp } from 'ts-functional-pipe'
+import { deferP0, pipeInto as pp } from 'ts-functional-pipe'
 import { defaultIfEmpty } from './defaultIfEmpty'
 import { map } from './map'
 import { flatMap } from './flatMap'

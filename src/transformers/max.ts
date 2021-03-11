@@ -4,7 +4,7 @@ import { IndexedSelector } from '../types/IndexedSelector'
 import { minMaxByImpl } from './helpers/minMaxByImpl'
 import { _map, map } from './map'
 import { _firstOrDefault, firstOrDefault } from './firstOrDefault'
-import { pp, deferP0 } from 'ts-functional-pipe'
+import { pipeInto as pp, deferP0 } from 'ts-functional-pipe'
 
 const identity = getIdentity()
 

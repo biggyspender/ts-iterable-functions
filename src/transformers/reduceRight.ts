@@ -1,5 +1,4 @@
-import { aggregate } from './aggregate'
-import { deferP0, pp } from 'ts-functional-pipe'
+import { pipeInto as pp } from 'ts-functional-pipe'
 import { reverse } from './reverse'
 import { reduce } from './reduce'
 export function _reduceRight<T, TOut>(

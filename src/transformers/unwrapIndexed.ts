@@ -1,4 +1,4 @@
-import { deferP0, pp } from 'ts-functional-pipe'
+import { deferP0, pipeInto as pp } from 'ts-functional-pipe'
 import { orderBy } from './orderBy'
 import { map } from './map'
 import { Indexed } from '../types/Indexed'

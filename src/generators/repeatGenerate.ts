@@ -1,4 +1,4 @@
-import { pp } from 'ts-functional-pipe'
+import { pipeInto as pp } from 'ts-functional-pipe'
 import { map } from '../transformers/map'
 import { range } from './range'
 export function repeatGenerate<T>(generator: (i: number) => T, numRepeats: number): Iterable<T> {

@@ -1,6 +1,6 @@
 import { ThenComparerBuilder } from 'ts-comparer-builder/dist/types/ComparerBuilder'
 import { _map, map } from '../map'
-import { pp } from 'ts-functional-pipe'
+import { pipeInto as pp } from 'ts-functional-pipe'
 import { _indexed } from '../indexed'
 
 export default class OrderedIterable<T> implements Iterable<T> {

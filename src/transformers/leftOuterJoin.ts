@@ -1,6 +1,6 @@
 import { IndexedSelector } from '../types/IndexedSelector'
 import { _groupJoin, groupJoin } from './groupJoin'
-import { pp, deferP0 } from 'ts-functional-pipe'
+import { pipeInto as pp, deferP0 } from 'ts-functional-pipe'
 import { flatMap } from './flatMap'
 import { defaultIfEmpty } from './defaultIfEmpty'
 import { map } from './map'

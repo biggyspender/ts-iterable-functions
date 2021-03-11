@@ -1,6 +1,6 @@
 import { IndexedSelector } from '../types/IndexedSelector'
 import { _toLookup } from './toLookup'
-import { deferP0, pp } from 'ts-functional-pipe'
+import { deferP0, pipeInto as pp } from 'ts-functional-pipe'
 import { map, _map } from './map'
 import { distinct } from './distinct'
 import { concat } from './concat'

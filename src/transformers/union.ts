@@ -1,4 +1,4 @@
-import { pp, deferP0 } from 'ts-functional-pipe'
+import { pipeInto as pp, deferP0 } from 'ts-functional-pipe'
 import { concat } from './concat'
 import { distinct } from './distinct'
 import { SetFactory } from '../types/SetFactory'
