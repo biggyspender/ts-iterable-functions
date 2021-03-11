@@ -69,6 +69,7 @@ import {
   toIterable,
   _first,
   _zipAllToTuple,
+  zipMap,
 } from '../src/ts-iterable-functions'
 import { Date } from './Date'
 import { deepEqualityComparer } from 'ts-equality-comparer'
@@ -1239,6 +1240,17 @@ describe('ts-iterable-functions test', () => {
         toArray()
       )
     )
+  })
+  test('zipMap', () => {
+    const seq1 = [1, 2, 3]
+    const seq2 = ['a', 'b', 'c', 'd']
+    const seq3 = [9, 8, 7]
+    const seqs: [Iterable<number>, Iterable<string>, Iterable<number>] = [seq1, seq2, seq3]
+    const zipMapped = pp(
+      seqs,
+      zipMap((num1, str, num2) => `${num1}${str}${num2}`)
+    )
+    expect([...zipMapped]).toEqual(['1a9', '2b8', '3c7'])
   })
 })
 function getImpureIterable() {

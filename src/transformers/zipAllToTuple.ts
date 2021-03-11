@@ -1,22 +1,25 @@
 import { deferP0 } from 'ts-functional-pipe'
+import { toIterable } from '../helpers/toIterable'
 
-export function* _zipAllToTuple<T extends readonly any[]>(src: Iterablified<T>): Iterable<T> {
-  const iterators = (src.map((iterable) =>
-    iterable[Symbol.iterator]()
-  ) as unknown) as Iteratorfied<T>
-  for (;;) {
-    const itRes = (iterators.map((it) => it.next()) as unknown) as IteratorResultified<T>
-    if (itRes.some((r) => r.done)) {
-      break
+export function _zipAllToTuple<T extends readonly any[]>(src: Iterablified<T>): Iterable<T> {
+  return toIterable(function* () {
+    const iterators = (src.map((iterable) =>
+      iterable[Symbol.iterator]()
+    ) as unknown) as Iteratorfied<T>
+    for (;;) {
+      const itRes = (iterators.map((it) => it.next()) as unknown) as IteratorResultified<T>
+      if (itRes.some((r) => r.done)) {
+        break
+      }
+      const v = (itRes.map((r) => r.value) as unknown) as T
+      yield v
     }
-    const v = (itRes.map((r) => r.value) as unknown) as T
-    yield v
-  }
+  })
 }
 
 export const zipAllToTuple = deferP0(_zipAllToTuple)
 
-type Iterablified<T extends readonly any[]> = {
+export type Iterablified<T extends readonly any[]> = {
   [P in keyof T]: Iterable<T[P]>
 }
 type Iteratorfied<T extends readonly any[]> = {
