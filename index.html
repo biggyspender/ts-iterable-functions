@@ -1,0 +1,684 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>ts-iterable-functions</title>
+	<meta name="description" content="Documentation for ts-iterable-functions">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">ts-iterable-functions</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>ts-iterable-functions</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#ts-iterable-functions" id="ts-iterable-functions" style="color: inherit; text-decoration: none;">
+					<h1>ts-iterable-functions</h1>
+				</a>
+				<p>A collection of type-safe functions for operating over iterable sequences, with specialized versions that generate unary functions for use in pipes. Will feel immediately familiar for users of MS LINQ-to-objects.</p>
+				<p><a href="https://npmjs.org/package/ts-iterable-functions" title="View this project on npm"><img src="https://img.shields.io/npm/v/ts-iterable-functions.svg?style=flat" alt="npm version"></a>
+				<a href="https://travis-ci.org/biggyspender/ts-iterable-functions"><img src="https://travis-ci.org/biggyspender/ts-iterable-functions.svg?branch=master" alt="Build Status"></a></p>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<p>First, import <code>pipeInto</code> from <a href="https://www.npmjs.com/package/ts-functional-pipe"><code>ts-functional-pipe</code></a>:</p>
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">pipeInto</span><span style="color: #000000"> </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #001080">pp</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;ts-functional-pipe&#039;</span>
+</code></pre>
+				<p>Let&#39;s make a collection of cars</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">cars</span><span style="color: #000000"> = [</span>
+<span style="color: #000000">  {</span>
+<span style="color: #000000">    </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Ford&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">model:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Escort&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  },</span>
+<span style="color: #000000">  {</span>
+<span style="color: #000000">    </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Ford&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">model:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Cortina&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  },</span>
+<span style="color: #000000">  {</span>
+<span style="color: #000000">    </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Renault&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">model:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Clio&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  },</span>
+<span style="color: #000000">  {</span>
+<span style="color: #000000">    </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Vauxhall&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">model:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Corsa&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  },</span>
+<span style="color: #000000">  {</span>
+<span style="color: #000000">    </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Ford&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">model:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Fiesta&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  },</span>
+<span style="color: #000000">  {</span>
+<span style="color: #000000">    </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Fiat&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">model:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;500&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  },</span>
+<span style="color: #000000">]</span>
+</code></pre>
+				<p>...and sort them by manufacturer, and then by model:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">orderedCars</span><span style="color: #000000"> = </span><span style="color: #795E26">pp</span><span style="color: #000000">(</span>
+<span style="color: #000000">  </span><span style="color: #001080">cars</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #795E26">orderBy</span><span style="color: #000000">((</span><span style="color: #001080">c</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000">.</span><span style="color: #001080">manufacturer</span><span style="color: #000000">),</span>
+<span style="color: #000000">  </span><span style="color: #795E26">thenBy</span><span style="color: #000000">((</span><span style="color: #001080">c</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000">.</span><span style="color: #001080">model</span><span style="color: #000000">),</span>
+<span style="color: #000000">  </span><span style="color: #795E26">toArray</span><span style="color: #000000">()</span>
+<span style="color: #000000">)</span>
+</code></pre>
+				<p>Or we could count the number of cars for each manufacturer:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">carsPerManufacturer</span><span style="color: #000000"> = </span><span style="color: #795E26">pp</span><span style="color: #000000">(</span>
+<span style="color: #000000">  </span><span style="color: #001080">cars</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #795E26">groupBy</span><span style="color: #000000">((</span><span style="color: #001080">c</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000">.</span><span style="color: #001080">manufacturer</span><span style="color: #000000">),</span>
+<span style="color: #000000">  </span><span style="color: #795E26">map</span><span style="color: #000000">((</span><span style="color: #001080">g</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> ({</span>
+<span style="color: #000000">    </span><span style="color: #001080">count:</span><span style="color: #000000"> </span><span style="color: #795E26">_count</span><span style="color: #000000">(</span><span style="color: #001080">g</span><span style="color: #000000">),</span>
+<span style="color: #000000">    </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #001080">g</span><span style="color: #000000">.</span><span style="color: #001080">key</span><span style="color: #000000">,</span>
+<span style="color: #000000">  })),</span>
+<span style="color: #000000">  </span><span style="color: #795E26">orderByDescending</span><span style="color: #000000">((</span><span style="color: #001080">c</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000">.</span><span style="color: #001080">count</span><span style="color: #000000">),</span>
+<span style="color: #000000">  </span><span style="color: #795E26">thenBy</span><span style="color: #000000">((</span><span style="color: #001080">c</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000">.</span><span style="color: #001080">manufacturer</span><span style="color: #000000">)</span>
+<span style="color: #000000">)</span>
+<span style="color: #AF00DB">for</span><span style="color: #000000"> (</span><span style="color: #0000FF">var</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000"> </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">carsPerManufacturer</span><span style="color: #000000">) {</span>
+<span style="color: #000000">  </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">`</span><span style="color: #0000FF">${</span><span style="color: #001080">c</span><span style="color: #000000FF">.</span><span style="color: #001080">manufacturer</span><span style="color: #0000FF">}</span><span style="color: #A31515"> : </span><span style="color: #0000FF">${</span><span style="color: #001080">c</span><span style="color: #000000FF">.</span><span style="color: #001080">count</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span><span style="color: #000000">)</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>to give</p>
+				<pre><code><span style="color: #000000">Ford : </span><span style="color: #098658">3</span>
+<span style="color: #000000">Fiat : </span><span style="color: #098658">1</span>
+<span style="color: #000000">Renault : </span><span style="color: #098658">1</span>
+<span style="color: #000000">Vauxhall : </span><span style="color: #098658">1</span>
+</code></pre>
+				<a href="#functions-for-iterable-sequences" id="functions-for-iterable-sequences" style="color: inherit; text-decoration: none;">
+					<h2>Functions for iterable sequences</h2>
+				</a>
+				<p>Almost every function in this collection is designed to work over <code>Iterable&lt;T&gt;</code>.</p>
+				<a href="#an-example" id="an-example" style="color: inherit; text-decoration: none;">
+					<h3>An example</h3>
+				</a>
+				<p>Let&#39;s start with <code>map</code> (which is also aliased to <code>select</code>) to see how it works.</p>
+				<p>Here&#39;s an <code>Iterable&lt;number&gt;</code></p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">src</span><span style="color: #000000"> = [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">3</span><span style="color: #000000">]</span>
+</code></pre>
+				<p>We can use the <code>_map</code> function to transform this as follows:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">times2</span><span style="color: #000000"> = </span><span style="color: #795E26">_map</span><span style="color: #000000">(</span><span style="color: #001080">src</span><span style="color: #000000">, (</span><span style="color: #001080">x</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">x</span><span style="color: #000000"> + </span><span style="color: #001080">x</span><span style="color: #000000">)</span>
+</code></pre>
+				<a href="#two-forms-of-the-same-function" id="two-forms-of-the-same-function" style="color: inherit; text-decoration: none;">
+					<h3>Two forms of the same function</h3>
+				</a>
+				<p>All of the functions that transform iterables in this library exist in two forms.</p>
+				<p>The first form is the one we used above and looks like this:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">function</span><span style="color: #000000"> </span><span style="color: #795E26">_someOperator</span><span style="color: #000000">&lt;</span><span style="color: #267F99">T</span><span style="color: #000000">, </span><span style="color: #267F99">A</span><span style="color: #000000">, </span><span style="color: #267F99">B</span><span style="color: #000000">, </span><span style="color: #267F99">R</span><span style="color: #000000">&gt;(</span><span style="color: #001080">src</span><span style="color: #000000">: </span><span style="color: #267F99">T</span><span style="color: #000000">, </span><span style="color: #001080">a</span><span style="color: #000000">: </span><span style="color: #267F99">A</span><span style="color: #000000">, </span><span style="color: #001080">b</span><span style="color: #000000">: </span><span style="color: #267F99">B</span><span style="color: #000000">): </span><span style="color: #267F99">R</span>
+</code></pre>
+				<p>and by convention is prefixed with an <code>_underscore</code>. While handy in their own way, composing these functions is ugly.</p>
+				<pre><code class="language-typescript"><span style="color: #008000">//this looks awful</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">times2squared</span><span style="color: #000000"> = </span><span style="color: #795E26">_map</span><span style="color: #000000">(</span>
+<span style="color: #000000">  </span><span style="color: #795E26">_map</span><span style="color: #000000">(</span><span style="color: #001080">src</span><span style="color: #000000">, (</span><span style="color: #001080">x</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">x</span><span style="color: #000000"> + </span><span style="color: #001080">x</span><span style="color: #000000">),</span>
+<span style="color: #000000">  (</span><span style="color: #001080">x</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">x</span><span style="color: #000000"> * </span><span style="color: #001080">x</span>
+<span style="color: #000000">)</span>
+</code></pre>
+				<a href="#the-pipeable-function" id="the-pipeable-function" style="color: inherit; text-decoration: none;">
+					<h3>The pipeable function</h3>
+				</a>
+				<p>If, instead, we had functions that look like this</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">function</span><span style="color: #000000"> </span><span style="color: #795E26">someOperator</span><span style="color: #000000">&lt;</span><span style="color: #267F99">T</span><span style="color: #000000">, </span><span style="color: #267F99">A</span><span style="color: #000000">, </span><span style="color: #267F99">B</span><span style="color: #000000">, </span><span style="color: #267F99">R</span><span style="color: #000000">&gt;(</span><span style="color: #001080">a</span><span style="color: #000000">: </span><span style="color: #267F99">A</span><span style="color: #000000">, </span><span style="color: #001080">b</span><span style="color: #000000">: </span><span style="color: #267F99">B</span><span style="color: #000000">): (</span><span style="color: #001080">src</span><span style="color: #000000">: </span><span style="color: #267F99">T</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #267F99">R</span>
+</code></pre>
+				<p>where the function returns a <strong><em>unary</em></strong> function of the form <code>(src: T) =&gt; R</code>, we can use them in pipes (where the output of one function is fed in to the input of the next function).</p>
+				<p>In fact, we can transform <code>_someOperator</code> into <code>someOperator</code> (preserving all type information) with the <a href="https://github.com/biggyspender/ts-functional-pipe/blob/master/src/deferP0.ts"><code>deferP0</code></a> function (from <a href="https://github.com/biggyspender/ts-functional-pipe">ts-functional-pipe</a>):</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">deferP0</span><span style="color: #000000"> = &lt;</span><span style="color: #267F99">P0</span><span style="color: #000000">, </span><span style="color: #267F99">A</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">any</span><span style="color: #000000">[], </span><span style="color: #267F99">R</span><span style="color: #000000">&gt;(</span><span style="color: #795E26">fn</span><span style="color: #000000">: (</span><span style="color: #001080">src</span><span style="color: #000000">: </span><span style="color: #267F99">P0</span><span style="color: #000000">, ...</span><span style="color: #001080">args</span><span style="color: #000000">: </span><span style="color: #267F99">A</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #267F99">R</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> (...</span><span style="color: #001080">args</span><span style="color: #000000">: </span><span style="color: #267F99">A</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> (</span>
+<span style="color: #000000">  </span><span style="color: #001080">src</span><span style="color: #000000">: </span><span style="color: #267F99">P0</span>
+<span style="color: #000000">): </span><span style="color: #267F99">R</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #795E26">fn</span><span style="color: #000000">(</span><span style="color: #001080">src</span><span style="color: #000000">, ...</span><span style="color: #001080">args</span><span style="color: #000000">)</span>
+</code></pre>
+				<p>so, we could take the <code>_map</code> function above and transform it into the pipeable form with a simple call to <code>deferP0(_map)</code>.</p>
+				<p>All functions that transform <code>Iterable&lt;T&gt;</code> in the library exist in the two forms. So, for instance the map function exists as <code>_map</code> and <code>map</code>. Moving forward, we&#39;ll be avoiding the <code>_underscored</code> functions.</p>
+				<a href="#usage-with-pipes" id="usage-with-pipes" style="color: inherit; text-decoration: none;">
+					<h2>Usage with pipes</h2>
+				</a>
+				<p>The functions in this library are designed to be composed. Package <a href="https://github.com/biggyspender/ts-functional-pipe"><code>ts-functional-pipe</code></a> offers excellent type-inference for this purpose. There is good information about to use the <code>pipe</code>/<code>pipeInto</code>/<code>compose</code> functions it contains in the <a href="https://github.com/biggyspender/ts-functional-pipe/blob/master/README.md"><code>README</code></a> over there.</p>
+				<a href="#making-times2squared-readable" id="making-times2squared-readable" style="color: inherit; text-decoration: none;">
+					<h3>Making <code>times2squared</code> readable</h3>
+				</a>
+				<p>Let&#39;s use <code>pipeInto</code> (imported above as <code>pp</code>) to pipe our iterable into a chain of unary functions, generated (in this case) using the <code>map</code> function discussed above:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">src</span><span style="color: #000000"> = [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">3</span><span style="color: #000000">]</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">times2squared</span><span style="color: #000000"> = </span><span style="color: #795E26">pp</span><span style="color: #000000">(</span>
+<span style="color: #000000">  </span><span style="color: #001080">src</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #795E26">map</span><span style="color: #000000">((</span><span style="color: #001080">x</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">x</span><span style="color: #000000"> + </span><span style="color: #001080">x</span><span style="color: #000000">),</span>
+<span style="color: #000000">  </span><span style="color: #795E26">map</span><span style="color: #000000">((</span><span style="color: #001080">x</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">x</span><span style="color: #000000"> * </span><span style="color: #001080">x</span><span style="color: #000000">)</span>
+<span style="color: #000000">)</span>
+</code></pre>
+				<a href="#types-in-the-pipe-are-preserved" id="types-in-the-pipe-are-preserved" style="color: inherit; text-decoration: none;">
+					<h2>Types in the pipe are preserved</h2>
+				</a>
+				<p>Due to some funky type-definitions in <a href="https://github.com/biggyspender/ts-functional-pipe">ts-functional-pipe</a>, types flow through the pipe nicely:</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">src</span><span style="color: #000000"> = [</span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #098658">3</span><span style="color: #000000">]</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">toStringRepeated</span><span style="color: #000000"> = </span><span style="color: #795E26">pp</span><span style="color: #000000">(</span>
+<span style="color: #000000">  </span><span style="color: #001080">src</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #795E26">map</span><span style="color: #000000">((</span><span style="color: #001080">x</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">x</span><span style="color: #000000">.</span><span style="color: #795E26">toString</span><span style="color: #000000">()), </span><span style="color: #008000">// here x is number</span>
+<span style="color: #000000">  </span><span style="color: #795E26">map</span><span style="color: #000000">((</span><span style="color: #001080">s</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">s</span><span style="color: #000000"> + </span><span style="color: #001080">s</span><span style="color: #000000">) </span><span style="color: #008000">// here s is string</span>
+<span style="color: #000000">) </span><span style="color: #008000">// returns a string</span>
+</code></pre>
+				<p>and all types are correctly inferred.</p>
+				<p>More coming soon.</p>
+				<a href="#generators" id="generators" style="color: inherit; text-decoration: none;">
+					<h2>Generators</h2>
+				</a>
+				<p><code>range</code>, <code>repeat</code>, <code>repeatGenerate</code></p>
+				<a href="#transformers" id="transformers" style="color: inherit; text-decoration: none;">
+					<h2>Transformers</h2>
+				</a>
+				<p><code>aggregate</code>, <code>all</code>/<code>every</code>, <code>append</code>, <code>average</code>, <code>concat</code>, <code>count</code>, <code>defaultIfEmpty</code>, <code>distinctBy</code>, <code>distinct</code>, <code>elementAt</code>, <code>except</code>, <code>firstOrDefault</code>, <code>first</code>, <code>flatten</code>, <code>forEach</code>, <code>fullOuterGroupJoin</code>, <code>fullOuterJoin</code>, <code>groupAdjacent</code>, <code>groupBy</code>, <code>groupJoin</code>, <code>intersect</code>, <code>isSubsetOf</code>, <code>isSupersetOf</code>, <code>join</code>, <code>lastOrDefault</code>, <code>last</code>, <code>leftOuterJoin</code>, <code>maxBy</code>, <code>max</code>, <code>minBy</code>, <code>min</code>, <code>orderByDescending</code>, <code>orderBy</code>, <code>preprend</code>, <code>reduce</code>, <code>reduceRight</code>, <code>reverse</code>, <code>selectMany</code>/<code>flapMap</code>, <code>select</code>/<code>map</code>, <code>sequenceEqual</code>, <code>singleOrDefault</code>, <code>single</code>, <code>skip</code>, <code>skipWhile</code>, <code>some</code>, <code>sum</code>, <code>take</code>, <code>takeWhile</code>, <code>thenByDescending</code>, <code>thenBy</code>, <code>toArray</code>, <code>toLookup</code>, <code>toMap</code>, <code>toSet</code>, <code>union</code>, <code>where</code>/<code>filter</code>, <code>zipAll</code>, <code>zip</code>, <code>zipMap</code></p>
+				<a href="#acknowledgements" id="acknowledgements" style="color: inherit; text-decoration: none;">
+					<h3>acknowledgements</h3>
+				</a>
+				<p>Created using the wonderful <a href="https://github.com/alexjoverm/typescript-library-starter">https://github.com/alexjoverm/typescript-library-starter</a>.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/groupediterable.html" class="tsd-kind-icon">Grouped<wbr>Iterable</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#indexed" class="tsd-kind-icon">Indexed</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#indexedpredicate" class="tsd-kind-icon">Indexed<wbr>Predicate</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#indexedselector" class="tsd-kind-icon">Indexed<wbr>Selector</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#mapfactory" class="tsd-kind-icon">Map<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#setfactory" class="tsd-kind-icon">Set<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_aggregate" class="tsd-kind-icon">_aggregate</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_all" class="tsd-kind-icon">_all</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_append" class="tsd-kind-icon">_append</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#_average" class="tsd-kind-icon">_average</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_concat" class="tsd-kind-icon">_concat</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_count" class="tsd-kind-icon">_count</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_defaultifempty" class="tsd-kind-icon">_default<wbr>IfEmpty</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_distinct" class="tsd-kind-icon">_distinct</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_distinctby" class="tsd-kind-icon">_distinct<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_elementat" class="tsd-kind-icon">_element<wbr>At</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_every" class="tsd-kind-icon">_every</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_except" class="tsd-kind-icon">_except</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_filter" class="tsd-kind-icon">_filter</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_first" class="tsd-kind-icon">_first</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_firstordefault" class="tsd-kind-icon">_first<wbr>OrDefault</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_flatmap" class="tsd-kind-icon">_flat<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_flatten" class="tsd-kind-icon">_flatten</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_foreach" class="tsd-kind-icon">_for<wbr>Each</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_fulloutergroupjoin" class="tsd-kind-icon">_full<wbr>Outer<wbr>Group<wbr>Join</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_fullouterjoin" class="tsd-kind-icon">_full<wbr>Outer<wbr>Join</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_groupadjacent" class="tsd-kind-icon">_group<wbr>Adjacent</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_groupby" class="tsd-kind-icon">_group<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_groupjoin" class="tsd-kind-icon">_group<wbr>Join</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_indexed" class="tsd-kind-icon">_indexed</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_intersect" class="tsd-kind-icon">_intersect</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_issubsetof" class="tsd-kind-icon">_is<wbr>Subset<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_issupersetof" class="tsd-kind-icon">_is<wbr>Superset<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_join" class="tsd-kind-icon">_join</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_last" class="tsd-kind-icon">_last</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_lastordefault" class="tsd-kind-icon">_last<wbr>OrDefault</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_leftouterjoin" class="tsd-kind-icon">_left<wbr>Outer<wbr>Join</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_map" class="tsd-kind-icon">_map</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_max" class="tsd-kind-icon">_max</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_maxby" class="tsd-kind-icon">_max<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_min" class="tsd-kind-icon">_min</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_minby" class="tsd-kind-icon">_min<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_orderby" class="tsd-kind-icon">_order<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_orderbydescending" class="tsd-kind-icon">_order<wbr>ByDescending</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_prepend" class="tsd-kind-icon">_prepend</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_reduce" class="tsd-kind-icon">_reduce</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_reduceright" class="tsd-kind-icon">_reduce<wbr>Right</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_reverse" class="tsd-kind-icon">_reverse</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_select" class="tsd-kind-icon">_select</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_selectmany" class="tsd-kind-icon">_select<wbr>Many</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_sequenceequal" class="tsd-kind-icon">_sequence<wbr>Equal</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_single" class="tsd-kind-icon">_single</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_singleordefault" class="tsd-kind-icon">_single<wbr>OrDefault</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_skip" class="tsd-kind-icon">_skip</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_skipwhile" class="tsd-kind-icon">_skip<wbr>While</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_some" class="tsd-kind-icon">_some</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#_sum" class="tsd-kind-icon">_sum</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_take" class="tsd-kind-icon">_take</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_takewhile" class="tsd-kind-icon">_take<wbr>While</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_thenby" class="tsd-kind-icon">_then<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_thenbydescending" class="tsd-kind-icon">_then<wbr>ByDescending</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_toarray" class="tsd-kind-icon">_to<wbr>Array</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_tolookup" class="tsd-kind-icon">_to<wbr>Lookup</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_tomap" class="tsd-kind-icon">_to<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_toset" class="tsd-kind-icon">_to<wbr>Set</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_union" class="tsd-kind-icon">_union</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_unwrapindexed" class="tsd-kind-icon">_unwrap<wbr>Indexed</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_where" class="tsd-kind-icon">_where</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_zip" class="tsd-kind-icon">_zip</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_zipall" class="tsd-kind-icon">_zip<wbr>All</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_zipalltotuple" class="tsd-kind-icon">_zip<wbr>All<wbr>ToTuple</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#_zipmap" class="tsd-kind-icon">_zip<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#aggregate" class="tsd-kind-icon">aggregate</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#all" class="tsd-kind-icon">all</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#append" class="tsd-kind-icon">append</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#average" class="tsd-kind-icon">average</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#cartesian" class="tsd-kind-icon">cartesian</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#concat" class="tsd-kind-icon">concat</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#count" class="tsd-kind-icon">count</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#distinct" class="tsd-kind-icon">distinct</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#distinctby" class="tsd-kind-icon">distinct<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#elementat" class="tsd-kind-icon">element<wbr>At</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#empty" class="tsd-kind-icon">empty</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#every" class="tsd-kind-icon">every</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#except" class="tsd-kind-icon">except</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#filter" class="tsd-kind-icon">filter</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#first" class="tsd-kind-icon">first</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#firstordefault" class="tsd-kind-icon">first<wbr>OrDefault</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#flatmap" class="tsd-kind-icon">flat<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#flatten" class="tsd-kind-icon">flatten</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#foreach" class="tsd-kind-icon">for<wbr>Each</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#fromsinglevalue" class="tsd-kind-icon">from<wbr>Single<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#fulloutergroupjoin" class="tsd-kind-icon">full<wbr>Outer<wbr>Group<wbr>Join</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#fullouterjoin" class="tsd-kind-icon">full<wbr>Outer<wbr>Join</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#groupadjacent" class="tsd-kind-icon">group<wbr>Adjacent</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#groupby" class="tsd-kind-icon">group<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#groupjoin" class="tsd-kind-icon">group<wbr>Join</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#headtail" class="tsd-kind-icon">head<wbr>Tail</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#indexed" class="tsd-kind-icon">indexed</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#intersect" class="tsd-kind-icon">intersect</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#issubsetof" class="tsd-kind-icon">is<wbr>Subset<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#issupersetof" class="tsd-kind-icon">is<wbr>Superset<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#join" class="tsd-kind-icon">join</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#last" class="tsd-kind-icon">last</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#lastordefault" class="tsd-kind-icon">last<wbr>OrDefault</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#leftouterjoin" class="tsd-kind-icon">left<wbr>Outer<wbr>Join</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#map" class="tsd-kind-icon">map</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#max" class="tsd-kind-icon">max</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#maxby" class="tsd-kind-icon">max<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#min" class="tsd-kind-icon">min</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#minby" class="tsd-kind-icon">min<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#orderby" class="tsd-kind-icon">order<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#orderbydescending" class="tsd-kind-icon">order<wbr>ByDescending</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#prepend" class="tsd-kind-icon">prepend</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#range" class="tsd-kind-icon">range</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#reduce" class="tsd-kind-icon">reduce</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#reduceright" class="tsd-kind-icon">reduce<wbr>Right</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#repeat" class="tsd-kind-icon">repeat</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#repeatgenerate" class="tsd-kind-icon">repeat<wbr>Generate</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#reverse" class="tsd-kind-icon">reverse</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#select" class="tsd-kind-icon">select</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#selectmany" class="tsd-kind-icon">select<wbr>Many</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#sequenceequal" class="tsd-kind-icon">sequence<wbr>Equal</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#single" class="tsd-kind-icon">single</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#singleordefault" class="tsd-kind-icon">single<wbr>OrDefault</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#skip" class="tsd-kind-icon">skip</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#skipwhile" class="tsd-kind-icon">skip<wbr>While</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#some" class="tsd-kind-icon">some</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#sum" class="tsd-kind-icon">sum</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#take" class="tsd-kind-icon">take</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#takewhile" class="tsd-kind-icon">take<wbr>While</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#thenby" class="tsd-kind-icon">then<wbr>By</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#thenbydescending" class="tsd-kind-icon">then<wbr>ByDescending</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#toarray" class="tsd-kind-icon">to<wbr>Array</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#toiterable" class="tsd-kind-icon">to<wbr>Iterable</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#tolookup" class="tsd-kind-icon">to<wbr>Lookup</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#tomap" class="tsd-kind-icon">to<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#toset" class="tsd-kind-icon">to<wbr>Set</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#union" class="tsd-kind-icon">union</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#unwrapindexed" class="tsd-kind-icon">unwrap<wbr>Indexed</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#where" class="tsd-kind-icon">where</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#zip" class="tsd-kind-icon">zip</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#zipall" class="tsd-kind-icon">zip<wbr>All</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#zipalltotuple" class="tsd-kind-icon">zip<wbr>All<wbr>ToTuple</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#zipmap" class="tsd-kind-icon">zip<wbr>Map</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
