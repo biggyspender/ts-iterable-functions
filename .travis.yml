@@ -5,8 +5,8 @@ cache:
 notifications:
   email: false
 node_js:
-  - '10'
-  - '11'
+  - '16'
+  #- '11'
   #- '8'
   #- '6'
 jobs:
