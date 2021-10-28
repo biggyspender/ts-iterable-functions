@@ -26,10 +26,6 @@ export function _minMaxByImpl<T, TKey>(
       }
     }
   }
-  if (currentBest.length === 0) {
-    throw Error('sequence contains no elements')
-  }
-
   return currentBest
 }
 export const minMaxByImpl = deferP0(_minMaxByImpl)

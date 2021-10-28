@@ -2,11 +2,9 @@ import getIdentity from './helpers/getIdentity'
 import { defaultComparer, Comparer } from 'ts-comparer-builder'
 import { IndexedSelector } from '../types/IndexedSelector'
 import { minMaxByImpl } from './helpers/minMaxByImpl'
-import { _map, map } from './map'
-import { _firstOrDefault, firstOrDefault } from './firstOrDefault'
+import { map } from './map'
+import { first } from './first'
 import { pipeInto as pp, deferP0 } from 'ts-functional-pipe'
-
-const identity = getIdentity()
 
 export function _max<T, TOut = T>(
   src: Iterable<T>,
@@ -20,7 +18,7 @@ export function _max<T, TOut = T>(
       (x) => x,
       (a, b) => comparer(a, b)
     ),
-    firstOrDefault()
+    first()
   )
 }
 

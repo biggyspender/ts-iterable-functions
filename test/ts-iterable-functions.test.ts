@@ -1056,13 +1056,14 @@ describe('ts-iterable-functions test', () => {
         first()
       ).name
     ).toBe('luke')
-    expect(() =>
+    expect(
       pp(
         arr,
         take(0),
-        minBy((x) => x.age)
+        minBy((x) => x.age),
+        toArray()
       )
-    ).toThrow()
+    ).toEqual([])
     expect(
       pp(
         [0, 0],
