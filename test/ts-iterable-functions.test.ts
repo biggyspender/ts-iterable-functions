@@ -70,6 +70,7 @@ import {
   _first,
   _zipAllToTuple,
   zipMap,
+  scan,
 } from '../src/ts-iterable-functions'
 import { Date } from './Date'
 import { deepEqualityComparer } from 'ts-equality-comparer'
@@ -266,6 +267,16 @@ describe('ts-iterable-functions test', () => {
       aggregate(0, (prev, curr) => prev + curr)
     )
     expect(v).toEqual(6)
+  })
+  test('scan', () => {
+    expect(pp(range(0, 4), scan((acc, curr) => acc + curr, 0), toArray())).toEqual([0, 1, 3, 6])
+    expect(pp(range(0, 4), scan((acc, curr) => acc + curr), toArray())).toEqual([1, 3, 6])
+    expect(pp(range(1, 4), scan((acc, curr) => acc + curr), toArray())).toEqual([3, 6, 10])
+    expect(pp(range(0, 4), scan((acc, curr) => acc + curr, 1), toArray())).toEqual([1, 2, 4, 7])
+    expect(pp([] as number[], scan((acc, curr) => acc + curr, 1), toArray())).toEqual([])
+    expect(() => pp([] as number[], scan((acc, curr) => acc + curr), toArray())).toThrow()
+    expect(pp([1] as number[], scan((acc, curr) => acc + curr, 1), toArray())).toEqual([2])
+    expect(pp([7, 1, 2, 3], scan((acc, curr, idx) => idx < 3 ? Math.min(acc, curr) : curr, 100000), toArray())).toEqual([7, 1, 1, 3])
   })
   test('reduce', () => {
     const v = pp(
