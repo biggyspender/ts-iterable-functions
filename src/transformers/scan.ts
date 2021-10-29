@@ -16,23 +16,20 @@ export function _scan<T, TOut, TT extends T | TOut>(
   seed?: TT
 ): Iterable<TT> {
   return toIterable(function* () {
+    let v: TT;
+    let s: Iterable<T>;
     if (typeof seed !== 'undefined') {
-      let v = seed
-      let i = 0
-      for (const item of src) {
-        v = aggFunc(v, item, i++)
-        yield v as TT;
-      }
-
+      v = seed
+      s = src
     } else {
       const ht = headTail(src);
-      let v = ht[0] as TT;
-      const s = ht[1]
-      let i = 0
-      for (const item of s) {
-        v = aggFunc(v, item, i++)
-        yield v as TT;
-      }
+      v = ht[0] as TT;
+      s = ht[1]
+    }
+    let i = 0
+    for (const item of s) {
+      v = aggFunc(v, item, i++)
+      yield v as TT;
     }
   })
 
