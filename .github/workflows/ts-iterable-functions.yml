@@ -48,6 +48,7 @@ jobs:
 
       - name: Release docs
         if: ${{ github.ref == 'refs/heads/alpha' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run deploy-docs
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs
+          clean: true
