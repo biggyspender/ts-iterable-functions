@@ -5,6 +5,17 @@ A collection of type-safe functions for operating over iterable sequences, with 
 [![npm version](https://img.shields.io/npm/v/ts-iterable-functions.svg?style=flat)](https://npmjs.org/package/ts-iterable-functions "View this project on npm")
 [![build status](https://github.com/biggyspender/ts-iterable-functions/actions/workflows/ts-iterable-functions.yml/badge.svg)](https://github.com/biggyspender/ts-iterable-functions/actions/workflows/ts-iterable-functions.yml)
 
+### Note
+
+Versions > 5.x are now built with [esbuild](https://esbuild.github.io/) and no longer support IE11.
+
+## Installation
+
+```sh
+npm install ts-iterable-functions ts-functional-pipe \
+            ts-equality-comparer ts-comparer-builder
+```
+
 ## Usage
 
 First, import `pipeInto` from [`ts-functional-pipe`](https://www.npmjs.com/package/ts-functional-pipe):

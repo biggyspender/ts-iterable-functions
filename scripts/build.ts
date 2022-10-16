@@ -1,12 +1,20 @@
 import path from "path";
 import { build as esbuild, BuildOptions } from "esbuild";
 import { nodeExternalsPlugin } from "esbuild-node-externals";
-
+import { resolveToEsbuildTarget } from "esbuild-plugin-browserslist";
+import browserslist from "browserslist";
 // import * as fs from "fs";
+
+const target = resolveToEsbuildTarget(browserslist("since 2019 and not dead"), {
+  printUnknownTargets: false,
+});
+
+//console.log("target", target.join(", "));
 
 const baseConfig: BuildOptions = {
   platform: "node",
-  target: "esnext",
+  target,
+  //target: "esnext",
   format: "cjs",
   nodePaths: [path.join(__dirname, "../src")],
   sourcemap: true,
