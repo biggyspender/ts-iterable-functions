@@ -37,7 +37,11 @@
     "test:setup": "node -r ./esbuild-hook ./scripts/testSetup",
     "spell:check": "cspell \"{README.md,CODE_OF_CONDUCT.md,CONTRIBUTING.md,.github/*.md,src/**/*.ts}\"",
     "cz": "cz",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "build-docs": "typedoc ./src",
+    "build-docs:watch": "typedoc ./src --watch",
+    "serve:docs": "serve -l 5000 docs",
+    "deploy-docs": "node -r ./esbuild-hook tools/gh-pages-publish"
   },
   "devDependencies": {
     "@ryansonshine/commitizen": "^4.2.8",
@@ -49,6 +53,7 @@
     "@semantic-release/release-notes-generator": "^10.0.3",
     "@types/node": "^18.11.0",
     "@types/prompts": "^2.4.1",
+    "@types/shelljs": "^0.8.11",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "@vitest/coverage-c8": "^0.24.3",
@@ -64,7 +69,10 @@
     "nyc": "^15.1.0",
     "prettier": "^2.7.1",
     "semantic-release": "^19.0.5",
+    "serve": "^14.0.1",
+    "shelljs": "^0.8.5",
     "source-map-support": "^0.5.21",
+    "typedoc": "^0.23.16",
     "typescript": "^4.8.4",
     "vitest": "^0.23.4"
   },

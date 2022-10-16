@@ -41,3 +41,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm run semantic-release
+
+      - name: Build docs
+        if: ${{ github.ref == 'ref/heads/alpha' }}
+        run: npm run build-docs
+
+      - name: Release docs
+        if: ${{ github.ref == 'ref/heads/alpha' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run deploy-docs
