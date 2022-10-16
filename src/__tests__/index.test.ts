@@ -871,8 +871,8 @@ describe("ts-iterable-functions test", () => {
     const key0 = lookup.get(0);
     expect(
       key0 &&
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      key0.rgt.length === 0 &&
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        key0.rgt.length === 0 &&
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         key0.lft &&
         pp(key0.lft, sequenceEqual([0, 0]))
@@ -880,8 +880,8 @@ describe("ts-iterable-functions test", () => {
     const key5 = lookup.get(5);
     expect(
       key5 &&
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      key5.lft.length === 0 &&
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        key5.lft.length === 0 &&
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         key5.rgt &&
         pp(key5.rgt, sequenceEqual([5, 5]))
