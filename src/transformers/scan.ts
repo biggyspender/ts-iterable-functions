@@ -1,4 +1,5 @@
-import { headTail, toIterable } from "../ts-iterable-functions";
+import { headTail } from "../helpers/headTail";
+import { toIterable } from "../helpers/toIterable";
 
 export function _scan<T, TOut>(
   src: Iterable<T>,
