@@ -2,18 +2,25 @@
   "version": "0.1",
   "language": "en",
   "words": [
+    "concat",
+    "Corsa",
+    "Cortina",
     "degit",
     "esbuild",
     "gjuchault",
     "Iterablified",
     "Iteratorfied",
+    "LINQ",
     "metafile",
     "octocat",
     "outdir",
+    "pipeable",
+    "preprend",
     "Resultified",
     "rmrf",
     "socio",
-    "ts-iterable-functions"
+    "ts-iterable-functions",
+    "Vauxhall"
   ],
   "flagWords": [],
   "ignorePaths": [
