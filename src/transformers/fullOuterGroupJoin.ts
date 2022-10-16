@@ -27,7 +27,7 @@ export function _fullOuterGroupJoin<T, TRight, TKey, TOut>(
       distinct()
     );
 
-    const outputVals = pp(
+    const outputValues = pp(
       allKeys,
       map((key) => ({ key, leftItem: leftLookup.get(key) ?? [] })),
       map(({ key, leftItem }) => ({
@@ -37,7 +37,7 @@ export function _fullOuterGroupJoin<T, TRight, TKey, TOut>(
       })),
       map((x) => selector(x.leftItem, x.rightItem, x.key))
     );
-    for (const v of outputVals) {
+    for (const v of outputValues) {
       yield v;
     }
   });

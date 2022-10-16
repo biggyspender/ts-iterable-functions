@@ -132,13 +132,13 @@ describe("ts-iterable-functions test", () => {
     ).toBe(2);
   });
   test("distinctBy with comparer", () => {
-    const nums = pp(
+    const numbers = pp(
       range(0, 1000),
       select((x) => (x / 5) | 0)
     );
     expect(
       pp(
-        nums,
+        numbers,
         distinctBy((d) => d, createSetFactory()),
         count()
       )
@@ -1341,13 +1341,13 @@ describe("ts-iterable-functions test", () => {
     const seq1 = [1, 2, 3];
     const seq2 = ["a", "b", "c", "d"];
     const seq3 = [9, 8, 7];
-    const seqs: [Iterable<number>, Iterable<string>, Iterable<number>] = [
+    const sequences: [Iterable<number>, Iterable<string>, Iterable<number>] = [
       seq1,
       seq2,
       seq3,
     ];
     const zipMapped = pp(
-      seqs,
+      sequences,
       zipMap((num1, str, num2) => `${num1}${str}${num2}`)
     );
     expect([...zipMapped]).toEqual(["1a9", "2b8", "3c7"]);
