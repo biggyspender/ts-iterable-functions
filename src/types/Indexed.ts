@@ -1,1 +1,1 @@
-export type Indexed<T> = readonly [T, number]
+export type Indexed<T> = readonly [T, number];

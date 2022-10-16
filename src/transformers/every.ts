@@ -1,6 +1,6 @@
-import { deferP0 } from 'ts-functional-pipe'
-import { IndexedPredicate } from '../types/IndexedPredicate'
-import { _some } from './some'
+import { deferP0 } from "ts-functional-pipe";
+import { IndexedPredicate } from "../types/IndexedPredicate";
+import { _some } from "./some";
 
 /**
  * returns `true` if *all* elements in `src` return `true` when passed to `pred`
@@ -9,7 +9,7 @@ import { _some } from './some'
  * @param src source sequence
  * @param pred indexed predicate function
  */
-export const every = deferP0(_every)
+export const every = deferP0(_every);
 
 /**
  * returns `true` if *all* elements in `src` return `true` when passed to `pred`
@@ -17,6 +17,9 @@ export const every = deferP0(_every)
  * @param src source sequence
  * @param pred indexed predicate function
  */
-export function _every<T>(src: Iterable<T>, pred: IndexedPredicate<T>): boolean {
-  return !_some(src, (item, i) => !pred(item, i))
+export function _every<T>(
+  src: Iterable<T>,
+  pred: IndexedPredicate<T>
+): boolean {
+  return !_some(src, (item, i) => !pred(item, i));
 }

@@ -1,1 +1,1 @@
-export const empty = <T>(): Iterable<T> => [] as Iterable<T>
+export const empty = <T>(): Iterable<T> => [] as Iterable<T>;

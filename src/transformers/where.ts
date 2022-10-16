@@ -1,4 +1,4 @@
-import { filter, _filter } from './filter'
+import { filter, _filter } from "./filter";
 
 /**
  * creates a new sequence with every item of the source sequence for which the predicate function returns `true`
@@ -11,7 +11,7 @@ import { filter, _filter } from './filter'
  * @returns a new (possibly shorter) sequence with some items filtered away
  */
 
-export const where = filter
+export const where = filter;
 /**
  * creates a new sequence with every item of the source sequence for which the predicate function returns `true`
  *
@@ -20,4 +20,4 @@ export const where = filter
  * @param pred a function that returns `true` to signal inclusion, `false` to exclude
  * @returns a new (possibly shorter) sequence with some items filtered away
  */
-export const _where = _filter
+export const _where = _filter;

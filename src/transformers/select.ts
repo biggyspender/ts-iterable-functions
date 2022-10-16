@@ -1,4 +1,4 @@
-import { map, _map } from './map'
+import { map, _map } from "./map";
 
 /**
  * Creates a new sequence populated with the results of calling a provided function on every element in the source sequence
@@ -10,7 +10,7 @@ import { map, _map } from './map'
  * @returns A new sequence with each element being the result of the selector function.
  */
 
-export const select = map
+export const select = map;
 /**
  * Creates a new sequence populated with the results of calling a provided function on every element in the source sequence
  * @alias of {@link _map}
@@ -18,4 +18,4 @@ export const select = map
  * @param selector function to transform each item `T` in the source sequence into `TOut`
  * @returns A new sequence with each element being the result of the selector function.
  */
-export const _select = _map
+export const _select = _map;

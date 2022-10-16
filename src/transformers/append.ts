@@ -1,5 +1,5 @@
-import { deferP0 } from 'ts-functional-pipe'
-import { toIterable } from '../helpers/toIterable'
+import { deferP0 } from "ts-functional-pipe";
+import { toIterable } from "../helpers/toIterable";
 
 /**
  * append a single item to the end of a sequence
@@ -9,10 +9,10 @@ import { toIterable } from '../helpers/toIterable'
 export function _append<T>(src: Iterable<T>, item: T): Iterable<T> {
   return toIterable(function* () {
     for (const x of src) {
-      yield x
+      yield x;
     }
-    yield item
-  })
+    yield item;
+  });
 }
 
 /**
@@ -22,4 +22,4 @@ export function _append<T>(src: Iterable<T>, item: T): Iterable<T> {
  * @param src source sequence
  * @param item the item to append
  */
-export const append = deferP0(_append)
+export const append = deferP0(_append);

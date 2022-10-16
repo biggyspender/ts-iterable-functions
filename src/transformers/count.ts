@@ -1,20 +1,23 @@
-import { deferP0 } from 'ts-functional-pipe'
-import { IndexedPredicate } from '../types/IndexedPredicate'
+import { deferP0 } from "ts-functional-pipe";
+import { IndexedPredicate } from "../types/IndexedPredicate";
 
 /**
  * count the number of items in a sequence (that optionally satisfy a predicate)
  * @param src source sequence
  * @param pred optional predicate function to indicate which values should be included in the count
  */
-export function _count<T>(src: Iterable<T>, pred: IndexedPredicate<T> = () => true): number {
-  let c = 0
-  let i = 0
+export function _count<T>(
+  src: Iterable<T>,
+  pred: IndexedPredicate<T> = () => true
+): number {
+  let c = 0;
+  let i = 0;
   for (const item of src) {
     if (pred(item, i++)) {
-      ++c
+      ++c;
     }
   }
-  return c
+  return c;
 }
 /**
  * count the number of items in a sequence (that optionally satisfy a predicate)
@@ -23,4 +26,4 @@ export function _count<T>(src: Iterable<T>, pred: IndexedPredicate<T> = () => tr
  * @param src source sequence
  * @param pred optional predicate function to indicate which values should be included in the count
  */
-export const count = deferP0(_count)
+export const count = deferP0(_count);

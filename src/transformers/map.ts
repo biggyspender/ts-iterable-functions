@@ -1,6 +1,6 @@
-import { deferP0 } from 'ts-functional-pipe'
-import { toIterable } from '../helpers/toIterable'
-import { IndexedSelector } from '../types/IndexedSelector'
+import { deferP0 } from "ts-functional-pipe";
+import { toIterable } from "../helpers/toIterable";
+import { IndexedSelector } from "../types/IndexedSelector";
 
 /**
  * Creates a new sequence populated with the results of calling a provided function on every element in the source sequence
@@ -13,11 +13,11 @@ export function _map<T, TOut>(
   selector: IndexedSelector<T, TOut>
 ): Iterable<TOut> {
   return toIterable(function* () {
-    let c = 0
+    let c = 0;
     for (const x of src) {
-      yield selector(x, c++)
+      yield selector(x, c++);
     }
-  })
+  });
 }
 
 /**
@@ -29,4 +29,4 @@ export function _map<T, TOut>(
  * @returns A new sequence with each element being the result of the selector function.
  */
 
-export const map = deferP0(_map)
+export const map = deferP0(_map);

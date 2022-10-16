@@ -1,24 +1,24 @@
-import { deferP0 } from 'ts-functional-pipe'
-import { toIterable } from '../helpers/toIterable'
+import { deferP0 } from "ts-functional-pipe";
+import { toIterable } from "../helpers/toIterable";
 
 export function _zip<T, TOther, TOut>(
   src: Iterable<T>,
   seq: Iterable<TOther>,
   selector: (item1: T, item2: TOther) => TOut
 ): Iterable<TOut> {
-  return toIterable(function*() {
-    const it1 = src[Symbol.iterator]()
-    const it2 = seq[Symbol.iterator]()
+  return toIterable(function* () {
+    const it1 = src[Symbol.iterator]();
+    const it2 = seq[Symbol.iterator]();
 
     for (;;) {
-      const it1Result = it1.next()
-      const it2Result = it2.next()
+      const it1Result = it1.next();
+      const it2Result = it2.next();
 
       if (it1Result.done || it2Result.done) {
-        break
+        break;
       }
-      yield selector(it1Result.value, it2Result.value)
+      yield selector(it1Result.value, it2Result.value);
     }
-  })
+  });
 }
-export const zip = deferP0(_zip)
+export const zip = deferP0(_zip);

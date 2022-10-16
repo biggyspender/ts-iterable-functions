@@ -1,5 +1,5 @@
-import { deferP0 } from 'ts-functional-pipe'
-import { _aggregate } from './aggregate'
+import { deferP0 } from "ts-functional-pipe";
+import { _aggregate } from "./aggregate";
 
 /**
  * calculates the average value of a sequence of **`number`**
@@ -13,15 +13,15 @@ export function _average(src: Iterable<number>): number {
       count: 0,
     },
     (acc, val) => {
-      acc.tot += val
-      acc.count++
-      return acc
+      acc.tot += val;
+      acc.count++;
+      return acc;
     }
-  )
+  );
   if (f.count === 0) {
-    throw Error('sequence contains no elements')
+    throw Error("sequence contains no elements");
   }
-  return f.tot / f.count
+  return f.tot / f.count;
 }
 
 /**
@@ -31,4 +31,4 @@ export function _average(src: Iterable<number>): number {
  * @param src a sequence of numbers
  */
 
-export const average = deferP0(_average)
+export const average = deferP0(_average);

@@ -1,6 +1,6 @@
-import { toIterable } from '../helpers/toIterable'
+import { toIterable } from "../helpers/toIterable";
 
 export const fromSingleValue = <T>(item: T): Iterable<T> =>
-  toIterable(function*() {
-    yield item
-  })
+  toIterable(function* () {
+    yield item;
+  });

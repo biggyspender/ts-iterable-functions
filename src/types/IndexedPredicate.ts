@@ -4,4 +4,4 @@
  * @example {@link _filter}
  */
 
-export type IndexedPredicate<T> = (x: T, i: number) => boolean
+export type IndexedPredicate<T> = (x: T, i: number) => boolean;

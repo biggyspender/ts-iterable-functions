@@ -1,9 +1,9 @@
-import { pipeInto as pp, deferP0 } from 'ts-functional-pipe'
-import { IndexedSelector } from '../types/IndexedSelector'
-import { MapFactory } from '../types/MapFactory'
-import { flatMap } from './flatMap'
-import { groupJoin } from './groupJoin'
-import { _map } from './map'
+import { pipeInto as pp, deferP0 } from "ts-functional-pipe";
+import { IndexedSelector } from "../types/IndexedSelector";
+import { MapFactory } from "../types/MapFactory";
+import { flatMap } from "./flatMap";
+import { groupJoin } from "./groupJoin";
+import { _map } from "./map";
 
 export function _join<T, TInner, TKey, TOut>(
   src: Iterable<T>,
@@ -26,6 +26,6 @@ export function _join<T, TInner, TKey, TOut>(
       mapFactory
     ),
     flatMap(({ outer, innerSeq }) => _map(innerSeq, (i) => selector(outer, i)))
-  )
+  );
 }
-export const join = deferP0(_join)
+export const join = deferP0(_join);
