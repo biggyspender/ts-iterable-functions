@@ -45,8 +45,7 @@
     "semantic-release": "semantic-release",
     "build-docs": "typedoc ./src",
     "build-docs:watch": "typedoc ./src --watch",
-    "serve:docs": "serve -l 5000 docs",
-    "deploy-docs": "node -r ./esbuild-hook ./scripts/gh-pages-publish"
+    "serve:docs": "serve -l 5000 docs"
   },
   "devDependencies": {
     "@ryansonshine/commitizen": "^4.2.8",

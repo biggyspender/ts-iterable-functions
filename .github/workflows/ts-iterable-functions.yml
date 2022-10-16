@@ -43,11 +43,11 @@ jobs:
         run: npm run semantic-release
 
       - name: Build docs
-        if: ${{ github.ref == 'refs/heads/alpha' }}
+        if: ${{ github.ref == 'refs/heads/master' }}
         run: npm run build-docs
 
       - name: Release docs
-        if: ${{ github.ref == 'refs/heads/alpha' }}
+        if: ${{ github.ref == 'refs/heads/master' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: docs
