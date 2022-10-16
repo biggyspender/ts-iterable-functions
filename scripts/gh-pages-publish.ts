@@ -3,6 +3,7 @@ import { readFileSync } from "fs";
 import url from "url";
 
 let repoUrl: string;
+console.log(process.cwd());
 let pkg = JSON.parse(readFileSync("package.json") as any);
 if (typeof pkg.repository === "object") {
   if (!pkg.repository.hasOwnProperty("url")) {
