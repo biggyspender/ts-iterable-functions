@@ -2,8 +2,8 @@
 
 A collection of type-safe functions for operating over iterable sequences, with specialized versions that generate unary functions for use in pipes. Will feel immediately familiar for users of MS LINQ-to-objects.
 
-[![npm version](https://img.shields.io/npm/v/ts-iterable-functions.svg?style=flat)](https://npmjs.org/package/ts-iterable-functions "View this project on npm")
-[![build status](https://github.com/biggyspender/ts-iterable-functions/actions/workflows/ts-iterable-functions.yml/badge.svg)](https://github.com/biggyspender/ts-iterable-functions/actions/workflows/ts-iterable-functions.yml)
+[![npm](https://img.shields.io/npm/v/ts-iterable-functions.svg?style=flat)](https://npmjs.org/package/ts-iterable-functions "View this project on npm")
+[![build](https://github.com/biggyspender/ts-iterable-functions/actions/workflows/ts-iterable-functions.yml/badge.svg?branch=master)](https://github.com/biggyspender/ts-iterable-functions/actions/workflows/ts-iterable-functions.yml)
 
 ### Note
 
