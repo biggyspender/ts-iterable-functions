@@ -1,6 +1,6 @@
-import { IndexedSelector } from '../types/IndexedSelector'
-import { toIterable } from '../helpers/toIterable'
 import { deferP0 } from 'ts-functional-pipe'
+import { toIterable } from '../helpers/toIterable'
+import { IndexedSelector } from '../types/IndexedSelector'
 import { SetFactory } from '../types/SetFactory';
 
 export function _distinctBy<T, TKey>(

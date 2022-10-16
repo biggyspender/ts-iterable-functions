@@ -1,8 +1,8 @@
-import { deferP0, pipeInto as pp } from 'ts-functional-pipe'
-import { map } from './map'
-import { Iterablified, zipAllToTuple } from './zipAllToTuple'
+import { deferP0, pipeInto as pp } from "ts-functional-pipe";
+import { map } from "./map";
+import { Iterablified, zipAllToTuple } from "./zipAllToTuple";
 
-export function _zipMap<T extends readonly any[], TOut>(
+export function _zipMap<T extends readonly unknown[], TOut>(
   src: Iterablified<T>,
   selector: (...args: T) => TOut
 ): Iterable<TOut> {
@@ -10,7 +10,7 @@ export function _zipMap<T extends readonly any[], TOut>(
     src,
     zipAllToTuple(),
     map((args) => selector(...args))
-  )
+  );
 }
 
-export const zipMap = deferP0(_zipMap)
+export const zipMap = deferP0(_zipMap);

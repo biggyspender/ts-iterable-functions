@@ -1,5 +1,5 @@
-import { IndexedPredicate } from '../types/IndexedPredicate'
 import { deferP0 } from 'ts-functional-pipe'
+import { IndexedPredicate } from '../types/IndexedPredicate'
 
 /**
  * count the number of items in a sequence (that optionally satisfy a predicate)

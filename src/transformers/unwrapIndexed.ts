@@ -1,7 +1,7 @@
 import { deferP0, pipeInto as pp } from 'ts-functional-pipe'
-import { orderBy } from './orderBy'
-import { map } from './map'
 import { Indexed } from '../types/Indexed'
+import { map } from './map'
+import { orderBy } from './orderBy'
 
 export function _unwrapIndexed<T>(src: Iterable<Indexed<T>>): Iterable<T> {
   return pp(

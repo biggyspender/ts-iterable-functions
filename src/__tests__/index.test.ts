@@ -1,5 +1,9 @@
-import getIdentity from '../src/transformers/helpers/getIdentity'
+import { defaultComparer } from 'ts-comparer-builder'
+import { deepEqualityComparer } from 'ts-equality-comparer'
 import { pipeInto as pp } from 'ts-functional-pipe'
+import { createComparerMap, createComparerSet } from 'ts-hashmap'
+import { test, describe, expect } from 'vitest';
+import getIdentity from '../transformers/helpers/getIdentity'
 import {
   aggregate,
   all,
@@ -65,17 +69,14 @@ import {
   _select,
   headTail,
   _sequenceEqual,
-  _reduce,
+  // _reduce,
   toIterable,
   _first,
-  _zipAllToTuple,
+  // _zipAllToTuple,
   zipMap,
   scan,
-} from '../src/ts-iterable-functions'
+} from '../ts-iterable-functions'
 import { Date } from './Date'
-import { deepEqualityComparer } from 'ts-equality-comparer'
-import { createComparerMap, createComparerSet } from 'ts-hashmap'
-import { defaultComparer } from 'ts-comparer-builder'
 
 const createSetFactory = <K>() => ({ createSet: () => createComparerSet<K>(deepEqualityComparer) })
 const createMapFactory = <K>() => ({
@@ -791,6 +792,7 @@ describe('ts-iterable-functions test', () => {
         seq2,
         (x) => x,
         (x) => x,
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         (lft, rgt, i) => ({ lft: lft && [...lft], rgt: rgt && [...rgt], i })
       )
     )
@@ -803,10 +805,12 @@ describe('ts-iterable-functions test', () => {
     )
     const key0 = lookup.get(0)
     expect(
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       key0 && key0.rgt.length === 0 && key0.lft && pp(key0.lft, sequenceEqual([0, 0]))
     ).toBeTruthy()
     const key5 = lookup.get(5)
     expect(
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       key5 && key5.lft.length === 0 && key5.rgt && pp(key5.rgt, sequenceEqual([5, 5]))
     ).toBeTruthy()
 
@@ -845,7 +849,7 @@ describe('ts-iterable-functions test', () => {
   })
 
   test('join', () => {
-    let outerSeq: Array<{ id: number; value: string }> = [
+    const outerSeq: { id: number; value: string }[] = [
       {
         id: 1,
         value: 'chris',
@@ -859,7 +863,7 @@ describe('ts-iterable-functions test', () => {
         value: 'not relevant',
       },
     ]
-    let innerSeq: Array<{ id: number; value: string }> = [
+    const innerSeq: { id: number; value: string }[] = [
       {
         id: 1,
         value: 'sperry',
@@ -878,7 +882,7 @@ describe('ts-iterable-functions test', () => {
       },
     ]
 
-    let items = pp(
+    const items = pp(
       outerSeq,
       join(
         innerSeq,
@@ -893,7 +897,7 @@ describe('ts-iterable-functions test', () => {
   })
 
   test('leftOuterJoin', () => {
-    let outerSeq: Array<{ id: number; value: string }> = [
+    const outerSeq: { id: number; value: string }[] = [
       {
         id: 1,
         value: 'chris',
@@ -907,7 +911,7 @@ describe('ts-iterable-functions test', () => {
         value: 'not relevant',
       },
     ]
-    let innerSeq: Array<{ id: number; value: string }> = [
+    const innerSeq: { id: number; value: string }[] = [
       {
         id: 1,
         value: 'sperry',
@@ -926,7 +930,7 @@ describe('ts-iterable-functions test', () => {
       },
     ]
 
-    let items = pp(
+    const items = pp(
       outerSeq,
       leftOuterJoin(
         innerSeq,
@@ -944,7 +948,7 @@ describe('ts-iterable-functions test', () => {
     ])
   })
   test('leftOuterJoin with comparer', () => {
-    let outerSeq: Array<{ id: number; value: string }> = [
+    const outerSeq: { id: number; value: string }[] = [
       {
         id: 1,
         value: 'chris',
@@ -958,7 +962,7 @@ describe('ts-iterable-functions test', () => {
         value: 'not relevant',
       },
     ]
-    let innerSeq: Array<{ id: number; value: string }> = [
+    const innerSeq: { id: number; value: string }[] = [
       {
         id: 1,
         value: 'sperry',
@@ -977,7 +981,7 @@ describe('ts-iterable-functions test', () => {
       },
     ]
 
-    let items = pp(
+    const items = pp(
       outerSeq,
       leftOuterJoin(
         innerSeq,
@@ -1146,7 +1150,7 @@ describe('ts-iterable-functions test', () => {
         groupAdjacent(
           (x) => x,
           (x) => x,
-          (key, items) => [...items]
+          (_, items) => [...items]
         ),
         toArray()
       )
@@ -1164,7 +1168,7 @@ describe('ts-iterable-functions test', () => {
         groupAdjacent(
           (x) => x,
           (x) => x,
-          (key, items) => [...items],
+          (_, items) => [...items],
           deepEqualityComparer.equals
         ),
         toArray()

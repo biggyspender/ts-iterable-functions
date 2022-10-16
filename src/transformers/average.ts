@@ -1,5 +1,5 @@
-import { _aggregate } from './aggregate'
 import { deferP0 } from 'ts-functional-pipe'
+import { _aggregate } from './aggregate'
 
 /**
  * calculates the average value of a sequence of **`number`**

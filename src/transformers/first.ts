@@ -1,14 +1,14 @@
-import { IndexedPredicate } from '../types/IndexedPredicate'
-import { deferP0 } from 'ts-functional-pipe'
-import { _indexed } from './indexed'
+import { deferP0 } from "ts-functional-pipe";
+import { IndexedPredicate } from "../types/IndexedPredicate";
+import { _indexed } from "./indexed";
 
-export function _first<T>(src: Iterable<T>, pred: IndexedPredicate<T> = (x) => true): T {
-  for (const x of _indexed(src)) {
-    if (pred(...x)) {
-      return x[0]
+export function _first<T>(src: Iterable<T>, pred?: IndexedPredicate<T>): T {
+  for (const [v, i] of _indexed(src)) {
+    if (!pred || pred(v, i)) {
+      return v;
     }
   }
-  throw Error('sequence contains no elements')
+  throw Error("sequence contains no elements");
 }
 
-export const first = deferP0(_first)
+export const first = deferP0(_first);

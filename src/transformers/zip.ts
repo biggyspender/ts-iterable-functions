@@ -1,5 +1,5 @@
-import { toIterable } from '../helpers/toIterable'
 import { deferP0 } from 'ts-functional-pipe'
+import { toIterable } from '../helpers/toIterable'
 
 export function _zip<T, TOther, TOut>(
   src: Iterable<T>,

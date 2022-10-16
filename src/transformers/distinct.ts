@@ -1,6 +1,6 @@
 import { deferP0 } from 'ts-functional-pipe'
-import { _distinctBy } from './distinctBy'
 import { SetFactory } from '../types/SetFactory'
+import { _distinctBy } from './distinctBy'
 
 export function _distinct<T>(
   src: Iterable<T>,

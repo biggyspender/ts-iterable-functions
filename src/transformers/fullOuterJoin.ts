@@ -1,13 +1,13 @@
-import getIdentity from './helpers/getIdentity'
-import { IndexedSelector } from '../types/IndexedSelector'
-import { _fullOuterGroupJoin, fullOuterGroupJoin } from './fullOuterGroupJoin'
-import { deferP0, pipeInto as pp } from 'ts-functional-pipe'
-import { defaultIfEmpty } from './defaultIfEmpty'
-import { map } from './map'
-import { flatMap } from './flatMap'
-import { MapFactory } from '../types/MapFactory'
+import { deferP0, pipeInto as pp } from "ts-functional-pipe";
+import { IndexedSelector } from "../types/IndexedSelector";
+import { MapFactory } from "../types/MapFactory";
+import { defaultIfEmpty } from "./defaultIfEmpty";
+import { flatMap } from "./flatMap";
+import { fullOuterGroupJoin } from "./fullOuterGroupJoin";
+import getIdentity from "./helpers/getIdentity";
+import { map } from "./map";
 
-const identity = getIdentity()
+const identity = getIdentity();
 
 export function _fullOuterJoin<T, TRight, TKey, TOut>(
   src: Iterable<T>,
@@ -38,7 +38,7 @@ export function _fullOuterJoin<T, TRight, TKey, TOut>(
       mapFactory
     ),
     flatMap(identity)
-  )
+  );
 }
 
-export const fullOuterJoin = deferP0(_fullOuterJoin)
+export const fullOuterJoin = deferP0(_fullOuterJoin);

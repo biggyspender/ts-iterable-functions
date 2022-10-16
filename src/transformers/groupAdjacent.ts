@@ -1,6 +1,6 @@
-import { IndexedSelector } from '../types/IndexedSelector'
-import { toIterable } from '../helpers/toIterable'
 import { deferP0 } from 'ts-functional-pipe'
+import { toIterable } from '../helpers/toIterable'
+import { IndexedSelector } from '../types/IndexedSelector'
 
 export function _groupAdjacent<TSource, TKey, TElement, TResult>(
   src: Iterable<TSource>,
@@ -22,7 +22,7 @@ export function _groupAdjacent<TSource, TKey, TElement, TResult>(
       const iterator = source[Symbol.iterator]()
 
       let group: TKey | undefined = undefined
-      let members: Array<TElement> | undefined = undefined
+      let members: TElement[] | undefined = undefined
 
       let i = 0
       let itResult

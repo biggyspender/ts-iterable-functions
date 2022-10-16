@@ -1,6 +1,6 @@
+import { deferP0 } from 'ts-functional-pipe'
 import { toIterable } from '../helpers/toIterable'
 import { IndexedPredicate } from '../types/IndexedPredicate'
-import { deferP0 } from 'ts-functional-pipe'
 
 export function _takeWhile<T>(src: Iterable<T>, pred: IndexedPredicate<T>): Iterable<T> {
   return toIterable(function*() {

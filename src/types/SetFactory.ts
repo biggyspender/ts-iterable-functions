@@ -1,4 +1,4 @@
 
-export declare type SetFactory<TKey> = {
+export declare interface SetFactory<TKey> {
   createSet(): Set<TKey>;
-};
+}

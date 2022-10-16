@@ -1,9 +1,9 @@
 export const toPrettyJson = (() => {
-  const isIterable = (obj: any) =>
+  const isIterable = (obj: unknown): obj is Iterable<unknown> =>
     obj != null &&
     !Array.isArray(obj) &&
-    typeof obj !== 'string' &&
-    typeof obj[Symbol.iterator] === 'function'
-  const replacer = (_: string, v: any) => (isIterable(v) ? [...v] : v)
-  return (obj: any) => JSON.stringify(obj, replacer, 2)
-})()
+    typeof obj !== "string" &&
+    Symbol.iterator in obj;
+  const replacer = (_: string, v: unknown) => (isIterable(v) ? [...v] : v);
+  return (obj: unknown) => JSON.stringify(obj, replacer, 2);
+})();

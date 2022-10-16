@@ -1,7 +1,7 @@
-import { _minMaxByImpl } from './helpers/minMaxByImpl'
 import { Comparer, defaultComparer } from 'ts-comparer-builder'
-import { IndexedSelector } from '../types/IndexedSelector'
 import { deferP0 } from 'ts-functional-pipe'
+import { IndexedSelector } from '../types/IndexedSelector'
+import { _minMaxByImpl } from './helpers/minMaxByImpl'
 
 export function _minBy<T, TKey>(
   src: Iterable<T>,

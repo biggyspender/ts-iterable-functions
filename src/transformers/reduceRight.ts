@@ -1,6 +1,6 @@
 import { pipeInto as pp } from 'ts-functional-pipe'
-import { reverse } from './reverse'
 import { reduce } from './reduce'
+import { reverse } from './reverse'
 export function _reduceRight<T, TOut>(
   src: Iterable<T>,
   aggFunc: (prev: TOut, curr: T, idx: number) => TOut,

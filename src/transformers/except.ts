@@ -1,7 +1,7 @@
-import { _filter } from './filter'
 import { deferP0 } from 'ts-functional-pipe'
-import { SetFactory } from '../types/SetFactory'
 import { toIterable } from '../helpers/toIterable'
+import { SetFactory } from '../types/SetFactory'
+import { _filter } from './filter'
 
 export function _except<T>(
   src: Iterable<T>,

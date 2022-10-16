@@ -1,6 +1,6 @@
 import { deferP0 } from 'ts-functional-pipe'
-import { _every } from './every'
 import { SetFactory } from '../types/SetFactory'
+import { _every } from './every'
 
 export function _isSubsetOf<T>(
   src: Iterable<T>,

@@ -1,25 +1,26 @@
-import { IndexedPredicate } from '../types/IndexedPredicate'
-import { deferP0 } from 'ts-functional-pipe'
+import { deferP0 } from "ts-functional-pipe";
+import { IndexedPredicate } from "../types/IndexedPredicate";
 
-const dummy: any = {}
-
-export function _single<T>(src: Iterable<T>, pred: IndexedPredicate<T> = x => true): T {
-  let itemCount = 0
-  let foundItem = dummy
-  let i = 0
+export function _single<T>(
+  src: Iterable<T>,
+  pred: IndexedPredicate<T> = (_) => true
+): T {
+  let itemCount = 0;
+  let foundItem: { value: T } | undefined;
+  let i = 0;
   for (const item of src) {
     if (pred(item, i++)) {
-      ++itemCount
+      ++itemCount;
       if (itemCount > 1) {
-        throw Error('sequence contains more than one element')
+        throw Error("sequence contains more than one element");
       }
-      foundItem = item
+      foundItem = { value: item };
     }
   }
-  if (itemCount === 1) {
-    return foundItem
+  if (foundItem) {
+    return foundItem.value;
   }
-  throw Error('sequence contains no elements')
+  throw Error("sequence contains no elements");
 }
 
-export const single = deferP0(_single)
+export const single = deferP0(_single);

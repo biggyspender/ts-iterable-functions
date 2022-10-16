@@ -1,5 +1,0 @@
-{
-    "entryPoints": ["src/ts-iterable-functions.ts"],
-    "out": "docs",
-    "theme": "default"
-  }

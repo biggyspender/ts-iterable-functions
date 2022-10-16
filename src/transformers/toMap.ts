@@ -1,6 +1,6 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import getIdentity from './helpers/getIdentity'
 import { MapFactory } from "../types/MapFactory"
+import getIdentity from './helpers/getIdentity'
 
 export function _toMap<T, TKey>(
   src: Iterable<T>,

@@ -1,6 +1,6 @@
-import OrderedIterable from './helpers/OrderedIterable'
 import { comparerBuilder } from 'ts-comparer-builder'
 import { deferP0 } from 'ts-functional-pipe'
+import OrderedIterable from './helpers/OrderedIterable'
 
 export function _orderByDescending<T, TCmp>(
   src: Iterable<T>,

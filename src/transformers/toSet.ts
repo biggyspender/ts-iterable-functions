@@ -1,6 +1,6 @@
 import { IndexedSelector } from '../types/IndexedSelector'
-import getIdentity from './helpers/getIdentity'
 import { SetFactory } from "../types/SetFactory"
+import getIdentity from './helpers/getIdentity'
 
 export function _toSet<T>(src: Iterable<T>, setFactory?: SetFactory<T>): Set<T>
 export function _toSet<T, TKey>(

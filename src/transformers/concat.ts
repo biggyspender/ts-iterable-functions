@@ -1,5 +1,5 @@
-import { toIterable } from '../helpers/toIterable'
 import { deferP0 } from 'ts-functional-pipe'
+import { toIterable } from '../helpers/toIterable'
 
 /**
  * concatenate any number of sequences to the end of a sequence
@@ -7,7 +7,7 @@ import { deferP0 } from 'ts-functional-pipe'
  * @param sequences additional sequences whose items will be appended to the output sequence
  * @example concat(src, seq1, seq2, seq3)
  */
-export function _concat<T>(src: Iterable<T>, ...sequences: Array<Iterable<T>>): Iterable<T> {
+export function _concat<T>(src: Iterable<T>, ...sequences: Iterable<T>[]): Iterable<T> {
   return toIterable(function* () {
     for (const item of src) {
       yield item

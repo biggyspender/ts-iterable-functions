@@ -1,17 +1,33 @@
-We're really glad you're reading this, because we need volunteer developers to help this project come to fruition. 👏
+# Contributing Guidelines
 
-## Instructions
+_Pull requests, bug reports, and all other forms of contribution are welcomed and highly encouraged!_ :octocat:
 
-These steps will guide you through contributing to this project:
+### Contents
 
-- Fork the repo
-- Clone it and install dependencies
+- [Code of Conduct](#book-code-of-conduct)
+- [Asking Questions](#bulb-asking-questions)
+- [How can I Contribute?](#inbox_tray-how-can-i-contribute)
 
-		git clone https://github.com/YOUR-USERNAME/typescript-library-starter
-		npm install
+> **This guide serves to set clear expectations for everyone involved with the project so that we can improve it together while also creating a welcoming space for everyone to participate. Following these guidelines will help ensure a positive experience for contributors and maintainers.**
 
-Keep in mind that after running `npm install` the git repo is reset. So a good way to cope with this is to have a copy of the folder to push the changes, and the other to try them.
+## :book: Code of Conduct
 
-Make and commit your changes. Make sure the commands npm run build and npm run test:prod are working.
+Please review our [Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
-Finally send a [GitHub Pull Request](https://github.com/alexjoverm/typescript-library-starter/compare?expand=1) with a clear list of what you've done (read more [about pull requests](https://help.github.com/articles/about-pull-requests/)). Make sure all of your commits are atomic (one feature per commit).
+## :bulb: Asking Questions
+
+If you have any question that does not relate to a bug or a feature request, please use [GitHub Discussions](https://github.com/biggyspender/ts-iterable-functions/discussions) instead of GitHub issues.
+
+## :inbox_tray: How can I Contribute?
+
+**GitHub issues**
+
+If you encounter a problem with this library or if you have a new feature you'd like to see in this project, please create [a new issue](https://github.com/biggyspender/ts-iterable-functions/issues/new/choose).
+
+**GitHub Pull requests**
+
+Please leverage the repository's own tools to make sure the code is aligned with our standards:
+
+1. Run all check commands before submitting the PR (`type:check`, `format:check`, `lint:check`, `test:coverage` and `spell:check`)
+2. Please commit your changes and run a `setup` command so you can actually check how would the template look like once cleaned up
+3. Always leverage the `cz` command to create a commit. We heavily rely on this for automatic releases.

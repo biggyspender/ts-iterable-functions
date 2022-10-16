@@ -1,5 +1,5 @@
-import { toIterable } from '../helpers/toIterable'
 import { deferP0 } from 'ts-functional-pipe'
+import { toIterable } from '../helpers/toIterable'
 
 export function _defaultIfEmpty<T>(src: Iterable<T>): Iterable<T | undefined> {
   return toIterable<T | undefined, () => IterableIterator<T | undefined>>(function*() {

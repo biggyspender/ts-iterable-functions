@@ -1,7 +1,6 @@
-import { _filter } from './filter'
-import { deferP0 } from 'ts-functional-pipe'
-import { SetFactory } from '../types/SetFactory'
-import { toIterable } from '../helpers/toIterable'
+import { deferP0 } from "ts-functional-pipe";
+import { toIterable } from "../helpers/toIterable";
+import { SetFactory } from "../types/SetFactory";
 
 export function _intersect<T>(
   src: Iterable<T>,
@@ -9,16 +8,16 @@ export function _intersect<T>(
   setFactory: SetFactory<T> = { createSet: () => new Set() }
 ): Iterable<T> {
   return toIterable(function* () {
-    const set: Set<T> = setFactory.createSet()
+    const set: Set<T> = setFactory.createSet();
     for (const item of seq) {
-      set.add(item)
+      set.add(item);
     }
     for (const item of src) {
       if (set.has(item)) {
-        yield item
+        yield item;
       }
     }
-  })
+  });
 }
 
-export const intersect = deferP0(_intersect)
+export const intersect = deferP0(_intersect);

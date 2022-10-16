@@ -1,6 +1,6 @@
+import { deferP0 } from 'ts-functional-pipe'
 import { IndexedPredicate } from '../types/IndexedPredicate'
 import { _some } from './some'
-import { deferP0 } from 'ts-functional-pipe'
 
 /**
  * returns `true` if *all* elements in `src` return `true` when passed to `pred`

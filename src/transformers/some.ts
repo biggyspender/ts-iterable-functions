@@ -1,5 +1,5 @@
-import { IndexedPredicate } from '../types/IndexedPredicate'
-import { deferP0 } from 'ts-functional-pipe'
+import { deferP0 } from "ts-functional-pipe";
+import { IndexedPredicate } from "../types/IndexedPredicate";
 
 /**
  * returns `true` if *any* elements in `src` return `true` when passed to `pred`
@@ -7,14 +7,17 @@ import { deferP0 } from 'ts-functional-pipe'
  * @param src source sequence
  * @param pred indexed predicate function
  */
-export function _some<T>(src: Iterable<T>, pred: IndexedPredicate<T> = (x) => true): boolean {
-  let i = 0
+export function _some<T>(
+  src: Iterable<T>,
+  pred: IndexedPredicate<T> = (_) => true
+): boolean {
+  let i = 0;
   for (const item of src) {
     if (pred(item, i++)) {
-      return true
+      return true;
     }
   }
-  return false
+  return false;
 }
 /**
  * returns `true` if *any* elements in `src` return `true` when passed to `pred`
@@ -24,4 +27,4 @@ export function _some<T>(src: Iterable<T>, pred: IndexedPredicate<T> = (x) => tr
  * @param src source sequence
  * @param pred indexed predicate function
  */
-export const some = deferP0(_some)
+export const some = deferP0(_some);

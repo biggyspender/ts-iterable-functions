@@ -1,9 +1,9 @@
-import { IndexedSelector } from '../types/IndexedSelector'
 import { pipeInto as pp, deferP0 } from 'ts-functional-pipe'
-import { groupJoin } from './groupJoin'
-import { flatMap } from './flatMap'
-import { _map } from './map'
+import { IndexedSelector } from '../types/IndexedSelector'
 import { MapFactory } from '../types/MapFactory'
+import { flatMap } from './flatMap'
+import { groupJoin } from './groupJoin'
+import { _map } from './map'
 
 export function _join<T, TInner, TKey, TOut>(
   src: Iterable<T>,

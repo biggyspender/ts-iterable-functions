@@ -1,5 +1,5 @@
-import { toIterable } from '../helpers/toIterable'
 import { deferP0 } from 'ts-functional-pipe'
+import { toIterable } from '../helpers/toIterable'
 
 export function _reverse<T>(src: Iterable<T>): Iterable<T> {
   return toIterable(function*() {
