@@ -22,7 +22,6 @@ export function _some<T>(
 /**
  * returns `true` if *any* elements in `src` return `true` when passed to `pred`
  * @remarks does not enumerate further if `pred` returns `false` on a value
- * @remarks
  * {@link https://biggyspender.github.io/ts-functional-pipe/globals.html#deferp0 P0 deferred} version of {@link _every}
  * @param src source sequence
  * @param pred indexed predicate function
