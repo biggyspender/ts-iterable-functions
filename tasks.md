@@ -20,15 +20,15 @@ count.ts - done
 
 defaultIfEmpty.ts - done
 
-distinct.ts
+distinct.ts - done
 
-distinctBy.ts
+distinctBy.ts - done
 
-elementAt.ts
+elementAt.ts - done
 
-every.ts
+every.ts - done
 
-except.ts
+except.ts - done
 
 first.ts
 
