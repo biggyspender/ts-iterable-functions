@@ -3,8 +3,10 @@
 - Goal: update each transformer in `src/transformers/` so its `_function` JSDoc matches the refreshed pattern now present in `aggregate.ts`, `append.ts`, `average.ts`, and `concat.ts`.
 - Style requirements:
 	- Remove any existing comments on the `_function` and rewrite the JSDoc from scratch.
+	- Delete any stray inline comments tied to the `_function` body before adding the refreshed block.
 	- Provide a concise summary, list generic type parameters when present, describe each parameter and the return value, call out error conditions, and include two fenced `ts` examples: direct invocation and `pipeInto` with the curried helper.
 	- Document the curried export with a one-line block comment reading `Curried version of {@link _FunctionName}.` exactly, matching the existing pattern.
+	- Place that curried-export comment immediately above the exported helper, outside the `_function` body.
 	- Mirror the tone and section ordering used in the updated files; use the same wording for example headings (“or using the curried version:”) and keep descriptions one sentence where practical.
 	- Ensure each `pipeInto` example is self-contained by declaring any data it uses inside the fenced block.
 - Process: work through the list below sequentially, updating each transformer file and marking the entry with `- done` once finished.
