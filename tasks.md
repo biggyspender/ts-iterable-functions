@@ -104,15 +104,15 @@ sum.ts - done
 
 take.ts - done
 
-takeToInclusive.ts
+takeToInclusive.ts - done
 
-takeWhile.ts
+takeWhile.ts - done
 
-thenBy.ts
+thenBy.ts - done
 
-thenByDescending.ts
+thenByDescending.ts - done
 
-toArray.ts
+toArray.ts - done
 
 toObject.ts
 
