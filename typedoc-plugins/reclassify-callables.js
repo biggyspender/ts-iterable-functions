@@ -11,6 +11,7 @@ import {
     TypeParameterReflection,
     ReflectionFlag,
     Comment,
+    CommentTag,
     PageEvent,
 } from "typedoc";
 
@@ -363,6 +364,9 @@ function tryConvertDeferP0(reflection, project) {
         }
     }
 
+    const companionName = companion?.name ?? `_${reflection.name}`;
+    appendCurriedVersionNote(signature, companionName);
+
     const returnDeclaration = cloneDeclaration(innerDeclaration, signature);
     signature.type = new ReflectionType(returnDeclaration);
 
@@ -401,14 +405,14 @@ function findCompanionReflection(reflection, project) {
  */
 function applyCompanionComments(source, target) {
     if (source.comment && !target.comment) {
-        target.comment = source.comment;
+        target.comment = cloneComment(source.comment);
     }
 
     if (Array.isArray(source.parameters) && Array.isArray(target.parameters)) {
         for (const parameter of source.parameters) {
             const targetParameter = target.parameters.find((param) => param.name === parameter.name);
             if (targetParameter && parameter.comment && !targetParameter.comment) {
-                targetParameter.comment = parameter.comment;
+                targetParameter.comment = cloneComment(parameter.comment);
             }
         }
     }
@@ -417,10 +421,60 @@ function applyCompanionComments(source, target) {
         for (const typeParam of source.typeParameters) {
             const targetTypeParam = target.typeParameters.find((param) => param.name === typeParam.name);
             if (targetTypeParam && typeParam.comment && !targetTypeParam.comment) {
-                targetTypeParam.comment = typeParam.comment;
+                targetTypeParam.comment = cloneComment(typeParam.comment);
             }
         }
     }
+}
+
+/**
+ * Produces a deep clone of a comment to avoid mutating shared references.
+ * @param {Comment | undefined} comment
+ * @returns {Comment | undefined}
+ */
+function cloneComment(comment) {
+    if (!comment) {
+        return comment;
+    }
+
+    const cloned = new Comment(Comment.cloneDisplayParts(comment.summary ?? []), []);
+
+    if (Array.isArray(comment.blockTags)) {
+        cloned.blockTags = comment.blockTags.map((tag) =>
+            typeof tag.clone === "function"
+                ? tag.clone()
+                : new CommentTag(tag.tag, tag.name, Comment.cloneDisplayParts(tag.content ?? []))
+        );
+    }
+
+    if (comment.modifierTags) {
+        cloned.modifierTags = new Set(comment.modifierTags);
+    }
+
+    return cloned;
+}
+
+/**
+ * Appends a "Curried version" note to the signature summary so output docs highlight the relationship.
+ * @param {SignatureReflection} signature
+ * @param {string} companionName
+ */
+function appendCurriedVersionNote(signature, companionName) {
+    const existing = signature.comment;
+    const comment = existing ? cloneComment(existing) : new Comment([], []);
+    signature.comment = comment;
+    const summary = comment.summary ?? (comment.summary = []);
+
+    const exists = summary.some(
+        (part) => typeof part?.text === "string" && part.text.includes("Curried version of ")
+    );
+
+    if (exists) {
+        return;
+    }
+
+    const prefix = summary.length > 0 ? "\n\n" : "";
+    summary.push({ kind: "text", text: `${prefix}Curried version of \`${companionName}\`.` });
 }
 
 /**
