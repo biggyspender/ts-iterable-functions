@@ -1,6 +1,26 @@
 import { headTail } from "../helpers/headTail";
 import { _aggregate } from "./aggregate";
 
+/**
+ * Aggregates a sequence into a single result by iteratively combining elements.
+ *
+ * @typeParam T - Element type produced by the source iterable.
+ * @typeParam TOut - Accumulator result type when a distinct seed is supplied.
+ * @typeParam TT - Effective accumulator type when `seed` is optional.
+ * @param src - Source iterable to be reduced.
+ * @param aggFunc - Combiner invoked with the previous accumulator, current element, and current index.
+ * @param seed - Optional initial accumulator; falls back to the first element when omitted.
+ * @returns The final accumulator produced after the reducer runs over the entire sequence.
+ * @throws {Error} If `seed` is omitted and the source iterable is empty.
+ * @example
+ * ```ts
+ * const total = _reduce([1, 2, 3], (prev, curr) => prev + curr);
+ * console.log(total); // 6
+ *
+ * const product = _reduce([1, 2, 3], (prev, curr) => prev * curr, 1);
+ * console.log(product); // 6
+ * ```
+ */
 export function _reduce<T, TOut>(
   src: Iterable<T>,
   aggFunc: (prev: TOut, curr: T, idx: number) => TOut,
@@ -23,6 +43,9 @@ export function _reduce<T, TOut, TT extends T | TOut>(
   }
 }
 
+/**
+ * Curried version of {@link _reduce}.
+ */
 export function reduce<T, TOut>(
   aggFunc: (prev: TOut, curr: T, idx: number) => TOut,
   seed: TOut

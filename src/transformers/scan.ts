@@ -1,6 +1,23 @@
 import { headTail } from "../helpers/headTail";
 import { toIterable } from "../helpers/toIterable";
 
+/**
+ * Produces the intermediate accumulator values of a reduction over the source iterable.
+ *
+ * @typeParam T - Element type produced by the source iterable.
+ * @typeParam TOut - Accumulator result type when a distinct seed is supplied.
+ * @typeParam TT - Effective accumulator type when `seed` is optional.
+ * @param src - Source iterable providing values for the running aggregation.
+ * @param aggFunc - Combiner invoked with the previous accumulator, current element, and current index.
+ * @param seed - Optional initial accumulator; falls back to the first element when omitted.
+ * @returns A deferred iterable yielding each intermediate accumulator value in evaluation order.
+ * @throws {Error} If `seed` is omitted and the source iterable is empty.
+ * @example
+ * ```ts
+ * const runningTotals = [..._scan([1, 2, 3], (prev, curr) => prev + curr, 0)];
+ * console.log(runningTotals); // [1, 3, 6]
+ * ```
+ */
 export function _scan<T, TOut>(
   src: Iterable<T>,
   aggFunc: (prev: TOut, curr: T, idx: number) => TOut,
@@ -33,6 +50,10 @@ export function _scan<T, TOut, TT extends T | TOut>(
     }
   });
 }
+
+/**
+ * Curried version of {@link _scan}.
+ */
 export function scan<T, TOut>(
   aggFunc: (prev: TOut, curr: T, idx: number) => TOut,
   seed: TOut
