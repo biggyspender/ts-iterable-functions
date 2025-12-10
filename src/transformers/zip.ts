@@ -2,32 +2,39 @@ import { deferP0 } from "ts-functional-pipe";
 import { toIterable } from "../helpers/toIterable";
 
 /**
- * Creates a new iterable by pairing consecutive elements from two source iterables
- * and transforming each pair through the provided selector function.
+ * Combines two iterables by applying a selector to aligned pairs until either source is exhausted.
  *
- * Iteration stops as soon as either source iterable is exhausted.
- *
- * @typeParam T - The element type of the first iterable.
- * @typeParam TOther - The element type of the second iterable.
- * @typeParam TOut - The element type produced by the selector function.
- * @param src - The first iterable to zip.
- * @param seq - The second iterable to zip.
- * @param selector - A function that combines each pair of elements into an output value.
- * @returns An iterable yielding the transformed results for each pair of elements.
+ * @typeParam T - Element type produced by the first iterable.
+ * @typeParam TOther - Element type produced by the second iterable.
+ * @typeParam TOut - Element type yielded by the selector.
+ * @param src - Primary iterable providing the first element of each pair.
+ * @param seq - Secondary iterable providing the second element of each pair.
+ * @param selector - Function mapping a pair of elements to the emitted value.
+ * @returns A deferred iterable yielding the selector results for each aligned pair.
+ * @throws Error Rethrows any error thrown by `selector`.
  *
  * @example
  * ```ts
- * const result = _zip([1, 2], ['a', 'b'], (n, s) => `${n}${s}`);
+ * const result = _zip(
+ *   [1, 2],
+ *   ["a", "b"],
+ *   (value, label) => `${value}${label}`
+ * );
  * console.log([...result]); // ["1a", "2b"]
  * ```
  *
  * or using the curried version:
  * ```ts
- * const result = pipeInto(
- *   [1, 2],
- *   zip(['a', 'b'], (n, s) => `${n}${s}`)
- * );
- * console.log([...result]); // ["1a", "2b"]
+ * const result = [
+ *   ...pipeInto(
+ *     [1, 2],
+ *     zip(
+ *       ["a", "b"],
+ *       (value, label) => `${value}${label}`
+ *     )
+ *   ),
+ * ];
+ * console.log(result); // ["1a", "2b"]
  * ```
  */
 export function _zip<T, TOther, TOut>(
@@ -51,4 +58,7 @@ export function _zip<T, TOther, TOut>(
   });
 }
 
+/**
+ * Curried version of {@link _zip}.
+ */
 export const zip = deferP0(_zip);

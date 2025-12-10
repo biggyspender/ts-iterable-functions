@@ -114,15 +114,15 @@ thenByDescending.ts - done
 
 toArray.ts - done
 
-toObject.ts
+toObject.ts - done
 
-union.ts
+union.ts - done
 
-unwrapIndexed.ts
+unwrapIndexed.ts - done
 
-zip.ts
+zip.ts - done
 
-zipAll.ts
+zipAll.ts - done
 
 zipAllToTuple.ts
 
