@@ -2,8 +2,23 @@ import { deferP0 } from "ts-functional-pipe";
 import { _aggregate } from "./aggregate";
 
 /**
- * calculates the average value of a sequence of **`number`**
- * @param src a sequence of numbers
+ * Computes the arithmetic mean of a numeric iterable, throwing if the sequence is empty.
+ *
+ * @param src - Source iterable yielding numeric values to average.
+ * @returns The arithmetic mean of the input values.
+ * @throws Error when the iterable produces no elements.
+ *
+ * @example
+ * ```ts
+ * const mean = _average([2, 4, 6]);
+ * console.log(mean); // 4
+ * ```
+ *
+ * or using the curried version:
+ * ```ts
+ * const mean = pipeInto([2, 4, 6], average());
+ * console.log(mean); // 4
+ * ```
  */
 export function _average(src: Iterable<number>): number {
   const f = _aggregate(
@@ -25,10 +40,6 @@ export function _average(src: Iterable<number>): number {
 }
 
 /**
- * calculates the average value of a sequence of **`number`**
- * @remarks
- * {@link https://biggyspender.github.io/ts-functional-pipe/globals.html#deferp0 P0 deferred} version of {@link _average}
- * @param src a sequence of numbers
+ * Curried version of {@link _average}
  */
-
 export const average = deferP0(_average);
