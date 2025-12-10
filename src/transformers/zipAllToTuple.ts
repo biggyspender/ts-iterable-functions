@@ -1,6 +1,38 @@
 import { deferP0 } from "ts-functional-pipe";
 import { toIterable } from "../helpers/toIterable";
 
+/**
+ * Zips multiple iterables into tuples containing the co-indexed elements from each source.
+ *
+ * @typeParam T - Tuple type describing the elements produced by each input iterable.
+ * @param src - Iterable providing the iterables to zip.
+ * @returns A deferred iterable yielding tuples of aligned elements.
+ * @throws Error Rethrows any error thrown while enumerating the source iterables.
+ *
+ * @example
+ * ```ts
+ * const sources: Iterablified<[number, string]> = [
+ *   [1, 2, 3],
+ *   ["a", "b", "c"],
+ * ];
+ * const pairs = Array.from(_zipAllToTuple(sources));
+ * console.log(pairs); // [[1, "a"], [2, "b"], [3, "c"]]
+ * ```
+ *
+ * or using the curried version:
+ * ```ts
+ * const pairs = Array.from(
+ *   pipeInto(
+ *     [
+ *       [1, 2],
+ *       ["x", "y"],
+ *     ] as Iterablified<[number, string]>,
+ *     zipAllToTuple()
+ *   )
+ * );
+ * console.log(pairs); // [[1, "x"], [2, "y"]]
+ * ```
+ */
 export function _zipAllToTuple<T extends readonly unknown[]>(
   src: Iterablified<T>
 ): Iterable<T> {
@@ -21,6 +53,9 @@ export function _zipAllToTuple<T extends readonly unknown[]>(
   });
 }
 
+/**
+ * Curried version of {@link _zipAllToTuple}.
+ */
 export const zipAllToTuple = deferP0(_zipAllToTuple);
 
 export type Iterablified<T extends readonly unknown[]> = {

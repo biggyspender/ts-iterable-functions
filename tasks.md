@@ -124,6 +124,6 @@ zip.ts - done
 
 zipAll.ts - done
 
-zipAllToTuple.ts
+zipAllToTuple.ts - done
 
-zipMap.ts
+zipMap.ts - done
