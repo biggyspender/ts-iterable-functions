@@ -2,9 +2,25 @@ import { deferP0 } from "ts-functional-pipe";
 import { IndexedPredicate } from "../types/IndexedPredicate";
 
 /**
- * count the number of items in a sequence (that optionally satisfy a predicate)
- * @param src source sequence
- * @param pred optional predicate function to indicate which values should be included in the count
+ * Counts the elements of the source iterable that satisfy the optional predicate.
+ *
+ * @typeParam T - Element type produced by the source iterable.
+ * @param src - Source iterable to enumerate.
+ * @param pred - Predicate receiving each element and its index; truthy results increment the count.
+ * @returns Number of elements accepted by `pred`, or the total element count when omitted.
+ * @throws Error Rethrows any error thrown by `pred`.
+ *
+ * @example
+ * ```ts
+ * const evens = _count([1, 2, 3, 4], (value) => value % 2 === 0);
+ * console.log(evens); // 2
+ * ```
+ *
+ * or using the curried version:
+ * ```ts
+ * const evens = pipeInto([1, 2, 3, 4], count((value) => value % 2 === 0));
+ * console.log(evens); // 2
+ * ```
  */
 export function _count<T>(
   src: Iterable<T>,
@@ -19,11 +35,8 @@ export function _count<T>(
   }
   return c;
 }
+
 /**
- * count the number of items in a sequence (that optionally satisfy a predicate)
- * @remarks
- * {@link https://biggyspender.github.io/ts-functional-pipe/globals.html#deferp0 P0 deferred} version of {@link _count}
- * @param src source sequence
- * @param pred optional predicate function to indicate which values should be included in the count
+ * Curried version of {@link _count}.
  */
 export const count = deferP0(_count);

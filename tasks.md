@@ -16,9 +16,9 @@ average.ts - done
 
 concat.ts - done
 
-count.ts
+count.ts - done
 
-defaultIfEmpty.ts
+defaultIfEmpty.ts - done
 
 distinct.ts
 
