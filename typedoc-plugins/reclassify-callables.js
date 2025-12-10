@@ -308,11 +308,6 @@ function tryConvertDeferP0(reflection, project) {
         return;
     }
 
-    const tupleType = restParameter.type;
-    if (!tupleType || tupleType.type !== "tuple" || !Array.isArray(tupleType.elements)) {
-        return;
-    }
-
     const innerType = outerSignature.type;
     if (!(innerType instanceof ReflectionType)) {
         return;
@@ -331,10 +326,8 @@ function tryConvertDeferP0(reflection, project) {
     const signature = new SignatureReflection(reflection.name, ReflectionKind.CallSignature, reflection);
 
     if (reflection.comment) {
-        signature.comment = reflection.comment;
+        // Ignore comments attached to the curried export so companion docs drive the output.
         reflection.comment = undefined;
-    } else if (outerSignature.comment) {
-        signature.comment = outerSignature.comment;
     }
 
     copyFlags(outerSignature, signature);
@@ -343,26 +336,47 @@ function tryConvertDeferP0(reflection, project) {
         signature.typeParameters = outerSignature.typeParameters.map((tp) => cloneTypeParameter(tp, signature));
     }
 
-    signature.parameters = tupleType.elements.map((element, index) => {
-        const name = element?.name ?? `arg${index}`;
-        const parameter = new ParameterReflection(name, ReflectionKind.Parameter, signature);
-        if (element?.isOptional) {
-            parameter.setFlag(ReflectionFlag.Optional, true);
-        }
-        parameter.sources = restParameter.sources;
-        parameter.type = cloneType(element?.element ?? element, parameter);
-        return parameter;
-    });
-
-    applyTagComments(signature, signature.comment ?? outerSignature.comment);
-
     const companion = findCompanionReflection(reflection, project);
+    let parametersDefined = false;
+
     if (companion?.isDeclaration?.()) {
         const companionSignature = companion.signatures?.[0];
         if (companionSignature) {
+            if (Array.isArray(companionSignature.parameters)) {
+                const [, ...companionParameters] = companionSignature.parameters;
+                if (companionParameters.length > 0) {
+                    signature.parameters = companionParameters.map((param) => cloneParameter(param, signature));
+                } else {
+                    signature.parameters = [];
+                }
+                parametersDefined = true;
+            }
+
             applyCompanionComments(companionSignature, signature);
         }
     }
+
+    if (!parametersDefined) {
+        const restType = restParameter.type;
+        if (restType?.type === "tuple" && Array.isArray(restType.elements)) {
+            signature.parameters = restType.elements.map((element, index) => {
+                const name = element?.name ?? `arg${index}`;
+                const parameter = new ParameterReflection(name, ReflectionKind.Parameter, signature);
+                if (element?.isOptional) {
+                    parameter.setFlag(ReflectionFlag.Optional, true);
+                }
+                parameter.sources = restParameter.sources;
+                parameter.type = cloneType(element?.element ?? element, parameter);
+                return parameter;
+            });
+        } else {
+            const clonedRest = cloneParameter(restParameter, signature);
+            signature.parameters = clonedRest ? [clonedRest] : [];
+        }
+    }
+
+    applyTagComments(signature, signature.comment ?? outerSignature.comment);
+    outerSignature.comment = undefined;
 
     const companionName = companion?.name ?? `_${reflection.name}`;
     appendCurriedVersionNote(signature, companionName);

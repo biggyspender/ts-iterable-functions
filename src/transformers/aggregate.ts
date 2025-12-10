@@ -39,6 +39,6 @@ export function _aggregate<T, TOut>(
 }
 
 /**
- * Curried version of {@link _aggregate}
+ * Curried version of {@link _aggregate}.
  */
 export const aggregate = deferP0(_aggregate);

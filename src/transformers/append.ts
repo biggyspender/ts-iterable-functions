@@ -31,6 +31,6 @@ export function _append<T>(src: Iterable<T>, item: T): Iterable<T> {
 }
 
 /**
- * Curried version of {@link _append}
+ * Curried version of {@link _append}.
  */
 export const append = deferP0(_append);

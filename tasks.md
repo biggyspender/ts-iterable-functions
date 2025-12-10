@@ -1,11 +1,11 @@
 **Transformer Documentation Tasks**
 
-- Goal: update each transformer in `src/transformers/` to use a consistent JSDoc style matching the pattern introduced in `aggregate.ts` and applied to `append.ts`, `average.ts`, and `concat.ts`.
+- Goal: update each transformer in `src/transformers/` so its `_function` JSDoc matches the refreshed pattern now present in `aggregate.ts`, `append.ts`, `average.ts`, and `concat.ts`.
 - Style requirements:
-	- Remove any existing comments and rewrite JSDoc blocks from scratch.
-	- Document the internal `_function` with a summary, generic type parameters, parameter details, return description, notable error cases, and two example snippets (direct usage and curried `deferP0` usage via `pipeInto`).
-	- Avoid documenting the exported `const` that wraps `deferP0`; only document the `_function`.
-	- Keep language clear and actionable for readers; follow the exact tone and structure used in the already completed files.
+	- Remove any existing comments on the `_function` and rewrite the JSDoc from scratch.
+	- Provide a concise summary, list generic type parameters when present, describe each parameter and the return value, call out error conditions, and include two fenced `ts` examples: direct invocation and `pipeInto` with the curried helper.
+	- Document the curried export with a one-line block comment reading `Curried version of {@link _FunctionName}.` exactly, matching the existing pattern.
+	- Mirror the tone and section ordering used in the updated files; use the same wording for example headings (“or using the curried version:”) and keep descriptions one sentence where practical.
 - Process: work through the list below sequentially, updating each transformer file and marking the entry with `- done` once finished.
 
 aggregate.ts - done

@@ -38,6 +38,6 @@ export function _concat<T>(
 }
 
 /**
- * Curried version of {@link _concat}
+ * Curried version of {@link _concat}.
  */
 export const concat = deferP0(_concat);

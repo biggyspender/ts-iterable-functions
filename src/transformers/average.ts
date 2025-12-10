@@ -40,6 +40,6 @@ export function _average(src: Iterable<number>): number {
 }
 
 /**
- * Curried version of {@link _average}
+ * Curried version of {@link _average}.
  */
 export const average = deferP0(_average);
