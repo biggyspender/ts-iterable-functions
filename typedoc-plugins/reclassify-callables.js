@@ -455,6 +455,52 @@ function cloneComment(comment) {
 }
 
 /**
+ * Attempts to replace a variable-style function export that references another
+ * function with its own set of call signatures so documentation renders cleanly.
+ * @param {DeclarationReflection} reflection
+ */
+function tryConvertReferenceFunction(reflection, project) {
+    if (
+        !(reflection instanceof DeclarationReflection) ||
+        Array.isArray(reflection.signatures) && reflection.signatures.length > 0
+    ) {
+        return;
+    }
+
+    const type = reflection.type;
+
+    if (type instanceof ReferenceType && type.reflection) {
+        const target = type.reflection;
+        if (!declarationHasSignature(target) || !Array.isArray(target.signatures)) {
+            return;
+        }
+
+        const clonedSignatures = target.signatures.map((signature) => cloneSignature(signature, reflection));
+        reflection.signatures = clonedSignatures;
+        if (project?.removeTypeReflections) {
+            project.removeTypeReflections(type);
+        }
+        reflection.type = undefined;
+        return;
+    }
+
+    if (type instanceof ReflectionType && type.declaration && declarationHasSignature(type.declaration)) {
+        const sourceDeclaration = type.declaration;
+        const clonedSignatures = sourceDeclaration.signatures?.map((signature) => cloneSignature(signature, reflection)) ?? [];
+
+        if (clonedSignatures.length === 0) {
+            return;
+        }
+
+        reflection.signatures = clonedSignatures;
+        if (project?.removeTypeReflections) {
+            project.removeTypeReflections(type);
+        }
+        reflection.type = undefined;
+    }
+}
+
+/**
  * Appends a "Curried version" note to the signature summary so output docs highlight the relationship.
  * @param {SignatureReflection} signature
  * @param {string} companionName
@@ -478,6 +524,42 @@ function appendCurriedVersionNote(signature, companionName) {
 }
 
 /**
+ * Ensures function reflections expose their summary on call signatures only,
+ * preventing duplicate text in generated documentation.
+ * @param {import("typedoc").Reflection | undefined} reflection
+ */
+function normalizeFunctionComments(reflection) {
+    if (!reflection) {
+        return;
+    }
+
+    if (
+        reflection.kind === ReflectionKind.Function &&
+        Array.isArray(reflection.signatures) &&
+        reflection.signatures.length > 0
+    ) {
+        const reflectionComment = reflection.comment ? cloneComment(reflection.comment) : undefined;
+
+        if (reflectionComment) {
+            for (const signature of reflection.signatures) {
+                if (!signature.comment) {
+                    signature.comment = cloneComment(reflectionComment);
+                }
+            }
+        }
+
+        reflection.comment = undefined;
+
+    }
+
+    if (Array.isArray(reflection.children)) {
+        for (const child of reflection.children) {
+            normalizeFunctionComments(child);
+        }
+    }
+}
+
+/**
  * Rewrites signatures for exports tagged with {@link CURRIED_FROM_TAG} so
  * documentation reflects the curried parameter order.
  * @param {import("typedoc").ProjectReflection} project
@@ -491,6 +573,7 @@ function applyCurriedFrom(project) {
         }
 
         tryConvertDeferP0(reflection, project);
+        tryConvertReferenceFunction(reflection, project);
     }
 }
 
@@ -513,11 +596,13 @@ export function load(app) {
         }
 
         applyCurriedFrom(project);
+        normalizeFunctionComments(project);
         reorderFunctionGroups(project);
     });
 
     app.renderer.on(PageEvent.BEGIN, (page) => {
         if (page.model) {
+            normalizeFunctionComments(page.model);
             reorderFunctionGroups(page.model);
         }
     });
