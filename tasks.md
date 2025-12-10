@@ -84,15 +84,15 @@ orderBy.ts - done
 
 orderByDescending.ts - done
 
-prepend.ts
+prepend.ts - done
 
-reverse.ts
+reverse.ts - done
 
-sequenceEqual.ts
+sequenceEqual.ts - done
 
-single.ts
+single.ts - done
 
-singleOrDefault.ts
+singleOrDefault.ts - done
 
 skip.ts
 
