@@ -15,7 +15,6 @@ export function _zipAllToTuple<T extends readonly unknown[]>(
       if (itRes.some((r) => r.done)) {
         break;
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       const v = itRes.map((r) => r.value) as unknown as T;
       yield v;
     }

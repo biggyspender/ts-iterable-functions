@@ -13,11 +13,11 @@
   "license": "MIT",
   "engines": {
     "node": ">= 20",
-    "npm": ">= 8"
+    "pnpm": ">= 10"
   },
   "volta": {
     "node": "20.19.4",
-    "npm": "11.4.2"
+    "pnpm": "10.25.0"
   },
   "publishConfig": {
     "access": "public"
@@ -27,7 +27,8 @@
     "/README.md"
   ],
   "scripts": {
-    "build": "npm run clean && npm run type:dts && npm run build:main",
+    "build": "run-s clean build:all",
+    "build:all": "run-p type:dts build:main",
     "build:main": "node -r ./esbuild-hook ./scripts/build",
     "clean": "node -r ./esbuild-hook ./scripts/clean",
     "type:dts": "tsc --emitDeclarationOnly",
@@ -48,39 +49,41 @@
     "serve:docs": "serve -l 5000 docs"
   },
   "devDependencies": {
-    "@ryansonshine/commitizen": "^4.2.8",
-    "@ryansonshine/cz-conventional-changelog": "^3.3.4",
-    "@semantic-release/changelog": "^6.0.1",
-    "@semantic-release/commit-analyzer": "^9.0.2",
-    "@semantic-release/github": "^8.0.6",
-    "@semantic-release/npm": "^12.0.2",
-    "@semantic-release/release-notes-generator": "^10.0.3",
+    "@eslint/js": "^9.39.1",
+    "@ryansonshine/commitizen": "4.2.8",
+    "@ryansonshine/cz-conventional-changelog": "3.3.4",
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/commit-analyzer": "13.0.1",
+    "@semantic-release/github": "12.0.2",
+    "@semantic-release/npm": "13.1.2",
+    "@semantic-release/release-notes-generator": "14.1.0",
     "@types/node": "^20.0.0",
     "@types/prompts": "^2.4.9",
     "@types/shelljs": "^0.8.17",
-    "@typescript-eslint/eslint-plugin": "^5.40.0",
-    "@typescript-eslint/parser": "^5.40.0",
-    "@vitest/coverage-v8": "^3.2.4",
+    "@typescript-eslint/eslint-plugin": "8.49.0",
+    "@typescript-eslint/parser": "8.49.0",
+    "@vitest/coverage-v8": "4.0.15",
     "browserslist": "^4.25.1",
     "c8": "^7.12.0",
     "cspell": "^6.12.0",
-    "esbuild": "^0.25.6",
-    "esbuild-node-externals": "^1.18.0",
-    "esbuild-plugin-browserslist": "^1.0.1",
-    "eslint": "^8.25.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-import-resolver-typescript": "^3.5.1",
-    "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-import": "^2.26.0",
+    "esbuild": "0.27.1",
+    "esbuild-node-externals": "1.20.1",
+    "esbuild-plugin-browserslist": "2.0.0",
+    "eslint": "9.39.1",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-import-resolver-typescript": "4.4.4",
+    "eslint-plugin-eslint-comments": "3.2.0",
+    "eslint-plugin-import": "2.32.0",
     "nyc": "^15.1.0",
-    "prettier": "^3.6.2",
-    "semantic-release": "^24.2.7",
-    "serve": "^14.2.4",
-    "shelljs": "^0.10.0",
-    "source-map-support": "^0.5.21",
-    "typedoc": "^0.28.7",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "prettier": "3.7.4",
+    "semantic-release": "25.0.2",
+    "serve": "14.2.5",
+    "shelljs": "0.10.0",
+    "source-map-support": "0.5.21",
+    "typedoc": "0.28.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.49.0",
+    "vitest": "4.0.15"
   },
   "peerDependencies": {
     "ts-comparer-builder": "^1.1.1",
@@ -90,5 +93,8 @@
   },
   "overrides": {
     "semver-regex": "3.1.4"
+  },
+  "dependencies": {
+    "npm-run-all2": "^8.0.4"
   }
 }
