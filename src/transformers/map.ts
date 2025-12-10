@@ -3,10 +3,31 @@ import { toIterable } from "../helpers/toIterable";
 import { IndexedSelector } from "../types/IndexedSelector";
 
 /**
- * Creates a new sequence populated with the results of calling a provided function on every element in the source sequence
- * @param src source sequence
- * @param selector function to transform each item `T` in the source sequence into `TOut`
- * @returns A new sequence with each element being the result of the selector function.
+ * Projects each element of the source iterable into a new form.
+ *
+ * @typeParam T - Element type produced by the source iterable.
+ * @typeParam TOut - Element type produced by the selector.
+ * @param src - Source iterable to transform.
+ * @param selector - Selector receiving each element and its index, producing the projected value.
+ * @returns A deferred iterable yielding the selector results for each source element.
+ * @throws Error Rethrows any error thrown by `selector`.
+ *
+ * @example
+ * ```ts
+ * const squares = [..._map([1, 2, 3], (value) => value * value)];
+ * console.log(squares); // [1, 4, 9]
+ * ```
+ *
+ * or using the curried version:
+ * ```ts
+ * const squares = [
+ *   ...pipeInto(
+ *     [1, 2, 3],
+ *     map((value) => value * value)
+ *   ),
+ * ];
+ * console.log(squares); // [1, 4, 9]
+ * ```
  */
 export function _map<T, TOut>(
   src: Iterable<T>,
@@ -21,12 +42,6 @@ export function _map<T, TOut>(
 }
 
 /**
- * Creates a new sequence populated with the results of calling a provided function on every element in the source sequence
- * @remarks
- * {@link https://biggyspender.github.io/ts-functional-pipe/globals.html#deferp0 P0 deferred} version of {@link _map}
- * @param src source sequence
- * @param selector function to transform each item `T` in the source sequence into `TOut`
- * @returns A new sequence with each element being the result of the selector function.
+ * Curried version of {@link _map}.
  */
-
 export const map = deferP0(_map);

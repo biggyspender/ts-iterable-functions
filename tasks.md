@@ -52,25 +52,25 @@ groupBy.ts - done
 
 groupJoin.ts - done
 
-indexed.ts
+indexed.ts - done
 
-intersect.ts
+intersect.ts - done
 
-isSubsetOf.ts
+isSubsetOf.ts - done
 
-isSupersetOf.ts
+isSupersetOf.ts - done
 
-join.ts
+join.ts - done
 
-last.ts
+last.ts - done
 
-lastOrDefault.ts
+lastOrDefault.ts - done
 
-leftOuterJoin.ts
+leftOuterJoin.ts - done
 
-map.ts
+map.ts - done
 
-max.ts
+max.ts - done
 
 maxBy.ts
 
