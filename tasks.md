@@ -104,6 +104,8 @@ sum.ts - done
 
 take.ts - done
 
+takeToInclusive.ts
+
 takeWhile.ts
 
 thenBy.ts
@@ -111,6 +113,8 @@ thenBy.ts
 thenByDescending.ts
 
 toArray.ts
+
+toObject.ts
 
 union.ts
 
