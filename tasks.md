@@ -94,15 +94,15 @@ single.ts - done
 
 singleOrDefault.ts - done
 
-skip.ts
+skip.ts - done
 
-skipWhile.ts
+skipWhile.ts - done
 
-some.ts
+some.ts - done
 
-sum.ts
+sum.ts - done
 
-take.ts
+take.ts - done
 
 takeWhile.ts
 
