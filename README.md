@@ -1,15 +1,4 @@
----
 
-## 🔄 Comparison with Alternatives
-
-| Library                | Type Safety | Pipeable | LINQ-like | Dependencies | ESM/CJS | Bundle Size |
-|------------------------|:-----------:|:--------:|:---------:|:------------:|:-------:|:-----------:|
-| ts-iterable-functions  |     ✅      |   ✅     |    ✅     |      0       |  ✅/✅   |   Tiny      |
-| lodash/underscore      |     ❌      |   ❌     |    ❌     |     Many     |  ✅/✅   |   Large     |
-| rxjs                   |     ✅      |   ✅     |    ❌     |     Many     |  ✅/✅   |   Large     |
-| native JS iterables    |     ❌      |   ❌     |    ❌     |      0       |  ✅/✅   |   Small     |
-
----
 
 ## 🌍 Real-World Use Cases
 
@@ -51,35 +40,43 @@
 
 ## 📚 Table of Contents
 
-- [Quick Start](#-quick-start)
-- [Features](#-features)
-- [API Overview](#-api-overview)
-- [Functions for iterable sequences](#functions-for-iterable-sequences)
-- [Usage with pipes](#usage-with-pipes)
-- [Generators](#generators)
-- [Transformers](#transformers)
-- [Acknowledgements](#acknowledgements)
+- [ts-iterable-functions](#ts-iterable-functions)
+  - [🚀 Features](#-features)
+  - [📚 Table of Contents](#-table-of-contents)
+  - [🧩 API Overview](#-api-overview)
+    - [Note](#note)
+  - [Functions for iterable sequences](#functions-for-iterable-sequences)
+    - [An example](#an-example)
+    - [Two forms of the same function](#two-forms-of-the-same-function)
+    - [The pipeable function](#the-pipeable-function)
+  - [Usage with pipes](#usage-with-pipes)
+    - [Making `times2squared` readable](#making-times2squared-readable)
+  - [Types in the pipe are preserved](#types-in-the-pipe-are-preserved)
+  - [Generators](#generators)
+  - [Transformers](#transformers)
+  - [🤝 Contributing \& Community](#-contributing--community)
+    - [Acknowledgements](#acknowledgements)
 
 ---
 
 ## 🧩 API Overview
 
-| Function         | Description                                      |
-|------------------|--------------------------------------------------|
-| `map`/`select`   | Transform each element in an iterable            |
-| `filter`/`where` | Filter elements by predicate                     |
-| `reduce`         | Reduce iterable to a single value                |
-| `groupBy`        | Group elements by key selector                   |
-| `orderBy`        | Sort elements by key selector                    |
-| `thenBy`         | Secondary sort for already ordered iterables     |
-| `toArray`        | Convert iterable to array                        |
-| `toSet`          | Convert iterable to set                          |
-| `concat`         | Concatenate multiple iterables                   |
-| `distinct`       | Remove duplicate elements                        |
-| `flatten`        | Flatten nested iterables                         |
-| `sum`/`average`  | Aggregate numeric values                         |
-| `zip`            | Combine multiple iterables element-wise           |
-| ...and more!     | See below for the full list                      |
+| Function         | Description                                  |
+| ---------------- | -------------------------------------------- |
+| `map`/`select`   | Transform each element in an iterable        |
+| `filter`/`where` | Filter elements by predicate                 |
+| `reduce`         | Reduce iterable to a single value            |
+| `groupBy`        | Group elements by key selector               |
+| `orderBy`        | Sort elements by key selector                |
+| `thenBy`         | Secondary sort for already ordered iterables |
+| `toArray`        | Convert iterable to array                    |
+| `toSet`          | Convert iterable to set                      |
+| `concat`         | Concatenate multiple iterables               |
+| `distinct`       | Remove duplicate elements                    |
+| `flatten`        | Flatten nested iterables                     |
+| `sum`/`average`  | Aggregate numeric values                     |
+| `zip`            | Combine multiple iterables element-wise      |
+| ...and more!     | See below for the full list                  |
 
 ---
 Install:

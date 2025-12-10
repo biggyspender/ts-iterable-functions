@@ -1,0 +1,7 @@
+{
+    "plugin": [
+        "typedoc-plugin-markdown",
+        "./typedoc-plugins/reclassify-callables.js"
+    ],
+    "out": "./docs"
+}

@@ -22,4 +22,7 @@ export function _aggregate<T, TOut>(
   }
   return v;
 }
+/**
+ * {@inheritDoc _aggregate}
+ */
 export const aggregate = deferP0(_aggregate);
