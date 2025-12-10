@@ -74,15 +74,15 @@ map.ts - done
 
 max.ts - done
 
-maxBy.ts
+maxBy.ts - done
 
-min.ts
+min.ts - done
 
-minBy.ts
+minBy.ts - done
 
-orderBy.ts
+orderBy.ts - done
 
-orderByDescending.ts
+orderByDescending.ts - done
 
 prepend.ts
 
