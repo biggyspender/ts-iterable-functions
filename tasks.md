@@ -6,7 +6,9 @@
 	- Provide a concise summary, list generic type parameters when present, describe each parameter and the return value, call out error conditions, and include two fenced `ts` examples: direct invocation and `pipeInto` with the curried helper.
 	- Document the curried export with a one-line block comment reading `Curried version of {@link _FunctionName}.` exactly, matching the existing pattern.
 	- Mirror the tone and section ordering used in the updated files; use the same wording for example headings (“or using the curried version:”) and keep descriptions one sentence where practical.
+	- Ensure each `pipeInto` example is self-contained by declaring any data it uses inside the fenced block.
 - Process: work through the list below sequentially, updating each transformer file and marking the entry with `- done` once finished.
+	- Mark progress by editing the existing list item in place (e.g., `count.ts - done`) rather than adding duplicate lines.
 
 aggregate.ts - done
 
@@ -30,25 +32,25 @@ every.ts - done
 
 except.ts - done
 
-first.ts
+first.ts - done
 
-firstOrDefault.ts
+firstOrDefault.ts - done
 
-flatMap.ts
+flatMap.ts - done
 
-flatten.ts
+flatten.ts - done
 
-forEach.ts
+forEach.ts - done
 
-fullOuterGroupJoin.ts
+fullOuterGroupJoin.ts - done
 
-fullOuterJoin.ts
+fullOuterJoin.ts - done
 
-groupAdjacent.ts
+groupAdjacent.ts - done
 
-groupBy.ts
+groupBy.ts - done
 
-groupJoin.ts
+groupJoin.ts - done
 
 indexed.ts
 
