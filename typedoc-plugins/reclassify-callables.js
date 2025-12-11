@@ -63,77 +63,6 @@ function declarationHasSignature(declaration) {
 }
 
 /**
- * Ensures function-like reflections are sorted with non-prefixed names before
- * their underscore-prefixed counterparts.
- * @param {import("typedoc").ContainerReflection | undefined} reflection
- */
-function reorderFunctionGroups(reflection) {
-    if (!reflection) {
-        return;
-    }
-
-    if (reflection.groups) {
-        for (const group of reflection.groups) {
-            if (!Array.isArray(group.children) || group.children.length === 0) {
-                continue;
-            }
-
-            const targetChildren = group.children.filter(isFunctionReflection);
-            if (targetChildren.length <= 1) {
-                continue;
-            }
-
-            const sorted = [...targetChildren].sort(compareFunctionNames);
-            let index = 0;
-
-            group.children = group.children.map((child) =>
-                isFunctionReflection(child) ? sorted[index++] : child
-            );
-        }
-    }
-
-    if (reflection.children && reflection.children.length > 0) {
-        const functionChildren = reflection.children.filter(isFunctionReflection);
-        if (functionChildren.length > 1) {
-            const sorted = [...functionChildren].sort(compareFunctionNames);
-            let index = 0;
-
-            reflection.children = reflection.children.map((child) =>
-                isFunctionReflection(child) ? sorted[index++] : child
-            );
-        }
-
-        for (const child of reflection.children) {
-            reorderFunctionGroups(child);
-        }
-    }
-}
-
-/**
- * @param {Reflection | undefined} reflection
- */
-function isFunctionReflection(reflection) {
-    return Boolean(reflection && reflection.kind === ReflectionKind.Function);
-}
-
-/**
- * @param {Reflection} a
- * @param {Reflection} b
- */
-function compareFunctionNames(a, b) {
-    const nameA = a?.name ?? "";
-    const nameB = b?.name ?? "";
-    const underscoreA = nameA.startsWith("_");
-    const underscoreB = nameB.startsWith("_");
-
-    if (underscoreA !== underscoreB) {
-        return underscoreA ? 1 : -1;
-    }
-
-    return nameA.localeCompare(nameB);
-}
-
-/**
  * @param {import("typedoc").SomeType | undefined} type
  * @param {import("typedoc").Reflection | undefined} parent
  * @returns {import("typedoc").SomeType | undefined}
@@ -379,7 +308,7 @@ function tryConvertDeferP0(reflection, project) {
     outerSignature.comment = undefined;
 
     const companionName = companion?.name ?? `_${reflection.name}`;
-    appendCurriedVersionNote(signature, companionName);
+    appendCurriedVersionNote(signature, companion, companionName);
 
     const returnDeclaration = cloneDeclaration(innerDeclaration, signature);
     signature.type = new ReflectionType(returnDeclaration);
@@ -519,7 +448,7 @@ function tryConvertReferenceFunction(reflection, project) {
  * @param {SignatureReflection} signature
  * @param {string} companionName
  */
-function appendCurriedVersionNote(signature, companionName) {
+function appendCurriedVersionNote(signature, companion, companionName) {
     const existing = signature.comment;
     const comment = existing ? cloneComment(existing) : new Comment([], []);
     signature.comment = comment;
@@ -534,7 +463,9 @@ function appendCurriedVersionNote(signature, companionName) {
     }
 
     const prefix = summary.length > 0 ? "\n\n" : "";
-    summary.push({ kind: "text", text: `${prefix}Curried version of \`${companionName}\`.` });
+    summary.push({ kind: "text", text: `${prefix}Curried version of ` });
+    summary.push({ kind: "inline-tag", tag: "@link", text: companionName, target: companion });
+    summary.push({ kind: "text", text: "." });
 }
 
 /**
@@ -611,13 +542,11 @@ export function load(app) {
 
         applyCurriedFrom(project);
         normalizeFunctionComments(project);
-        reorderFunctionGroups(project);
     });
 
     app.renderer.on(PageEvent.BEGIN, (page) => {
         if (page.model) {
             normalizeFunctionComments(page.model);
-            reorderFunctionGroups(page.model);
         }
     });
 }
