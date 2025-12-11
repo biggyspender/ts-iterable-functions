@@ -3,12 +3,12 @@ import { MapFactory } from "../types/MapFactory";
 import getIdentity from "./helpers/getIdentity";
 
 /**
- * Materialises a sequence into a map keyed by the projected key selector.
+ * Materializes a sequence into a map keyed by the projected key selector.
  *
  * @typeParam T - Element type produced by the source iterable.
  * @typeParam TKey - Key type returned by `keySelector`.
  * @typeParam TValue - Value type stored in the resulting map when `valueSelector` is supplied.
- * @param src - Source iterable to materialise.
+ * @param src - Source iterable to materialize.
  * @param keySelector - Projection invoked with each element and index to produce the map key.
  * @param valueSelector - Optional projection producing the value that should be stored for the key; defaults to the element itself.
  * @param mapFactory - Optional factory controlling the concrete map implementation to instantiate.
@@ -30,19 +30,19 @@ import getIdentity from "./helpers/getIdentity";
 export function _toMap<T, TKey>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
-  mapFactory?: MapFactory<TKey>,
+  mapFactory?: MapFactory<TKey>
 ): Map<TKey, T>;
 export function _toMap<T, TKey, TValue>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
   valueSelector: IndexedSelector<T, TValue>,
-  mapFactory?: MapFactory<TKey>,
+  mapFactory?: MapFactory<TKey>
 ): Map<TKey, TValue>;
 export function _toMap<T, TKey, TValue = T>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
   valueSelectorOrMapFactory?: IndexedSelector<T, TValue> | MapFactory<TKey>,
-  mapFactoryMaybe?: MapFactory<TKey>,
+  mapFactoryMaybe?: MapFactory<TKey>
 ): Map<TKey, TValue> {
   const vs: IndexedSelector<T, TValue> = (
     !(typeof valueSelectorOrMapFactory === "object")
@@ -71,17 +71,17 @@ export function _toMap<T, TKey, TValue = T>(
  */
 export function toMap<T, TKey>(
   keySelector: IndexedSelector<T, TKey>,
-  mapFactory?: MapFactory<TKey>,
+  mapFactory?: MapFactory<TKey>
 ): (src: Iterable<T>) => Map<TKey, T>;
 export function toMap<T, TKey, TValue>(
   keySelector: IndexedSelector<T, TKey>,
   valueSelector: IndexedSelector<T, TValue>,
-  mapFactory?: MapFactory<TKey>,
+  mapFactory?: MapFactory<TKey>
 ): (src: Iterable<T>) => Map<TKey, TValue>;
 export function toMap<T, TKey, TValue = T>(
   keySelector: IndexedSelector<T, TKey>,
   valueSelectorOrMapFactory?: IndexedSelector<T, TValue> | MapFactory<TKey>,
-  mapFactoryMaybe?: MapFactory<TKey>,
+  mapFactoryMaybe?: MapFactory<TKey>
 ): (src: Iterable<T>) => Map<TKey, TValue> {
   const vs: IndexedSelector<T, TValue> = (
     !(typeof valueSelectorOrMapFactory === "object")
