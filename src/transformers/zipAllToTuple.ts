@@ -58,6 +58,10 @@ export function _zipAllToTuple<T extends readonly unknown[]>(
  */
 export const zipAllToTuple = deferP0(_zipAllToTuple);
 
+/**
+ * Converts a readonly tuple type into a corresponding tuple of iterables,
+ * where each position exposes an iterable of the original element type.
+ */
 export type Iterablified<T extends readonly unknown[]> = {
   [P in keyof T]: Iterable<T[P]>;
 };

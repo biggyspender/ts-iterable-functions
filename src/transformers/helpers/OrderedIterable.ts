@@ -3,6 +3,13 @@ import { pipeInto as pp } from "ts-functional-pipe";
 import { _indexed } from "../indexed";
 import { map } from "../map";
 
+/**
+ * Represents a lazily ordered wrapper around an iterable source that preserves stability
+ * by applying a composed comparer chain created by a {@link ThenComparerBuilder}.
+ *
+ * @typeParam T - Type of elements yielded from the wrapped iterable.
+ * @see ThenComparerBuilder
+ */
 export default class OrderedIterable<T> implements Iterable<T> {
   private src: Iterable<T>;
   comparerBuilder: ThenComparerBuilder<T>;
