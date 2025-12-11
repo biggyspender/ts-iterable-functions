@@ -4,6 +4,7 @@ on: [push]
 
 env:
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  VOLTA_FEATURE_PNPM: 1
 
 jobs:
   ts-iterable-functions:
