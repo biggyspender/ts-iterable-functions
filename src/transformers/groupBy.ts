@@ -7,7 +7,7 @@ import { _toLookup } from "./toLookup";
 
 function createGroupedIterable<K, V>(
   key: K,
-  value: Iterable<V>
+  value: Iterable<V>,
 ): GroupedIterable<K, V> {
   return {
     [Symbol.iterator]: function* () {
@@ -69,7 +69,7 @@ function createGroupedIterable<K, V>(
 export function _groupBy<T, TKey>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
-  mapFactory?: MapFactory<TKey>
+  mapFactory?: MapFactory<TKey>,
 ): Iterable<GroupedIterable<TKey, T>> {
   return toIterable(function* () {
     const lookup = _toLookup(src, keySelector, mapFactory);

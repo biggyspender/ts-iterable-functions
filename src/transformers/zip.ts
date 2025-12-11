@@ -40,7 +40,7 @@ import { toIterable } from "../helpers/toIterable";
 export function _zip<T, TOther, TOut>(
   src: Iterable<T>,
   seq: Iterable<TOther>,
-  selector: (item1: T, item2: TOther) => TOut
+  selector: (item1: T, item2: TOther) => TOut,
 ): Iterable<TOut> {
   return toIterable(function* () {
     const it1 = src[Symbol.iterator]();

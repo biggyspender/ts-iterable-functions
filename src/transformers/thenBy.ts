@@ -51,7 +51,7 @@ import OrderedIterable from "./helpers/OrderedIterable";
  */
 export function _thenBy<T, TCmp>(
   src: OrderedIterable<T>,
-  selector: (x: T) => TCmp
+  selector: (x: T) => TCmp,
 ): OrderedIterable<T> {
   return src.createNewFrom((builder) => builder.thenKey(selector));
 }

@@ -26,7 +26,7 @@ import { IndexedPredicate } from "../types/IndexedPredicate";
  */
 export function _firstOrDefault<T>(
   src: Iterable<T>,
-  pred: IndexedPredicate<T> = () => true
+  pred: IndexedPredicate<T> = () => true,
 ): T | undefined {
   let i = 0;
   for (const item of src) {

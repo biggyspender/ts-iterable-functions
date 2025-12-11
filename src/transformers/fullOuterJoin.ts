@@ -84,7 +84,7 @@ export function _fullOuterJoin<T, TRight, TKey, TOut>(
   leftKeySelector: IndexedSelector<T, TKey>,
   rightKeySelector: IndexedSelector<TRight, TKey>,
   selector: (o: T | undefined, v: TRight | undefined, k: TKey) => TOut,
-  mapFactory?: MapFactory<TKey>
+  mapFactory?: MapFactory<TKey>,
 ): Iterable<TOut> {
   return pp(
     src,
@@ -100,13 +100,13 @@ export function _fullOuterJoin<T, TRight, TKey, TOut>(
             pp(
               rgt,
               defaultIfEmpty(),
-              map((r) => selector(l, r, i))
-            )
-          )
+              map((r) => selector(l, r, i)),
+            ),
+          ),
         ),
-      mapFactory
+      mapFactory,
     ),
-    flatMap(identity)
+    flatMap(identity),
   );
 }
 

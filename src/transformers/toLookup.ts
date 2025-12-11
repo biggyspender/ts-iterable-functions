@@ -25,19 +25,19 @@ import { MapFactory } from "../types/MapFactory";
 export function _toLookup<T, TKey>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
-  mapFactory?: MapFactory<TKey>
+  mapFactory?: MapFactory<TKey>,
 ): Map<TKey, Iterable<T>>;
 export function _toLookup<T, TKey, TValue>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
   valueSelector: IndexedSelector<T, TValue>,
-  mapFactory?: MapFactory<TKey>
+  mapFactory?: MapFactory<TKey>,
 ): Map<TKey, Iterable<TValue>>;
 export function _toLookup<T, TKey, TValue = T>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
   valueSelectorOrMapFactory?: IndexedSelector<T, TValue> | MapFactory<TKey>,
-  mapFactoryMaybe?: MapFactory<TKey>
+  mapFactoryMaybe?: MapFactory<TKey>,
 ): Map<TKey, Iterable<T | TValue>> {
   let mapFactory: MapFactory<TKey> | undefined;
 
@@ -74,17 +74,17 @@ export function _toLookup<T, TKey, TValue = T>(
  */
 export function toLookup<T, TKey>(
   keySelector: IndexedSelector<T, TKey>,
-  mapFactory?: MapFactory<TKey>
+  mapFactory?: MapFactory<TKey>,
 ): (src: Iterable<T>) => Map<TKey, Iterable<T>>;
 export function toLookup<T, TKey, TValue>(
   keySelector: IndexedSelector<T, TKey>,
   valueSelector: IndexedSelector<T, TValue>,
-  mapFactory?: MapFactory<TKey>
+  mapFactory?: MapFactory<TKey>,
 ): (src: Iterable<T>) => Map<TKey, Iterable<TValue>>;
 export function toLookup<T, TKey, TValue = T>(
   keySelector: IndexedSelector<T, TKey>,
   valueSelectorOrMapFactory?: IndexedSelector<T, TValue> | MapFactory<TKey>,
-  mapFactoryMaybe?: MapFactory<TKey>
+  mapFactoryMaybe?: MapFactory<TKey>,
 ): (src: Iterable<T>) => Map<TKey, Iterable<T | TValue>> {
   let mapFactory: MapFactory<TKey> | undefined;
 

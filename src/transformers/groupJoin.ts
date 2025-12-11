@@ -76,7 +76,7 @@ export function _groupJoin<T, TInner, TKey, TOut>(
   outerKeySelector: IndexedSelector<T, TKey>,
   innerKeySelector: IndexedSelector<TInner, TKey>,
   selector: (o: T, v: Iterable<TInner>) => TOut,
-  mapFactory?: MapFactory<TKey>
+  mapFactory?: MapFactory<TKey>,
 ): Iterable<TOut> {
   return toIterable(function* () {
     const innerSeqIt = innerSeq;

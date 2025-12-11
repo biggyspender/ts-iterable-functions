@@ -40,12 +40,12 @@ import { Iterablified, zipAllToTuple } from "./zipAllToTuple";
  */
 export function _zipMap<T extends readonly unknown[], TOut>(
   src: Iterablified<T>,
-  selector: (...args: T) => TOut
+  selector: (...args: T) => TOut,
 ): Iterable<TOut> {
   return pp(
     src,
     zipAllToTuple(),
-    map((args) => selector(...args))
+    map((args) => selector(...args)),
   );
 }
 

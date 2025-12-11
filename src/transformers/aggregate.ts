@@ -28,7 +28,7 @@ import { deferP0 } from "ts-functional-pipe";
 export function _aggregate<T, TOut>(
   src: Iterable<T>,
   seed: TOut,
-  aggFunc: (prev: TOut, curr: T, idx: number) => TOut
+  aggFunc: (prev: TOut, curr: T, idx: number) => TOut,
 ): TOut {
   let v = seed;
   let i = 0;

@@ -31,7 +31,7 @@ export function _defaultIfEmpty<T>(src: Iterable<T>): Iterable<T | undefined> {
       if (!yielded) {
         yield undefined;
       }
-    }
+    },
   );
 }
 

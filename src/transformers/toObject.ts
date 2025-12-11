@@ -46,12 +46,12 @@ import { map } from "./map";
 export function _toObject<T, K extends PropertyKey, V>(
   arr: Iterable<T>,
   keySelector: IndexedSelector<T, K>,
-  valueSelector: IndexedSelector<T, V>
+  valueSelector: IndexedSelector<T, V>,
 ) {
   return pipeInto(
     arr,
     map((v, i) => [keySelector(v, i), valueSelector(v, i)] as const),
-    (v) => Object.fromEntries(v) as Record<K, V>
+    (v) => Object.fromEntries(v) as Record<K, V>,
   );
 }
 

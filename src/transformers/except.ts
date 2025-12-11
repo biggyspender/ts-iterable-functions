@@ -28,7 +28,7 @@ import { _filter } from "./filter";
 export function _except<T>(
   src: Iterable<T>,
   seq: Iterable<T>,
-  setFactory: SetFactory<T> = { createSet: () => new Set() }
+  setFactory: SetFactory<T> = { createSet: () => new Set() },
 ): Iterable<T> {
   return toIterable(function* () {
     const set: Set<T> = setFactory.createSet();

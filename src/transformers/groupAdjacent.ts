@@ -54,7 +54,7 @@ export function _groupAdjacent<TSource, TKey, TElement, TResult>(
   keySelector: IndexedSelector<TSource, TKey>,
   elementSelector: IndexedSelector<TSource, TElement>,
   resultSelector: (key: TKey, items: Iterable<TElement>) => TResult,
-  equalityComparer?: (a: TKey | undefined, b: TKey | undefined) => boolean
+  equalityComparer?: (a: TKey | undefined, b: TKey | undefined) => boolean,
 ): Iterable<TResult> {
   const source = src;
   const eq = equalityComparer
@@ -90,7 +90,7 @@ export function _groupAdjacent<TSource, TKey, TElement, TResult>(
       if (typeof members !== "undefined" && typeof group !== "undefined") {
         yield resultSelector(group, members);
       }
-    }
+    },
   );
 }
 

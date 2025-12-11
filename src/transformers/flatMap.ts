@@ -28,7 +28,7 @@ import { IndexedSelector } from "../types/IndexedSelector";
  */
 export function _flatMap<T, TOut>(
   src: Iterable<T>,
-  selector: IndexedSelector<T, Iterable<TOut>>
+  selector: IndexedSelector<T, Iterable<TOut>>,
 ): Iterable<TOut> {
   return toIterable(function* () {
     let i = 0;

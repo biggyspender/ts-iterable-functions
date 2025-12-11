@@ -25,7 +25,7 @@ import { _some } from "./some";
  */
 export function _every<T>(
   src: Iterable<T>,
-  pred: IndexedPredicate<T>
+  pred: IndexedPredicate<T>,
 ): boolean {
   return !_some(src, (item, i) => !pred(item, i));
 }

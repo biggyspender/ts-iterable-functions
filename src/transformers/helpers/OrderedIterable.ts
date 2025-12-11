@@ -24,7 +24,7 @@ export default class OrderedIterable<T> implements Iterable<T> {
             const comp = comparer(aVal, bVal);
             return comp === 0 ? aIdx - bIdx : comp;
           }),
-          map(([value]) => value)
+          map(([value]) => value),
         );
         for (const x of arr) {
           yield x;
@@ -38,7 +38,7 @@ export default class OrderedIterable<T> implements Iterable<T> {
     return [...this[Symbol.iterator]()];
   }
   createNewFrom(
-    b: (builder: ThenComparerBuilder<T>) => ThenComparerBuilder<T>
+    b: (builder: ThenComparerBuilder<T>) => ThenComparerBuilder<T>,
   ) {
     return new OrderedIterable<T>(this.src, b(this.comparerBuilder));
   }

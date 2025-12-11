@@ -40,7 +40,7 @@ import { _zip } from "./zip";
  * ```
  */
 export function _zipAll<TT>(
-  src: Iterable<Iterable<TT>>
+  src: Iterable<Iterable<TT>>,
 ): Iterable<Iterable<TT>> {
   const v = _aggregate<Iterable<TT>, Iterable<Iterable<TT>> | undefined>(
     src,
@@ -48,7 +48,7 @@ export function _zipAll<TT>(
     (acc, curr) =>
       typeof acc === "undefined"
         ? _map(curr, (x) => [x])
-        : _zip(acc, curr, (a, c) => _append(a, c))
+        : _zip(acc, curr, (a, c) => _append(a, c)),
   );
   return typeof v === "undefined" ? [] : v;
 }

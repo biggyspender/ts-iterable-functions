@@ -24,7 +24,7 @@ import { IndexedPredicate } from "../types/IndexedPredicate";
  */
 export function _count<T>(
   src: Iterable<T>,
-  pred: IndexedPredicate<T> = () => true
+  pred: IndexedPredicate<T> = () => true,
 ): number {
   let c = 0;
   let i = 0;

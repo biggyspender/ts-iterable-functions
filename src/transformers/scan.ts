@@ -21,16 +21,16 @@ import { toIterable } from "../helpers/toIterable";
 export function _scan<T, TOut>(
   src: Iterable<T>,
   aggFunc: (prev: TOut, curr: T, idx: number) => TOut,
-  seed: TOut
+  seed: TOut,
 ): Iterable<TOut>;
 export function _scan<T, _>(
   src: Iterable<T>,
-  aggFunc: (prev: T, curr: T, idx: number) => T
+  aggFunc: (prev: T, curr: T, idx: number) => T,
 ): Iterable<T>;
 export function _scan<T, TOut, TT extends T | TOut>(
   src: Iterable<T>,
   aggFunc: (prev: TT, curr: T, idx: number) => TT,
-  seed?: TT
+  seed?: TT,
 ): Iterable<TT> {
   return toIterable(function* () {
     let v: TT;
@@ -56,14 +56,14 @@ export function _scan<T, TOut, TT extends T | TOut>(
  */
 export function scan<T, TOut>(
   aggFunc: (prev: TOut, curr: T, idx: number) => TOut,
-  seed: TOut
+  seed: TOut,
 ): (source: Iterable<T>) => Iterable<TOut>;
 export function scan<T>(
-  aggFunc: (prev: T, curr: T, idx: number) => T
+  aggFunc: (prev: T, curr: T, idx: number) => T,
 ): (source: Iterable<T>) => Iterable<T>;
 export function scan<T, TOut, TT extends T | TOut>(
   aggFunc: (prev: TT, curr: T, idx: number) => TT,
-  seed?: TT
+  seed?: TT,
 ): (source: Iterable<T>) => Iterable<TT> {
   return (source: Iterable<T>) => _scan(source, aggFunc, seed as TT);
 }

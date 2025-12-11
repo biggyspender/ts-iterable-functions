@@ -43,7 +43,7 @@ import { SetFactory } from "../types/SetFactory";
 export function _distinctBy<T, TKey>(
   src: Iterable<T>,
   selector: IndexedSelector<T, TKey>,
-  setFactory: SetFactory<TKey> = { createSet: () => new Set() }
+  setFactory: SetFactory<TKey> = { createSet: () => new Set() },
 ): Iterable<T> {
   return toIterable(function* () {
     const set = setFactory.createSet();

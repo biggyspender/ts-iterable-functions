@@ -30,7 +30,7 @@ import { _every } from "./every";
 export function _isSubsetOf<T>(
   src: Iterable<T>,
   seq: Iterable<T>,
-  setFactory: SetFactory<T> = { createSet: () => new Set() }
+  setFactory: SetFactory<T> = { createSet: () => new Set() },
 ): boolean {
   const set = setFactory.createSet();
   for (const x of seq) {

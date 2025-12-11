@@ -23,13 +23,13 @@ import { _indexed } from "./indexed";
  * ```
  */
 export function filter<T, S extends T>(
-  pred: TypeGuardPredicate<T, S>
+  pred: TypeGuardPredicate<T, S>,
 ): (src: Iterable<T>) => Iterable<S>;
 export function filter<T>(
-  pred: IndexedPredicate<T>
+  pred: IndexedPredicate<T>,
 ): (src: Iterable<T>) => Iterable<T>;
 export function filter<T>(
-  pred: IndexedPredicate<T>
+  pred: IndexedPredicate<T>,
 ): (src: Iterable<T>) => Iterable<unknown> {
   return (src: Iterable<T>): Iterable<unknown> =>
     toIterable(function* () {
@@ -59,15 +59,15 @@ export function filter<T>(
  */
 export function _filter<T, S extends T>(
   src: Iterable<T>,
-  pred: TypeGuardPredicate<T, S>
+  pred: TypeGuardPredicate<T, S>,
 ): Iterable<S>;
 export function _filter<T>(
   src: Iterable<T>,
-  pred: IndexedPredicate<T>
+  pred: IndexedPredicate<T>,
 ): Iterable<T>;
 export function _filter<T>(
   src: Iterable<T>,
-  pred: IndexedPredicate<T>
+  pred: IndexedPredicate<T>,
 ): Iterable<unknown> {
   return filter(pred)(src);
 }

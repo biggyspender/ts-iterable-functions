@@ -82,7 +82,7 @@ export function _fullOuterGroupJoin<T, TRight, TKey, TOut>(
   leftKeySelector: IndexedSelector<T, TKey>,
   rightKeySelector: IndexedSelector<TRight, TKey>,
   selector: (o: Iterable<T>, v: Iterable<TRight>, k: TKey) => TOut,
-  mapFactory?: MapFactory<TKey>
+  mapFactory?: MapFactory<TKey>,
 ): Iterable<TOut> {
   return toIterable(function* () {
     const right = rightSeq;
@@ -93,7 +93,7 @@ export function _fullOuterGroupJoin<T, TRight, TKey, TOut>(
       leftLookup,
       map(([key, _]) => key),
       concat(rightLookupKeys),
-      distinct()
+      distinct(),
     );
 
     const outputValues = pp(
@@ -104,7 +104,7 @@ export function _fullOuterGroupJoin<T, TRight, TKey, TOut>(
         leftItem,
         rightItem: rightLookup.get(key) ?? [],
       })),
-      map((x) => selector(x.leftItem, x.rightItem, x.key))
+      map((x) => selector(x.leftItem, x.rightItem, x.key)),
     );
     for (const v of outputValues) {
       yield v;

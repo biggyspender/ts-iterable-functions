@@ -30,7 +30,7 @@ import { toIterable } from "../helpers/toIterable";
  */
 export function _takeToInclusive<T>(
   src: Iterable<T>,
-  pred: IndexedPredicate<T>
+  pred: IndexedPredicate<T>,
 ): Iterable<T> {
   return toIterable(function* () {
     let i = 0;

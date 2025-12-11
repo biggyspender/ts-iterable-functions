@@ -38,16 +38,16 @@ import { map } from "./map";
 export function _min<T, TOut = T>(
   src: Iterable<T>,
   selector: IndexedSelector<T, TOut> = (x) => x as unknown as TOut,
-  comparer: Comparer<TOut> = defaultComparer
+  comparer: Comparer<TOut> = defaultComparer,
 ): TOut | undefined {
   return pp(
     src,
     map(selector),
     minMaxByImpl(
       (x) => x,
-      (a, b) => -comparer(a, b)
+      (a, b) => -comparer(a, b),
     ),
-    first()
+    first(),
   );
 }
 

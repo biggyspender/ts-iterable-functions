@@ -30,7 +30,7 @@ import { IndexedPredicate } from "../types/IndexedPredicate";
  */
 export function _takeWhile<T>(
   src: Iterable<T>,
-  pred: IndexedPredicate<T>
+  pred: IndexedPredicate<T>,
 ): Iterable<T> {
   return toIterable(function* () {
     let i = 0;

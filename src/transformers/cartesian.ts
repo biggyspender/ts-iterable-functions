@@ -24,7 +24,7 @@ import { map } from "./map";
  * ```
  */
 export const cartesian = <T>(
-  sequences: Iterable<Iterable<T>>
+  sequences: Iterable<Iterable<T>>,
 ): Iterable<Iterable<T>> => {
   const emptyProduct = fromSingleValue(empty<T>());
   return pp(
@@ -35,10 +35,10 @@ export const cartesian = <T>(
         flatMap((accSeq) =>
           pp(
             sequence,
-            map((item) => pp(accSeq, append(item)))
-          )
-        )
-      )
-    )
+            map((item) => pp(accSeq, append(item))),
+          ),
+        ),
+      ),
+    ),
   );
 };

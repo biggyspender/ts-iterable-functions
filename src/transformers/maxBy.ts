@@ -45,7 +45,7 @@ import { _minMaxByImpl } from "./helpers/minMaxByImpl";
 export function _maxBy<T, TKey>(
   src: Iterable<T>,
   selector: IndexedSelector<T, TKey>,
-  comparer: Comparer<TKey> = defaultComparer
+  comparer: Comparer<TKey> = defaultComparer,
 ): Iterable<T> {
   return _minMaxByImpl(src, selector, (a, b) => comparer(a, b));
 }

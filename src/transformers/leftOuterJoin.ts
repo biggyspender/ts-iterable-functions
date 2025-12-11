@@ -76,7 +76,7 @@ export function _leftOuterJoin<T, TInner, TKey, TOut>(
   outerKeySelector: IndexedSelector<T, TKey>,
   innerKeySelector: IndexedSelector<TInner, TKey>,
   selector: (outer: T, inner: TInner | undefined) => TOut,
-  mapFactory?: MapFactory<TKey>
+  mapFactory?: MapFactory<TKey>,
 ): Iterable<TOut> {
   return pp(
     src,
@@ -88,15 +88,15 @@ export function _leftOuterJoin<T, TInner, TKey, TOut>(
         outer,
         innerSeq,
       }),
-      mapFactory
+      mapFactory,
     ),
     flatMap(({ outer, innerSeq }) =>
       pp(
         innerSeq,
         defaultIfEmpty(),
-        map((i) => selector(outer, i))
-      )
-    )
+        map((i) => selector(outer, i)),
+      ),
+    ),
   );
 }
 

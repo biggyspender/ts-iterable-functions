@@ -5,7 +5,7 @@ import { IndexedSelector } from "../../types/IndexedSelector";
 export function _minMaxByImpl<T, TKey>(
   src: Iterable<T>,
   selector: IndexedSelector<T, TKey>,
-  comparer: Comparer<TKey>
+  comparer: Comparer<TKey>,
 ): Iterable<T> {
   let currentBestKey: TKey | undefined;
   let currentBest: T[] = [];

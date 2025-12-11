@@ -28,7 +28,7 @@ import { IndexedPredicate } from "../types/IndexedPredicate";
  */
 export function _single<T>(
   src: Iterable<T>,
-  pred: IndexedPredicate<T> = (_) => true
+  pred: IndexedPredicate<T> = (_) => true,
 ): T {
   let itemCount = 0;
   let foundItem: { value: T } | undefined;

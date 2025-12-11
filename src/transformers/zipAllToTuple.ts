@@ -34,15 +34,15 @@ import { toIterable } from "../helpers/toIterable";
  * ```
  */
 export function _zipAllToTuple<T extends readonly unknown[]>(
-  src: Iterablified<T>
+  src: Iterablified<T>,
 ): Iterable<T> {
   return toIterable(function* () {
     const iterators = src.map((iterable) =>
-      iterable[Symbol.iterator]()
+      iterable[Symbol.iterator](),
     ) as unknown as Iteratorfied<T>;
     for (;;) {
       const itRes = iterators.map((it) =>
-        it.next()
+        it.next(),
       ) as unknown as IteratorResultified<T>;
       if (itRes.some((r) => r.done)) {
         break;

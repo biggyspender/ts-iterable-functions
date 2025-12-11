@@ -11,10 +11,10 @@ import { range } from "./range";
  */
 export function repeatGenerate<T>(
   generator: (i: number) => T,
-  numRepeats: number
+  numRepeats: number,
 ): Iterable<T> {
   return pp(
     range(0, numRepeats),
-    map((i: number) => generator(i))
+    map((i: number) => generator(i)),
   );
 }

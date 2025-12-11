@@ -22,12 +22,12 @@ export function _toSet<T>(src: Iterable<T>, setFactory?: SetFactory<T>): Set<T>;
 export function _toSet<T, TKey>(
   src: Iterable<T>,
   keySelector: IndexedSelector<T, TKey>,
-  setFactory?: SetFactory<TKey>
+  setFactory?: SetFactory<TKey>,
 ): Set<TKey>;
 export function _toSet<T, TKey = T>(
   src: Iterable<T>,
   keySelectorOrSetFactory?: IndexedSelector<T, TKey> | SetFactory<TKey>,
-  setFactoryMaybe?: SetFactory<TKey>
+  setFactoryMaybe?: SetFactory<TKey>,
 ): Set<TKey> {
   const ks: IndexedSelector<T, TKey> = (
     typeof keySelectorOrSetFactory === "function"
@@ -54,15 +54,15 @@ export function _toSet<T, TKey = T>(
  * Curried version of {@link _toSet}.
  */
 export function toSet<T>(
-  setFactory?: SetFactory<T>
+  setFactory?: SetFactory<T>,
 ): (src: Iterable<T>) => Set<T>;
 export function toSet<T, TKey>(
   keySelector: IndexedSelector<T, TKey>,
-  setFactory?: SetFactory<TKey>
+  setFactory?: SetFactory<TKey>,
 ): (src: Iterable<T>) => Set<TKey>;
 export function toSet<T, TKey = T>(
   keySelectorOrSetFactory?: IndexedSelector<T, TKey> | SetFactory<TKey>,
-  setFactoryMaybe?: SetFactory<TKey>
+  setFactoryMaybe?: SetFactory<TKey>,
 ): (src: Iterable<T>) => Set<TKey> {
   const ks: IndexedSelector<T, TKey> = (
     !(typeof keySelectorOrSetFactory === "object")

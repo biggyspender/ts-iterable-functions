@@ -40,7 +40,7 @@ export function _unwrapIndexed<T>(src: Iterable<Indexed<T>>): Iterable<T> {
   return pp(
     src,
     orderBy(([, idx]) => idx),
-    map(([value]) => value)
+    map(([value]) => value),
   );
 }
 

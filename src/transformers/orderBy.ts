@@ -32,7 +32,7 @@ import OrderedIterable from "./helpers/OrderedIterable";
  */
 export function _orderBy<T, TCmp>(
   src: Iterable<T>,
-  selector: (x: T) => TCmp
+  selector: (x: T) => TCmp,
 ): OrderedIterable<T> {
   const builder = comparerBuilder<T>().sortKey(selector);
   return new OrderedIterable<T>(src, builder);

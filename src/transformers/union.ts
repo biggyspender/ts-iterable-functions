@@ -35,7 +35,7 @@ import { distinct } from "./distinct";
 export function _union<T>(
   src: Iterable<T>,
   seq: Iterable<T>,
-  setFactory?: SetFactory<T>
+  setFactory?: SetFactory<T>,
 ): Iterable<T> {
   return pp(src, concat(seq), distinct(setFactory));
 }

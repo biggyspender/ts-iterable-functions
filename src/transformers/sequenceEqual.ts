@@ -28,7 +28,7 @@ import { deferP0 } from "ts-functional-pipe";
 export function _sequenceEqual<T>(
   src: Iterable<T>,
   seq: Iterable<T>,
-  equalityComparer?: (a: T | undefined, b: T | undefined) => boolean
+  equalityComparer?: (a: T | undefined, b: T | undefined) => boolean,
 ): boolean {
   const eq = equalityComparer
     ? (a: T | undefined, b: T | undefined) =>

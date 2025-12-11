@@ -31,7 +31,7 @@ import { IndexedSelector } from "../types/IndexedSelector";
  */
 export function _map<T, TOut>(
   src: Iterable<T>,
-  selector: IndexedSelector<T, TOut>
+  selector: IndexedSelector<T, TOut>,
 ): Iterable<TOut> {
   return toIterable(function* () {
     let c = 0;
