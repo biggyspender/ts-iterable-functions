@@ -1,6 +1,6 @@
 import { defaultComparer } from "ts-comparer-builder";
 import { deepEqualityComparer } from "ts-equality-comparer";
-import { pipeInto as pp } from "ts-functional-pipe";
+import { pipeInto } from "ts-functional-pipe";
 import { createComparerMap, createComparerSet } from "ts-hashmap";
 import { test, describe, expect } from "vitest";
 import {
@@ -74,6 +74,11 @@ import {
   // _zipAllToTuple,
   zipMap,
   scan,
+  _toMap,
+  _toSet,
+  _zipAll,
+  _unwrapIndexed,
+  unwrapIndexed,
 } from "..";
 import getIdentity from "../transformers/helpers/getIdentity";
 import { Date } from "./Date";
@@ -99,18 +104,18 @@ describe("ts-iterable-functions test", () => {
   });
   test("where works", () => {
     const it = range(0, 3);
-    const whereQ = pp(
+    const whereQ = pipeInto(
       it,
-      where((x) => x > 0)
+      where((x) => x > 0),
     );
     expect([...whereQ]).toEqual([1, 2]);
     expect([...whereQ]).toEqual([1, 2]);
   });
   test("select works", () => {
     const it = range(0, 3);
-    const selected = pp(
+    const selected = pipeInto(
       it,
-      select((x) => x * 2)
+      select((x) => x * 2),
     );
     expect([...selected]).toEqual([0, 2, 4]);
     expect([...selected]).toEqual([0, 2, 4]);
@@ -124,24 +129,24 @@ describe("ts-iterable-functions test", () => {
       { day: 1, month: 1, year: 2000 },
     ];
     expect(
-      pp(
+      pipeInto(
         dates,
         distinctBy((d) => d.year),
-        count()
-      )
+        count(),
+      ),
     ).toBe(2);
   });
   test("distinctBy with comparer", () => {
-    const numbers = pp(
+    const numbers = pipeInto(
       range(0, 1000),
-      select((x) => (x / 5) | 0)
+      select((x) => (x / 5) | 0),
     );
     expect(
-      pp(
+      pipeInto(
         numbers,
         distinctBy((d) => d, createSetFactory()),
-        count()
-      )
+        count(),
+      ),
     ).toBe(200);
   });
   test("orderBy", () => {
@@ -152,10 +157,10 @@ describe("ts-iterable-functions test", () => {
       { a: 2, b: 2 },
     ];
 
-    const sorted = pp(
+    const sorted = pipeInto(
       values,
       orderByDescending((x) => x.a),
-      thenByDescending((x) => x.b)
+      thenByDescending((x) => x.b),
     );
     expect([...sorted]).toEqual([
       { a: 2, b: 2 },
@@ -171,12 +176,12 @@ describe("ts-iterable-functions test", () => {
       { day: 1, month: 1, year: 1999 },
       { day: 1, month: 1, year: 2000 },
     ];
-    const sortedDates = pp(
+    const sortedDates = pipeInto(
       dates,
       orderBy((x) => x.year),
       thenBy((x) => x.month),
       thenBy((x) => x.day),
-      toArray()
+      toArray(),
     );
     expect(sortedDates).toEqual([
       { day: 1, month: 1, year: 1999 },
@@ -186,12 +191,12 @@ describe("ts-iterable-functions test", () => {
       { day: 1, month: 10, year: 2000 },
     ]);
 
-    const sortedDates2 = pp(
+    const sortedDates2 = pipeInto(
       sortedDates,
       orderByDescending((x) => x.year),
       thenByDescending((x) => x.month),
       thenByDescending((x) => x.day),
-      toArray()
+      toArray(),
     );
     expect(sortedDates2).toEqual([
       { day: 1, month: 10, year: 2000 },
@@ -201,54 +206,63 @@ describe("ts-iterable-functions test", () => {
       { day: 1, month: 1, year: 1999 },
     ]);
     expect(
-      pp(
+      pipeInto(
         [1, 2],
         orderByDescending((x) => x),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([2, 1]);
     expect(
-      pp(
+      pipeInto(
         [2, 1],
         orderByDescending((x) => x),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([2, 1]);
     expect(
-      pp(
+      pipeInto(
         [0, 0],
         orderByDescending((x) => x),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([0, 0]);
 
-    const items = pp(
+    const items = pipeInto(
       range(0, 100),
       map((x) => ({ a: 1, idx: x })),
       orderBy((x) => x.a),
-      map((x) => x.idx)
+      map((x) => x.idx),
     );
-    expect(pp(items, sequenceEqual(range(0, 100)))).toBeTruthy();
+    expect(pipeInto(items, sequenceEqual(range(0, 100)))).toBeTruthy();
+
+    const stableOrdered = pipeInto(
+      [
+        { category: 1, label: "b" },
+        { category: 1, label: "a" },
+      ],
+      orderBy((entry) => entry.category),
+    );
+    expect(stableOrdered.toJSON()).toEqual([...stableOrdered]);
   });
 
   test("can compose", () => {
     const it = range(0, 3);
-    const selected = pp(
+    const selected = pipeInto(
       it,
-      select((x) => x * 2)
+      select((x) => x * 2),
     );
-    const selectedFiltered = pp(
+    const selectedFiltered = pipeInto(
       selected,
-      where((x) => x > 2)
+      where((x) => x > 2),
     );
     expect([...selectedFiltered]).toEqual([4]);
     expect([...selectedFiltered]).toEqual([4]);
   });
   test("selectMany", () => {
     const it = range(0, 2);
-    const selected = pp(
+    const selected = pipeInto(
       it,
-      selectMany((_) => [1, 2])
+      selectMany((_) => [1, 2]),
     );
     expect([...selected]).toEqual([1, 2, 1, 2]);
   });
@@ -262,131 +276,131 @@ describe("ts-iterable-functions test", () => {
     expect([...it]).toEqual([0, 1, 2]);
 
     const src = repeatGenerate(() => Math.random(), 1000);
-    expect(pp(src, sequenceEqual(src))).toBeFalsy();
+    expect(pipeInto(src, sequenceEqual(src))).toBeFalsy();
   });
   test("aggregate", () => {
-    const v = pp(
+    const v = pipeInto(
       range(0, 4),
-      aggregate(0, (prev, curr) => prev + curr)
+      aggregate(0, (prev, curr) => prev + curr),
     );
     expect(v).toEqual(6);
   });
   test("scan", () => {
     expect(
-      pp(
+      pipeInto(
         range(0, 4),
         scan((acc, curr) => acc + curr, 0),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([0, 1, 3, 6]);
     expect(
-      pp(
+      pipeInto(
         range(0, 4),
         scan((acc, curr) => acc + curr),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([1, 3, 6]);
     expect(
-      pp(
+      pipeInto(
         range(1, 4),
         scan((acc, curr) => acc + curr),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([3, 6, 10]);
     expect(
-      pp(
+      pipeInto(
         range(0, 4),
         scan((acc, curr) => acc + curr, 1),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([1, 2, 4, 7]);
     expect(
-      pp(
+      pipeInto(
         [] as number[],
         scan((acc, curr) => acc + curr, 1),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([]);
     expect(() =>
-      pp(
+      pipeInto(
         [] as number[],
         scan((acc, curr) => acc + curr),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toThrow();
     expect(
-      pp(
+      pipeInto(
         [1] as number[],
         scan((acc, curr) => acc + curr, 1),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([2]);
     expect(
-      pp(
+      pipeInto(
         [7, 1, 2, 3],
         scan(
           (acc, curr, idx) => (idx < 3 ? Math.min(acc, curr) : curr),
-          100000
+          100000,
         ),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([7, 1, 1, 3]);
   });
   test("reduce", () => {
-    const v = pp(
+    const v = pipeInto(
       range(0, 4),
-      reduce((prev, curr) => prev + curr, 0)
+      reduce((prev, curr) => prev + curr, 0),
     );
     expect(v).toEqual(6);
-    const v2 = pp(
+    const v2 = pipeInto(
       range(0, 4),
-      reduce((prev, curr) => prev + curr)
+      reduce((prev, curr) => prev + curr),
     );
     expect(v2).toEqual(6);
-    const v3 = pp(
+    const v3 = pipeInto(
       range(0, 4),
       map((v) => v.toString()),
-      reduce((prev, curr) => `${prev}${curr}`)
+      reduce((prev, curr) => `${prev}${curr}`),
     );
     expect(v3).toEqual("0123");
   });
   test("reduceRight", () => {
-    const v = pp(
+    const v = pipeInto(
       [
         [0, 1],
         [2, 3],
         [4, 5],
       ],
-      reduceRight((prev, curr) => prev.concat(curr), new Array<number>())
+      reduceRight((prev, curr) => prev.concat(curr), new Array<number>()),
     );
     expect(v).toEqual([4, 5, 2, 3, 0, 1]);
-    const v2 = pp(
+    const v2 = pipeInto(
       range(0, 4),
-      reduceRight((prev, curr) => prev + curr)
+      reduceRight((prev, curr) => prev + curr),
     );
     expect(v2).toEqual(6);
-    const v3 = pp(
+    const v3 = pipeInto(
       range(0, 4),
       map((v) => v.toString()),
-      reduceRight((prev, curr) => `${prev}${curr}`)
+      reduceRight((prev, curr) => `${prev}${curr}`),
     );
     expect(v3).toEqual("3210");
   });
   test("all", () => {
     const fourZeroes = repeat(0, 4);
-    const val = pp(
+    const val = pipeInto(
       fourZeroes,
-      all((v) => v === 1)
+      all((v) => v === 1),
     );
     expect(val).toEqual(false);
-    const val2 = pp(
+    const val2 = pipeInto(
       fourZeroes,
-      all((v) => v === 0)
+      all((v) => v === 0),
     );
     expect(val2).toEqual(true);
-    const val3 = pp(
+    const val3 = pipeInto(
       fourZeroes,
-      all((v) => v === 1)
+      all((v) => v === 1),
     );
     expect(val3).toEqual(false);
   });
@@ -394,211 +408,211 @@ describe("ts-iterable-functions test", () => {
     const fourZeroes = repeat(0, 4);
 
     expect(
-      pp(
+      pipeInto(
         fourZeroes,
-        some((x) => x === 1)
-      )
+        some((x) => x === 1),
+      ),
     ).toBe(false);
     expect(
-      pp(
+      pipeInto(
         fourZeroes,
-        some((x) => x === 0)
-      )
+        some((x) => x === 0),
+      ),
     ).toBe(true);
-    expect(pp(fourZeroes, some())).toBe(true);
-    expect(pp([], some())).toBe(false);
+    expect(pipeInto(fourZeroes, some())).toBe(true);
+    expect(pipeInto([], some())).toBe(false);
   });
   test("concat", () => {
-    expect([...pp([1, 2, 3], concat([4, 5], [6, 7]))]).toEqual([
+    expect([...pipeInto([1, 2, 3], concat([4, 5], [6, 7]))]).toEqual([
       1, 2, 3, 4, 5, 6, 7,
     ]);
   });
   test("average", () => {
-    expect(pp([1, 2, 3, 4], average())).toBe(2.5);
-    expect(() => pp([], average())).toThrow();
+    expect(pipeInto([1, 2, 3, 4], average())).toBe(2.5);
+    expect(() => pipeInto([], average())).toThrow();
   });
   test("count", () => {
-    expect(pp([1, 2, 3, 4], count())).toBe(4);
-    expect(pp([], count())).toBe(0);
+    expect(pipeInto([1, 2, 3, 4], count())).toBe(4);
+    expect(pipeInto([], count())).toBe(0);
     expect(
-      pp(
+      pipeInto(
         [1, 2, 3, 4],
-        count((x) => x > 2)
-      )
+        count((x) => x > 2),
+      ),
     ).toBe(2);
   });
   test("single", () => {
-    expect(pp([1], single())).toBe(1);
-    expect(() => pp([], single())).toThrow();
-    expect(() => pp([1, 2], single())).toThrow();
+    expect(pipeInto([1], single())).toBe(1);
+    expect(() => pipeInto([], single())).toThrow();
+    expect(() => pipeInto([1, 2], single())).toThrow();
     expect(() =>
-      pp(
+      pipeInto(
         [1, 2],
-        single((x) => x > 2)
-      )
+        single((x) => x > 2),
+      ),
     ).toThrow();
     expect(
-      pp(
+      pipeInto(
         [1, 2],
-        single((x) => x > 1)
-      )
+        single((x) => x > 1),
+      ),
     ).toBe(2);
-    expect(pp([false], single())).toEqual(false);
+    expect(pipeInto([false], single())).toEqual(false);
   });
   test("singleOrDefault", () => {
-    expect(pp([1], singleOrDefault())).toBe(1);
-    expect(pp([], singleOrDefault())).toBeUndefined();
-    expect(() => pp([1, 2], singleOrDefault())).toThrow();
+    expect(pipeInto([1], singleOrDefault())).toBe(1);
+    expect(pipeInto([], singleOrDefault())).toBeUndefined();
+    expect(() => pipeInto([1, 2], singleOrDefault())).toThrow();
     expect(
-      pp(
+      pipeInto(
         [1, 2],
-        singleOrDefault((x) => x > 2)
-      )
+        singleOrDefault((x) => x > 2),
+      ),
     ).toBeUndefined();
     expect(
-      pp(
+      pipeInto(
         [1, 2],
-        singleOrDefault((x) => x > 1)
-      )
+        singleOrDefault((x) => x > 1),
+      ),
     ).toBe(2);
-    expect(pp([false], singleOrDefault())).toEqual(false);
+    expect(pipeInto([false], singleOrDefault())).toEqual(false);
   });
   test("elementAt", () => {
-    expect(pp([1, 2, 3], elementAt(1))).toBe(2);
-    expect(() => pp([1, 2, 3], elementAt(3))).toThrow();
+    expect(pipeInto([1, 2, 3], elementAt(1))).toBe(2);
+    expect(() => pipeInto([1, 2, 3], elementAt(3))).toThrow();
   });
 
   test("except", () => {
-    expect([...pp([1, 2, 3], except([1, 3]))]).toEqual([2]);
+    expect([...pipeInto([1, 2, 3], except([1, 3]))]).toEqual([2]);
   });
   test("first", () => {
-    expect(pp(range(0, 3), first())).toBe(0);
+    expect(pipeInto(range(0, 3), first())).toBe(0);
     expect(
-      pp(
+      pipeInto(
         range(0, 3),
-        first((x) => x > 0)
-      )
+        first((x) => x > 0),
+      ),
     ).toBe(1);
     expect(() =>
-      pp(
+      pipeInto(
         range(0, 3),
-        first((x) => x > 2)
-      )
+        first((x) => x > 2),
+      ),
     ).toThrow();
-    expect(pp([false], first())).toEqual(false);
+    expect(pipeInto([false], first())).toEqual(false);
   });
   test("firstOrDefault", () => {
-    expect(pp(range(0, 3), firstOrDefault())).toBe(0);
+    expect(pipeInto(range(0, 3), firstOrDefault())).toBe(0);
     expect(
-      pp(
+      pipeInto(
         range(0, 3),
-        firstOrDefault((x) => x > 0)
-      )
+        firstOrDefault((x) => x > 0),
+      ),
     ).toBe(1);
     expect(
-      pp(
+      pipeInto(
         range(0, 3),
-        firstOrDefault((x) => x > 2)
-      )
+        firstOrDefault((x) => x > 2),
+      ),
     ).toBeUndefined();
-    expect(pp([false], firstOrDefault())).toEqual(false);
+    expect(pipeInto([false], firstOrDefault())).toEqual(false);
   });
   test("last", () => {
-    expect(pp(range(0, 3), last())).toBe(2);
+    expect(pipeInto(range(0, 3), last())).toBe(2);
     expect(
-      pp(
+      pipeInto(
         range(0, 3),
-        last((x) => x < 2)
-      )
+        last((x) => x < 2),
+      ),
     ).toBe(1);
     expect(() =>
-      pp(
+      pipeInto(
         range(0, 3),
-        last((x) => x > 2)
-      )
+        last((x) => x > 2),
+      ),
     ).toThrow();
-    expect(() => pp([false], last())).not.toThrow();
+    expect(() => pipeInto([false], last())).not.toThrow();
   });
   test("lastOrDefault", () => {
-    expect(pp(range(0, 3), lastOrDefault())).toBe(2);
+    expect(pipeInto(range(0, 3), lastOrDefault())).toBe(2);
     expect(
-      pp(
+      pipeInto(
         range(0, 3),
-        lastOrDefault((x) => x < 2)
-      )
+        lastOrDefault((x) => x < 2),
+      ),
     ).toBe(1);
     expect(
-      pp(
+      pipeInto(
         range(0, 3),
-        lastOrDefault((x) => x > 2)
-      )
+        lastOrDefault((x) => x > 2),
+      ),
     ).toBeUndefined();
-    expect(() => pp([false], lastOrDefault())).not.toThrow();
+    expect(() => pipeInto([false], lastOrDefault())).not.toThrow();
   });
   test("forEach", () => {
-    pp(
+    pipeInto(
       range(0, 3),
-      forEach((x, i) => expect(x).toBe(i))
+      forEach((x, i) => expect(x).toBe(i)),
     );
   });
   test("intersect", () => {
-    expect([...pp(range(0, 5), intersect(range(3, 10)))]).toEqual([3, 4]);
+    expect([...pipeInto(range(0, 5), intersect(range(3, 10)))]).toEqual([3, 4]);
   });
   test("intersect with comparer", () => {
     expect([
-      ...pp(range(0, 5), intersect(range(3, 10), createSetFactory())),
+      ...pipeInto(range(0, 5), intersect(range(3, 10), createSetFactory())),
     ]).toEqual([3, 4]);
   });
 
   test("isSubsetOf", () => {
-    expect(pp(range(0, 2), isSubsetOf([0, 1, 2, 3]))).toEqual(true);
-    expect(pp(range(-2, 2), isSubsetOf([0, 1, 2, 3]))).toEqual(false);
+    expect(pipeInto(range(0, 2), isSubsetOf([0, 1, 2, 3]))).toEqual(true);
+    expect(pipeInto(range(-2, 2), isSubsetOf([0, 1, 2, 3]))).toEqual(false);
   });
   test("isSupersetOf", () => {
-    expect(pp(range(0, 5), isSupersetOf([0, 1]))).toEqual(true);
-    expect(pp(range(0, 5), isSupersetOf([6, 7]))).toEqual(false);
+    expect(pipeInto(range(0, 5), isSupersetOf([0, 1]))).toEqual(true);
+    expect(pipeInto(range(0, 5), isSupersetOf([6, 7]))).toEqual(false);
   });
   test("max", () => {
-    expect(() => pp([], max())).toThrow();
-    expect(pp([1], max())).toBe(1);
-    expect(pp([5, 4, 3, 2, 1], max())).toBe(5);
+    expect(() => pipeInto([], max())).toThrow();
+    expect(pipeInto([1], max())).toBe(1);
+    expect(pipeInto([5, 4, 3, 2, 1], max())).toBe(5);
     expect(
-      pp(
+      pipeInto(
         [5, 4, 3, 2, 1],
         select((x) => [...repeat(x, 2)]),
-        max(([x, _]) => x)
-      )
+        max(([x, _]) => x),
+      ),
     ).toBe(5);
     expect(
-      pp(
+      pipeInto(
         [5, 4, 3, 2, 1],
         max(
           (x) => x,
-          (a, b) => -defaultComparer(a, b)
-        )
-      )
+          (a, b) => -defaultComparer(a, b),
+        ),
+      ),
     ).toBe(1);
   });
   test("min", () => {
-    expect(() => pp([], min())).toThrow();
-    expect(pp([1], min())).toBe(1);
-    expect(pp([5, 4, 3, 2, 1], min())).toBe(1);
+    expect(() => pipeInto([], min())).toThrow();
+    expect(pipeInto([1], min())).toBe(1);
+    expect(pipeInto([5, 4, 3, 2, 1], min())).toBe(1);
     expect(
-      pp(
+      pipeInto(
         [5, 4, 3, 2, 1],
         select((x) => [...repeat(x, 2)]),
-        min(([x, _]) => x)
-      )
+        min(([x, _]) => x),
+      ),
     ).toBe(1);
 
     expect(
-      pp(
+      pipeInto(
         [5, 4, 3, 2, 1],
         min(
           (x) => x,
-          (a, b) => -defaultComparer(a, b)
-        )
-      )
+          (a, b) => -defaultComparer(a, b),
+        ),
+      ),
     ).toBe(5);
   });
   test("defaultComparer", () => {
@@ -609,148 +623,177 @@ describe("ts-iterable-functions test", () => {
   const identity = getIdentity();
   test("identity", () => {
     const src = repeatGenerate(() => Math.random(), 1000);
-    pp(
+    pipeInto(
       src,
       forEach((x) => {
         expect(identity(x)).toBe(x);
-      })
+      }),
     );
-    pp(
+    pipeInto(
       src,
       forEach((x) => {
         const str = x.toString();
         expect(/^-?\d+(\.\d+)?$/.test(str)).toBeTruthy();
         expect(identity(str)).toBe(str);
-      })
+      }),
     );
   });
   test("reverse", () => {
-    expect([...pp([5, 4, 3, 2, 1], reverse())]).toEqual([1, 2, 3, 4, 5]);
+    expect([...pipeInto([5, 4, 3, 2, 1], reverse())]).toEqual([1, 2, 3, 4, 5]);
   });
   test("sequenceEqual", () => {
-    expect(pp(range(0, 3), sequenceEqual([0, 1, 2]))).toBeTruthy();
-    expect(pp(range(0, 3), sequenceEqual([0, 1, 4]))).toBeFalsy();
-    expect(pp(range(0, 3), sequenceEqual([0, 1]))).toBeFalsy();
-    expect(pp(range(0, 2), sequenceEqual([0, 1, 2]))).toBeFalsy();
+    expect(pipeInto(range(0, 3), sequenceEqual([0, 1, 2]))).toBeTruthy();
+    expect(pipeInto(range(0, 3), sequenceEqual([0, 1, 4]))).toBeFalsy();
+    expect(pipeInto(range(0, 3), sequenceEqual([0, 1]))).toBeFalsy();
+    expect(pipeInto(range(0, 2), sequenceEqual([0, 1, 2]))).toBeFalsy();
   });
   test("sequenceEqual with comparer", () => {
     expect(
-      pp(range(0, 3), sequenceEqual([0, 1, 2], deepEqualityComparer.equals))
+      pipeInto(
+        range(0, 3),
+        sequenceEqual([0, 1, 2], deepEqualityComparer.equals),
+      ),
     ).toBeTruthy();
     expect(
-      pp(range(0, 3), sequenceEqual([0, 1, 4], deepEqualityComparer.equals))
+      pipeInto(
+        range(0, 3),
+        sequenceEqual([0, 1, 4], deepEqualityComparer.equals),
+      ),
     ).toBeFalsy();
     expect(
-      pp(range(0, 3), sequenceEqual([0, 1], deepEqualityComparer.equals))
+      pipeInto(range(0, 3), sequenceEqual([0, 1], deepEqualityComparer.equals)),
     ).toBeFalsy();
     expect(
-      pp(range(0, 2), sequenceEqual([0, 1, 2], deepEqualityComparer.equals))
+      pipeInto(
+        range(0, 2),
+        sequenceEqual([0, 1, 2], deepEqualityComparer.equals),
+      ),
     ).toBeFalsy();
   });
   test("toArray", () => {
-    expect(pp(range(0, 2), toArray())).toEqual([0, 1]);
+    expect(pipeInto(range(0, 2), toArray())).toEqual([0, 1]);
   });
   test("toLookup", () => {
-    const lookup = pp(
+    const lookup = pipeInto(
       range(0, 10),
-      toLookup((x) => x % 2)
+      toLookup((x) => x % 2),
     );
-    expect(pp(lookup, count())).toBe(2);
+    expect(pipeInto(lookup, count())).toBe(2);
     expect([...(lookup.get(0) ?? [])]).toEqual([0, 2, 4, 6, 8]);
     expect([...(lookup.get(1) ?? [])]).toEqual([1, 3, 5, 7, 9]);
   });
   test("toLookup with comparer", () => {
-    const lookup = pp(
+    const lookup = pipeInto(
       range(0, 10),
-      toLookup((x) => x % 2, createMapFactory())
+      toLookup((x) => x % 2, createMapFactory()),
     );
-    expect(pp(lookup, count())).toBe(2);
+    expect(pipeInto(lookup, count())).toBe(2);
     expect([...(lookup.get(0) ?? [])]).toEqual([0, 2, 4, 6, 8]);
     expect([...(lookup.get(1) ?? [])]).toEqual([1, 3, 5, 7, 9]);
-    const lookup2 = pp(
+    const lookup2 = pipeInto(
       range(0, 10),
       toLookup(
         (x) => x % 2,
         (x) => x * 2,
-        createMapFactory()
-      )
+        createMapFactory(),
+      ),
     );
-    expect(pp(lookup2, count())).toBe(2);
+    expect(pipeInto(lookup2, count())).toBe(2);
     expect([...(lookup2.get(0) ?? [])]).toEqual([0, 4, 8, 12, 16]);
     expect([...(lookup2.get(1) ?? [])]).toEqual([2, 6, 10, 14, 18]);
   });
   test("toMap", () => {
-    const map = pp(
+    const map = pipeInto(
       range(0, 10),
       toMap(
         (x) => x,
-        (x) => x / 2
-      )
+        (x) => x / 2,
+      ),
     );
-    expect(pp(map, count())).toBe(10);
-    pp(
+    expect(pipeInto(map, count())).toBe(10);
+    pipeInto(
       map,
       forEach(([k, v]) => {
         expect(v).toBe(k / 2);
-      })
+      }),
     );
     expect(map.get(10)).toBeUndefined();
     expect(() =>
-      pp(
+      pipeInto(
         [0, 0],
         toMap(
           (x) => x,
-          (x) => x
-        )
-      )
+          (x) => x,
+        ),
+      ),
     ).toThrow();
     expect(() =>
-      pp(
+      pipeInto(
         range(0, 10),
-        toMap((x) => (x / 2) | 0, createMapFactory())
-      )
+        toMap((x) => (x / 2) | 0, createMapFactory()),
+      ),
     ).toThrow();
   });
-  test("toSet", () => {
-    const set = pp(
-      range(0, 10),
-      toSet((x) => x)
+  test("_toMap overloads", () => {
+    const source = [
+      { id: 1, name: "alpha" },
+      { id: 2, name: "beta" },
+    ];
+    const fromFactory = _toMap(source, (item) => item.id, createMapFactory());
+    expect(fromFactory.get(1)?.name).toBe("alpha");
+
+    const withSelectorAndFactory = _toMap(
+      source,
+      (item) => item.id,
+      (item) => item.name,
+      createMapFactory(),
     );
-    expect(pp(set, count())).toBe(10);
+    expect([...withSelectorAndFactory.values()]).toEqual(["alpha", "beta"]);
+  });
+  test("toSet", () => {
+    const set = pipeInto(
+      range(0, 10),
+      toSet((x) => x),
+    );
+    expect(pipeInto(set, count())).toBe(10);
 
     expect(set.has(10)).toBeFalsy();
     expect(() =>
-      pp(
+      pipeInto(
         [1, 1],
-        toSet((x) => x)
-      )
+        toSet((x) => x),
+      ),
     ).toThrow();
 
-    const set2 = pp(range(0, 10), toSet());
-    expect(pp(set2, count())).toBe(10);
+    const set2 = pipeInto(range(0, 10), toSet());
+    expect(pipeInto(set2, count())).toBe(10);
 
     expect(set2.has(10)).toBeFalsy();
-    const set3 = pp(range(0, 10), toSet(createSetFactory()));
-    expect(pp(set3, count())).toBe(10);
+    const set3 = pipeInto(range(0, 10), toSet(createSetFactory()));
+    expect(pipeInto(set3, count())).toBe(10);
 
     expect(set3.has(10)).toBeFalsy();
     expect(() =>
-      pp(
+      pipeInto(
         range(0, 10),
-        toSet((x) => (x / 2) | 0, createSetFactory())
-      )
+        toSet((x) => (x / 2) | 0, createSetFactory()),
+      ),
     ).toThrow();
   });
+  test("_toSet with factory", () => {
+    const set = _toSet([1, 2, 3], createSetFactory());
+    expect([...set]).toEqual([1, 2, 3]);
+  });
   test("groupBy", () => {
-    const output = pp(
+    const output = pipeInto(
       range(0, 2),
       groupBy((x) => x % 2),
       selectMany((x) =>
-        pp(
+        pipeInto(
           x,
-          select((xx) => [x.key, xx])
-        )
-      )
+          select((xx) => [x.key, xx]),
+        ),
+      ),
     );
     expect([...output]).toEqual([
       [0, 0],
@@ -760,163 +803,167 @@ describe("ts-iterable-functions test", () => {
       [0, 0],
       [1, 1],
     ]);
+
+    const grouped = [
+      ...pipeInto(
+        range(0, 4),
+        groupBy((x) => x % 2),
+      ),
+    ];
+    expect(grouped[0].toJSON()).toEqual([...grouped[0]]);
   });
   test("groupJoin", () => {
     const seq1 = range(0, 5);
-    const seq2 = pp(
+    const seq2 = pipeInto(
       range(3, 5),
-      selectMany((x) => repeat(x, 2))
+      selectMany((x) => repeat(x, 2)),
     );
-    const joined = pp(
-      seq1,
-      groupJoin(
-        seq2,
-        (x) => x,
-        (x) => x,
-        (k, v) => ({ k, v })
-      )
-    );
-    expect([
-      ...pp(
-        joined,
-        select((x) => x.k)
-      ),
-    ]).toEqual([0, 1, 2, 3, 4]);
-    expect([
-      ...pp(
-        joined,
-        select((x) => x.k)
-      ),
-    ]).toEqual([0, 1, 2, 3, 4]);
-    expect([
-      ...pp(
-        joined,
-        select((x) => [...x.v])
-      ),
-    ]).toEqual([[], [], [], [3, 3], [4, 4]]);
-    expect([
-      ...pp(
-        joined,
-        select((x) => [...x.v])
-      ),
-    ]).toEqual([[], [], [], [3, 3], [4, 4]]);
-  });
-  test("groupJoin with comparer", () => {
-    const seq1 = range(0, 5);
-    const seq2 = pp(
-      range(3, 5),
-      selectMany((x) => repeat(x, 2))
-    );
-    const joined = pp(
+    const joined = pipeInto(
       seq1,
       groupJoin(
         seq2,
         (x) => x,
         (x) => x,
         (k, v) => ({ k, v }),
-        createMapFactory()
-      )
+      ),
     );
     expect([
-      ...pp(
+      ...pipeInto(
         joined,
-        select((x) => x.k)
+        select((x) => x.k),
       ),
     ]).toEqual([0, 1, 2, 3, 4]);
     expect([
-      ...pp(
+      ...pipeInto(
         joined,
-        select((x) => x.k)
+        select((x) => x.k),
       ),
     ]).toEqual([0, 1, 2, 3, 4]);
     expect([
-      ...pp(
+      ...pipeInto(
         joined,
-        select((x) => [...x.v])
+        select((x) => [...x.v]),
       ),
     ]).toEqual([[], [], [], [3, 3], [4, 4]]);
     expect([
-      ...pp(
+      ...pipeInto(
         joined,
-        select((x) => [...x.v])
+        select((x) => [...x.v]),
+      ),
+    ]).toEqual([[], [], [], [3, 3], [4, 4]]);
+  });
+  test("groupJoin with comparer", () => {
+    const seq1 = range(0, 5);
+    const seq2 = pipeInto(
+      range(3, 5),
+      selectMany((x) => repeat(x, 2)),
+    );
+    const joined = pipeInto(
+      seq1,
+      groupJoin(
+        seq2,
+        (x) => x,
+        (x) => x,
+        (k, v) => ({ k, v }),
+        createMapFactory(),
+      ),
+    );
+    expect([
+      ...pipeInto(
+        joined,
+        select((x) => x.k),
+      ),
+    ]).toEqual([0, 1, 2, 3, 4]);
+    expect([
+      ...pipeInto(
+        joined,
+        select((x) => x.k),
+      ),
+    ]).toEqual([0, 1, 2, 3, 4]);
+    expect([
+      ...pipeInto(
+        joined,
+        select((x) => [...x.v]),
+      ),
+    ]).toEqual([[], [], [], [3, 3], [4, 4]]);
+    expect([
+      ...pipeInto(
+        joined,
+        select((x) => [...x.v]),
       ),
     ]).toEqual([[], [], [], [3, 3], [4, 4]]);
   });
   test("fullOuterGroupJoin", () => {
-    const seq1 = pp(
+    const seq1 = pipeInto(
       range(0, 5),
-      selectMany((x) => repeat(x, 2))
+      selectMany((x) => repeat(x, 2)),
     );
-    const seq2 = pp(
+    const seq2 = pipeInto(
       range(1, 5),
-      selectMany((x) => repeat(x, 2))
+      selectMany((x) => repeat(x, 2)),
     );
-    const gj = pp(
+    const gj = pipeInto(
       seq1,
       fullOuterGroupJoin(
         seq2,
         (x) => x,
         (x) => x,
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        (lft, rgt, i) => ({ lft: lft && [...lft], rgt: rgt && [...rgt], i })
-      )
+
+        (lft, rgt, i) => ({ lft: lft && [...lft], rgt: rgt && [...rgt], i }),
+      ),
     );
-    const lookup = pp(
+    const lookup = pipeInto(
       gj,
       toMap(
         (x) => x.i,
-        (x) => x
-      )
+        (x) => x,
+      ),
     );
     const key0 = lookup.get(0);
     expect(
       key0 &&
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         key0.rgt.length === 0 &&
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         key0.lft &&
-        pp(key0.lft, sequenceEqual([0, 0]))
+        pipeInto(key0.lft, sequenceEqual([0, 0])),
     ).toBeTruthy();
     const key5 = lookup.get(5);
     expect(
       key5 &&
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         key5.lft.length === 0 &&
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         key5.rgt &&
-        pp(key5.rgt, sequenceEqual([5, 5]))
+        pipeInto(key5.rgt, sequenceEqual([5, 5])),
     ).toBeTruthy();
 
-    const mid = pp(gj, skip(1), reverse(), skip(1), reverse());
+    const mid = pipeInto(gj, skip(1), reverse(), skip(1), reverse());
 
-    pp(
+    pipeInto(
       mid,
       forEach((x) => {
         expect(x.lft).toEqual(x.rgt);
         expect([...repeat(x.i, 2)]).toEqual(x.lft);
-      })
+      }),
     );
   });
   test("fullOuterJoin", () => {
     const seq1 = range(0, 5);
     const seq2 = range(1, 5);
-    const j = pp(
+    const j = pipeInto(
       seq1,
       fullOuterJoin(
         seq2,
         (x) => x,
         (x) => x,
-        (l, r) => ({ l, r })
-      )
+        (l, r) => ({ l, r }),
+      ),
     );
-    const r1 = pp(
+    const r1 = pipeInto(
       j,
-      single((x) => x.l === 0)
+      single((x) => x.l === 0),
     );
     expect(typeof r1.r === "undefined" && r1.l === 0).toBeTruthy();
-    const r2 = pp(
+    const r2 = pipeInto(
       j,
-      single((x) => x.l === 1)
+      single((x) => x.l === 1),
     );
     expect(r2.r === 1 && r2.l === 1).toBeTruthy();
   });
@@ -955,14 +1002,14 @@ describe("ts-iterable-functions test", () => {
       },
     ];
 
-    const items = pp(
+    const items = pipeInto(
       outerSeq,
       join(
         innerSeq,
         (outerItem) => outerItem.id,
         (innerItem) => innerItem.id,
-        (outerItem, innerItem) => outerItem.value + " " + innerItem.value
-      )
+        (outerItem, innerItem) => outerItem.value + " " + innerItem.value,
+      ),
     );
 
     expect([...items]).toEqual([
@@ -1007,15 +1054,15 @@ describe("ts-iterable-functions test", () => {
       },
     ];
 
-    const items = pp(
+    const items = pipeInto(
       outerSeq,
       leftOuterJoin(
         innerSeq,
         (outerItem) => outerItem.id,
         (innerItem) => innerItem.id,
         (outerItem, innerItem) =>
-          outerItem.value + " " + (innerItem ? innerItem.value : "no match")
-      )
+          outerItem.value + " " + (innerItem ? innerItem.value : "no match"),
+      ),
     );
 
     expect([...items]).toEqual([
@@ -1059,7 +1106,7 @@ describe("ts-iterable-functions test", () => {
       },
     ];
 
-    const items = pp(
+    const items = pipeInto(
       outerSeq,
       leftOuterJoin(
         innerSeq,
@@ -1067,8 +1114,8 @@ describe("ts-iterable-functions test", () => {
         (innerItem) => innerItem.id,
         (outerItem, innerItem) =>
           outerItem.value + " " + (innerItem ? innerItem.value : "no match"),
-        createMapFactory()
-      )
+        createMapFactory(),
+      ),
     );
 
     expect([...items]).toEqual([
@@ -1080,45 +1127,45 @@ describe("ts-iterable-functions test", () => {
   });
 
   test("skip", () => {
-    expect([...pp([1, 2, 3], skip(1))]).toEqual([2, 3]);
+    expect([...pipeInto([1, 2, 3], skip(1))]).toEqual([2, 3]);
   });
   test("take", () => {
-    expect([...pp([1, 2, 3], take(2))]).toEqual([1, 2]);
+    expect([...pipeInto([1, 2, 3], take(2))]).toEqual([1, 2]);
   });
   test("sum", () => {
-    expect(pp([1, 2, 3], sum())).toEqual(6);
+    expect(pipeInto([1, 2, 3], sum())).toEqual(6);
   });
   test("union", () => {
-    const u = pp(range(0, 10), union(range(5, 10)));
+    const u = pipeInto(range(0, 10), union(range(5, 10)));
     expect([...u]).toEqual([...range(0, 15)]);
   });
   test("zip", () => {
     expect(
-      pp(
+      pipeInto(
         [1, 2],
         zip([2, 1], (a, b) => [a, b]),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([
       [1, 2],
       [2, 1],
     ]);
     expect(
-      pp(
+      pipeInto(
         [1, 2],
         zip([2, 1, 5], (a, b) => [a, b]),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([
       [1, 2],
       [2, 1],
     ]);
     expect(
-      pp(
+      pipeInto(
         [1, 2, 5],
         zip([2, 1], (a, b) => [a, b]),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([
       [1, 2],
       [2, 1],
@@ -1136,71 +1183,71 @@ describe("ts-iterable-functions test", () => {
       { name: "luke", age: 41 },
     ];
     expect(
-      pp(
+      pipeInto(
         arr,
         maxBy((x) => x.age),
-        first()
-      ).name
+        first(),
+      ).name,
     ).toBe("nicole");
     expect(
-      pp(
+      pipeInto(
         arr,
         minBy((x) => x.age),
-        first()
-      ).name
+        first(),
+      ).name,
     ).toBe("luke");
     expect(
-      pp(
+      pipeInto(
         arr,
         take(0),
         minBy((x) => x.age),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([]);
     expect(
-      pp(
+      pipeInto(
         [0, 0],
         minBy((x) => x),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([0, 0]);
     expect(
-      pp(
+      pipeInto(
         [0, 0],
         maxBy((x) => x),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([0, 0]);
     const inverseComparer = <T>(a: T, b: T) => defaultComparer(b, a);
     expect(
-      pp(
+      pipeInto(
         arr,
         maxBy((x) => x.age, inverseComparer),
-        first()
-      ).name
+        first(),
+      ).name,
     ).toBe("luke");
     expect(
-      pp(
+      pipeInto(
         arr,
         minBy((x) => x.age, inverseComparer),
-        first()
-      ).name
+        first(),
+      ).name,
     ).toBe("nicole");
   });
   test("append", () => {
-    expect(pp([1, 2], append(3), toArray())).toEqual([1, 2, 3]);
+    expect(pipeInto([1, 2], append(3), toArray())).toEqual([1, 2, 3]);
   });
   test("prepend", () => {
-    expect(pp([1, 2], prepend(3), toArray())).toEqual([3, 1, 2]);
+    expect(pipeInto([1, 2], prepend(3), toArray())).toEqual([3, 1, 2]);
   });
   test("flatten", () => {
     expect(
-      pp(
+      pipeInto(
         [1, 2],
         select((x) => repeat(x, 2)),
         flatten(),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([1, 1, 2, 2]);
   });
   test("zipAll", () => {
@@ -1210,28 +1257,44 @@ describe("ts-iterable-functions test", () => {
     ];
 
     expect(
-      pp(
+      pipeInto(
         b,
         zipAll(),
         select((x) => [...x]),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([
       [1, 1],
       [2, 2],
     ]);
   });
+  test("_zipAll empty source", () => {
+    expect([..._zipAll([])]).toEqual([]);
+  });
+  test("unwrapIndexed restores original order", () => {
+    const source: [string, number][] = [
+      ["beta", 1],
+      ["alpha", 0],
+      ["gamma", 2],
+    ];
+    expect([..._unwrapIndexed(source)]).toEqual(["alpha", "beta", "gamma"]);
+    expect([...pipeInto(source, unwrapIndexed())]).toEqual([
+      "alpha",
+      "beta",
+      "gamma",
+    ]);
+  });
   test("groupAdjacent", () => {
     expect(
-      pp(
+      pipeInto(
         [1, 1, 2, 2, 2, 3, 3, 3, 3, 2, 2],
         groupAdjacent(
           (x) => x,
           (x) => x,
-          (_, items) => [...items]
+          (_, items) => [...items],
         ),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([
       [1, 1],
       [2, 2, 2],
@@ -1241,16 +1304,16 @@ describe("ts-iterable-functions test", () => {
   });
   test("groupAdjacent with comparer", () => {
     expect(
-      pp(
+      pipeInto(
         [1, 1, 2, 2, 2, 3, 3, 3, 3, 2, 2],
         groupAdjacent(
           (x) => x,
           (x) => x,
           (_, items) => [...items],
-          deepEqualityComparer.equals
+          deepEqualityComparer.equals,
         ),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([
       [1, 1],
       [2, 2, 2],
@@ -1260,26 +1323,26 @@ describe("ts-iterable-functions test", () => {
   });
   test("skipWhile", () => {
     expect(
-      pp(
+      pipeInto(
         [1, 2, 3, 4, 1, 5],
         skipWhile((x) => x < 3),
-        toArray()
-      )
+        toArray(),
+      ),
     ).toEqual([3, 4, 1, 5]);
   });
   test("orderBy impure selector", () => {
     const _range = range(0, 1000);
-    const randomOrder = pp(
+    const randomOrder = pipeInto(
       _range,
-      orderBy((_) => Math.random())
+      orderBy((_) => Math.random()),
     );
-    expect(pp(randomOrder, sequenceEqual(_range))).toBeFalsy();
-    expect(pp(randomOrder, sequenceEqual(randomOrder))).toBeFalsy();
-    const reordered = pp(
+    expect(pipeInto(randomOrder, sequenceEqual(_range))).toBeFalsy();
+    expect(pipeInto(randomOrder, sequenceEqual(randomOrder))).toBeFalsy();
+    const reordered = pipeInto(
       randomOrder,
-      orderBy((x) => x)
+      orderBy((x) => x),
     );
-    expect(pp(reordered, sequenceEqual(_range))).toBeTruthy();
+    expect(pipeInto(reordered, sequenceEqual(_range))).toBeTruthy();
   });
   test("cartesian", () => {
     const data: Iterable<Iterable<string>> = [
@@ -1292,13 +1355,15 @@ describe("ts-iterable-functions test", () => {
       ["blue", "candy"],
       ["blue", "car"],
     ];
-    const cart = pp(data, cartesian);
-    expect(pp(cart, isSubsetOf(result, createSetFactory()))).toBeTruthy();
-    expect(pp(cart, isSupersetOf(result, createSetFactory()))).toBeTruthy();
+    const cart = pipeInto(data, cartesian);
+    expect(pipeInto(cart, isSubsetOf(result, createSetFactory()))).toBeTruthy();
+    expect(
+      pipeInto(cart, isSupersetOf(result, createSetFactory())),
+    ).toBeTruthy();
   });
   test("iterable toJSON", () => {
     expect(JSON.stringify(_select([1, 2, 3], identity))).toBe(
-      JSON.stringify([1, 2, 3])
+      JSON.stringify([1, 2, 3]),
     );
   });
   test("headTail", () => {
@@ -1323,18 +1388,18 @@ describe("ts-iterable-functions test", () => {
   test("zipAllToTuple", () => {
     const len = 50;
     const list1 = range(0, len + 100);
-    const list2 = pp(
+    const list2 = pipeInto(
       range(0, len - 1),
-      map((x) => `number ${x}`)
+      map((x) => `number ${x}`),
     );
-    const zipped = pp([list1, list2] as const, zipAllToTuple());
+    const zipped = pipeInto([list1, list2] as const, zipAllToTuple());
 
     expect([...zipped]).toEqual(
-      pp(
+      pipeInto(
         range(0, len - 1),
         map((i) => [i, `number ${i}`] as const),
-        toArray()
-      )
+        toArray(),
+      ),
     );
   });
   test("zipMap", () => {
@@ -1346,9 +1411,9 @@ describe("ts-iterable-functions test", () => {
       seq2,
       seq3,
     ];
-    const zipMapped = pp(
+    const zipMapped = pipeInto(
       sequences,
-      zipMap((num1, str, num2) => `${num1}${str}${num2}`)
+      zipMap((num1, str, num2) => `${num1}${str}${num2}`),
     );
     expect([...zipMapped]).toEqual(["1a9", "2b8", "3c7"]);
   });

@@ -1,8 +1,34 @@
 import { deferP0 } from "ts-functional-pipe";
+
+/**
+ * Determines whether the source iterable and the comparison iterable yield equal elements in order.
+ *
+ * @typeParam T - Element type produced by both iterables.
+ * @param src - Source iterable to evaluate.
+ * @param seq - Second iterable whose values are compared against the source.
+ * @param equalityComparer - Optional comparer invoked for each pair of elements; defaults to strict equality.
+ * @returns `true` when both iterables produce the same number of elements and each pair matches under the comparer.
+ * @throws Error Rethrows any error thrown by `equalityComparer`.
+ *
+ * @example
+ * ```ts
+ * const same = _sequenceEqual([1, 2, 3], [1, 2, 3]);
+ * console.log(same); // true
+ * ```
+ *
+ * or using the curried version:
+ * ```ts
+ * const same = pipeInto(
+ *   [1, 2, 3],
+ *   sequenceEqual([1, 2, 3])
+ * );
+ * console.log(same); // true
+ * ```
+ */
 export function _sequenceEqual<T>(
   src: Iterable<T>,
   seq: Iterable<T>,
-  equalityComparer?: (a: T | undefined, b: T | undefined) => boolean
+  equalityComparer?: (a: T | undefined, b: T | undefined) => boolean,
 ): boolean {
   const eq = equalityComparer
     ? (a: T | undefined, b: T | undefined) =>
@@ -27,4 +53,8 @@ export function _sequenceEqual<T>(
     }
   }
 }
+
+/**
+ * Curried version of {@link _sequenceEqual}.
+ */
 export const sequenceEqual = deferP0(_sequenceEqual);

@@ -94,3 +94,6 @@ export { zip, _zip } from "./transformers/zip";
 export { zipAll, _zipAll } from "./transformers/zipAll";
 export { zipAllToTuple, _zipAllToTuple } from "./transformers/zipAllToTuple";
 export { zipMap, _zipMap } from "./transformers/zipMap";
+export { default as OrderedIterable } from "./transformers/helpers/OrderedIterable";
+export { TypeGuardPredicate } from "./types/TypeGuardPredicate";
+export { Iterablified } from "./transformers/zipAllToTuple";

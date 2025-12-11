@@ -1,0 +1,552 @@
+"use strict";
+
+import {
+    Converter,
+    DeclarationReflection,
+    ReflectionKind,
+    ReflectionType,
+    ReferenceType,
+    SignatureReflection,
+    ParameterReflection,
+    TypeParameterReflection,
+    ReflectionFlag,
+    Comment,
+    CommentTag,
+    PageEvent,
+} from "typedoc";
+
+/**
+ * Detects whether a TypeDoc type node describes something callable.
+ * Walks into reflection and reference types so we catch arrow functions,
+ * type literals, and re-exported call signatures.
+ * @param {import("typedoc").SomeType | undefined} type
+ * @returns {boolean}
+ */
+function typeHasCallSignature(type) {
+    if (!type) {
+        return false;
+    }
+
+    if (type instanceof ReflectionType) {
+        return declarationHasSignature(type.declaration);
+    }
+
+    if (type instanceof ReferenceType && type.reflection) {
+        return declarationHasSignature(type.reflection);
+    }
+
+    if (Array.isArray(type.types)) {
+        return type.types.some(typeHasCallSignature);
+    }
+
+    if (Array.isArray(type.elements)) {
+        return type.elements.some(typeHasCallSignature);
+    }
+
+    return false;
+}
+
+/**
+ * @param {DeclarationReflection | undefined} declaration
+ * @returns {boolean}
+ */
+function declarationHasSignature(declaration) {
+    if (!declaration) {
+        return false;
+    }
+
+    return (
+        declaration instanceof DeclarationReflection &&
+        Array.isArray(declaration.signatures) &&
+        declaration.signatures.length > 0
+    );
+}
+
+/**
+ * @param {import("typedoc").SomeType | undefined} type
+ * @param {import("typedoc").Reflection | undefined} parent
+ * @returns {import("typedoc").SomeType | undefined}
+ */
+function cloneType(type, parent) {
+    if (!type) {
+        return type;
+    }
+
+    if (type instanceof ReflectionType) {
+        const declaration = type.declaration;
+        const clonedDeclaration = cloneDeclaration(declaration, parent);
+        return new ReflectionType(clonedDeclaration);
+    }
+
+    return type;
+}
+
+/**
+ * @param {DeclarationReflection} declaration
+ * @param {import("typedoc").Reflection | undefined} parent
+ */
+function cloneDeclaration(declaration, parent) {
+    const cloned = new DeclarationReflection(declaration.name, declaration.kind, parent);
+    cloned.comment = declaration.comment;
+    cloned.sources = declaration.sources;
+    cloned.defaultValue = declaration.defaultValue;
+    copyFlags(declaration, cloned);
+
+    if (Array.isArray(declaration.typeParameters)) {
+        cloned.typeParameters = declaration.typeParameters.map((tp) => cloneTypeParameter(tp, cloned));
+    }
+
+    if (Array.isArray(declaration.signatures)) {
+        cloned.signatures = declaration.signatures.map((signature) => cloneSignature(signature, cloned));
+    }
+
+    if (Array.isArray(declaration.children)) {
+        cloned.children = declaration.children.map((child) => cloneDeclaration(child, cloned));
+    }
+
+    if (declaration.type) {
+        cloned.type = cloneType(declaration.type, cloned);
+    }
+
+    return cloned;
+}
+
+/**
+ * @param {SignatureReflection} signature
+ * @param {DeclarationReflection} parent
+ */
+function cloneSignature(signature, parent) {
+    const cloned = new SignatureReflection(signature.name, signature.kind, parent);
+    cloned.comment = signature.comment;
+    cloned.sources = signature.sources;
+    copyFlags(signature, cloned);
+
+    if (Array.isArray(signature.typeParameters)) {
+        cloned.typeParameters = signature.typeParameters.map((tp) => cloneTypeParameter(tp, cloned));
+    }
+
+    if (Array.isArray(signature.parameters)) {
+        cloned.parameters = signature.parameters.map((parameter) => cloneParameter(parameter, cloned));
+    }
+
+    cloned.type = cloneType(signature.type, cloned);
+
+    return cloned;
+}
+
+/**
+ * @param {ParameterReflection} parameter
+ * @param {SignatureReflection} parent
+ */
+function cloneParameter(parameter, parent) {
+    const cloned = new ParameterReflection(parameter.name, parameter.kind, parent);
+    cloned.comment = parameter.comment;
+    cloned.sources = parameter.sources;
+    cloned.defaultValue = parameter.defaultValue;
+    copyFlags(parameter, cloned);
+    cloned.type = cloneType(parameter.type, cloned);
+    return cloned;
+}
+
+/**
+ * @param {TypeParameterReflection} typeParameter
+ * @param {import("typedoc").Reflection} parent
+ */
+function cloneTypeParameter(typeParameter, parent) {
+    const cloned = new TypeParameterReflection(typeParameter.name, parent, typeParameter.varianceModifier);
+    cloned.comment = typeParameter.comment;
+    cloned.sources = typeParameter.sources;
+    cloned.type = cloneType(typeParameter.type, cloned);
+    cloned.default = cloneType(typeParameter.default, cloned);
+    copyFlags(typeParameter, cloned);
+    return cloned;
+}
+
+/**
+ * Copies reflection flags from one reflection to another.
+ * @param {import("typedoc").Reflection} source
+ * @param {import("typedoc").Reflection} target
+ */
+function copyFlags(source, target) {
+    for (const value of Object.values(ReflectionFlag)) {
+        if (typeof value !== "number" || value === ReflectionFlag.None) {
+            continue;
+        }
+
+        if (source?.flags?.hasFlag?.(value)) {
+            target.setFlag(value, true);
+        }
+    }
+}
+
+/**
+ * Applies `@param` and `@typeParam` tag comments to cloned reflections.
+ * @param {SignatureReflection} signature
+ * @param {import("typedoc").Comment | undefined} comment
+ */
+function applyTagComments(signature, comment) {
+    if (!comment || !Array.isArray(comment.blockTags)) {
+        return;
+    }
+
+    for (const tag of comment.blockTags) {
+        if (!tag) {
+            continue;
+        }
+
+        if ((tag.tag === "@param" || tag.tag === "@arg" || tag.tag === "@argument") && tag.name) {
+            const parameter = signature.parameters?.find((param) => param.name === tag.name);
+            if (!parameter) {
+                continue;
+            }
+
+            parameter.comment =
+                parameter.comment ?? new Comment(Comment.cloneDisplayParts(tag.content ?? []), []);
+        }
+
+        if ((tag.tag === "@typeParam" || tag.tag === "@template") && tag.name) {
+            const typeParam = signature.typeParameters?.find((param) => param.name === tag.name);
+            if (!typeParam) {
+                continue;
+            }
+
+            typeParam.comment =
+                typeParam.comment ?? new Comment(Comment.cloneDisplayParts(tag.content ?? []), []);
+        }
+    }
+}
+
+/**
+ * Attempts to rewrite a `deferP0` curried helper into a readable signature.
+ * @param {DeclarationReflection} reflection
+ * @param {import("typedoc").ProjectReflection} project
+ */
+function tryConvertDeferP0(reflection, project) {
+    if (!(reflection.type instanceof ReflectionType)) {
+        return;
+    }
+
+    const outerDeclaration = reflection.type.declaration;
+    const outerSignature = outerDeclaration?.signatures?.[0];
+    if (!outerSignature) {
+        return;
+    }
+
+    const restParameter = outerSignature.parameters?.[0];
+    if (!restParameter || !restParameter.flags?.isRest) {
+        return;
+    }
+
+    const innerType = outerSignature.type;
+    if (!(innerType instanceof ReflectionType)) {
+        return;
+    }
+
+    const innerDeclaration = innerType.declaration;
+    if (!innerDeclaration?.signatures?.length) {
+        return;
+    }
+
+    const sourceFile = outerSignature.sources?.[0]?.fileName ?? "";
+    if (!sourceFile.includes("deferP0")) {
+        return;
+    }
+
+    const signature = new SignatureReflection(reflection.name, ReflectionKind.CallSignature, reflection);
+
+    if (reflection.comment) {
+        // Ignore comments attached to the curried export so companion docs drive the output.
+        reflection.comment = undefined;
+    }
+
+    copyFlags(outerSignature, signature);
+
+    if (Array.isArray(outerSignature.typeParameters)) {
+        signature.typeParameters = outerSignature.typeParameters.map((tp) => cloneTypeParameter(tp, signature));
+    }
+
+    const companion = findCompanionReflection(reflection, project);
+    let parametersDefined = false;
+
+    if (companion?.isDeclaration?.()) {
+        const companionSignature = companion.signatures?.[0];
+        if (companionSignature) {
+            if (Array.isArray(companionSignature.parameters)) {
+                const [, ...companionParameters] = companionSignature.parameters;
+                if (companionParameters.length > 0) {
+                    signature.parameters = companionParameters.map((param) => cloneParameter(param, signature));
+                } else {
+                    signature.parameters = [];
+                }
+                parametersDefined = true;
+            }
+
+            applyCompanionComments(companionSignature, signature);
+        }
+    }
+
+    if (!parametersDefined) {
+        const restType = restParameter.type;
+        if (restType?.type === "tuple" && Array.isArray(restType.elements)) {
+            signature.parameters = restType.elements.map((element, index) => {
+                const name = element?.name ?? `arg${index}`;
+                const parameter = new ParameterReflection(name, ReflectionKind.Parameter, signature);
+                if (element?.isOptional) {
+                    parameter.setFlag(ReflectionFlag.Optional, true);
+                }
+                parameter.sources = restParameter.sources;
+                parameter.type = cloneType(element?.element ?? element, parameter);
+                return parameter;
+            });
+        } else {
+            const clonedRest = cloneParameter(restParameter, signature);
+            signature.parameters = clonedRest ? [clonedRest] : [];
+        }
+    }
+
+    applyTagComments(signature, signature.comment ?? outerSignature.comment);
+    outerSignature.comment = undefined;
+
+    const companionName = companion?.name ?? `_${reflection.name}`;
+    appendCurriedVersionNote(signature, companion, companionName);
+
+    const returnDeclaration = cloneDeclaration(innerDeclaration, signature);
+    signature.type = new ReflectionType(returnDeclaration);
+
+    project.removeTypeReflections?.(reflection.type);
+    reflection.type = undefined;
+    reflection.signatures = [signature];
+}
+
+/**
+ * Attempts to locate the underscore-prefixed implementation used to build a curried export.
+ * @param {DeclarationReflection} reflection
+ * @param {import("typedoc").ProjectReflection} project
+ */
+function findCompanionReflection(reflection, project) {
+    const targetName = `_${reflection.name}`;
+    const path = [targetName];
+
+    let scope = reflection.parent;
+    while (scope) {
+        if (typeof scope.getChildByName === "function") {
+            const found = scope.getChildByName(path);
+            if (found) {
+                return found;
+            }
+        }
+        scope = scope.parent;
+    }
+
+    return project.getChildByName(path);
+}
+
+/**
+ * Copies parameter and type parameter comments from the implementation signature to the curried signature.
+ * @param {SignatureReflection} source
+ * @param {SignatureReflection} target
+ */
+function applyCompanionComments(source, target) {
+    if (source.comment && !target.comment) {
+        target.comment = cloneComment(source.comment);
+    }
+
+    if (Array.isArray(source.parameters) && Array.isArray(target.parameters)) {
+        for (const parameter of source.parameters) {
+            const targetParameter = target.parameters.find((param) => param.name === parameter.name);
+            if (targetParameter && parameter.comment && !targetParameter.comment) {
+                targetParameter.comment = cloneComment(parameter.comment);
+            }
+        }
+    }
+
+    if (Array.isArray(source.typeParameters) && Array.isArray(target.typeParameters)) {
+        for (const typeParam of source.typeParameters) {
+            const targetTypeParam = target.typeParameters.find((param) => param.name === typeParam.name);
+            if (targetTypeParam && typeParam.comment && !targetTypeParam.comment) {
+                targetTypeParam.comment = cloneComment(typeParam.comment);
+            }
+        }
+    }
+}
+
+/**
+ * Produces a deep clone of a comment to avoid mutating shared references.
+ * @param {Comment | undefined} comment
+ * @returns {Comment | undefined}
+ */
+function cloneComment(comment) {
+    if (!comment) {
+        return comment;
+    }
+
+    const cloned = new Comment(Comment.cloneDisplayParts(comment.summary ?? []), []);
+
+    if (Array.isArray(comment.blockTags)) {
+        cloned.blockTags = comment.blockTags.map((tag) =>
+            typeof tag.clone === "function"
+                ? tag.clone()
+                : new CommentTag(tag.tag, tag.name, Comment.cloneDisplayParts(tag.content ?? []))
+        );
+    }
+
+    if (comment.modifierTags) {
+        cloned.modifierTags = new Set(comment.modifierTags);
+    }
+
+    return cloned;
+}
+
+/**
+ * Attempts to replace a variable-style function export that references another
+ * function with its own set of call signatures so documentation renders cleanly.
+ * @param {DeclarationReflection} reflection
+ */
+function tryConvertReferenceFunction(reflection, project) {
+    if (
+        !(reflection instanceof DeclarationReflection) ||
+        Array.isArray(reflection.signatures) && reflection.signatures.length > 0
+    ) {
+        return;
+    }
+
+    const type = reflection.type;
+
+    if (type instanceof ReferenceType && type.reflection) {
+        const target = type.reflection;
+        if (!declarationHasSignature(target) || !Array.isArray(target.signatures)) {
+            return;
+        }
+
+        const clonedSignatures = target.signatures.map((signature) => cloneSignature(signature, reflection));
+        reflection.signatures = clonedSignatures;
+        if (project?.removeTypeReflections) {
+            project.removeTypeReflections(type);
+        }
+        reflection.type = undefined;
+        return;
+    }
+
+    if (type instanceof ReflectionType && type.declaration && declarationHasSignature(type.declaration)) {
+        const sourceDeclaration = type.declaration;
+        const clonedSignatures = sourceDeclaration.signatures?.map((signature) => cloneSignature(signature, reflection)) ?? [];
+
+        if (clonedSignatures.length === 0) {
+            return;
+        }
+
+        reflection.signatures = clonedSignatures;
+        if (project?.removeTypeReflections) {
+            project.removeTypeReflections(type);
+        }
+        reflection.type = undefined;
+    }
+}
+
+/**
+ * Appends a "Curried version" note to the signature summary so output docs highlight the relationship.
+ * @param {SignatureReflection} signature
+ * @param {string} companionName
+ */
+function appendCurriedVersionNote(signature, companion, companionName) {
+    const existing = signature.comment;
+    const comment = existing ? cloneComment(existing) : new Comment([], []);
+    signature.comment = comment;
+    const summary = comment.summary ?? (comment.summary = []);
+
+    const exists = summary.some(
+        (part) => typeof part?.text === "string" && part.text.includes("Curried version of ")
+    );
+
+    if (exists) {
+        return;
+    }
+
+    const prefix = summary.length > 0 ? "\n\n" : "";
+    summary.push({ kind: "text", text: `${prefix}Curried version of ` });
+    summary.push({ kind: "inline-tag", tag: "@link", text: companionName, target: companion });
+    summary.push({ kind: "text", text: "." });
+}
+
+/**
+ * Ensures function reflections expose their summary on call signatures only,
+ * preventing duplicate text in generated documentation.
+ * @param {import("typedoc").Reflection | undefined} reflection
+ */
+function normalizeFunctionComments(reflection) {
+    if (!reflection) {
+        return;
+    }
+
+    if (
+        reflection.kind === ReflectionKind.Function &&
+        Array.isArray(reflection.signatures) &&
+        reflection.signatures.length > 0
+    ) {
+        const reflectionComment = reflection.comment ? cloneComment(reflection.comment) : undefined;
+
+        if (reflectionComment) {
+            for (const signature of reflection.signatures) {
+                if (!signature.comment) {
+                    signature.comment = cloneComment(reflectionComment);
+                }
+            }
+        }
+
+        reflection.comment = undefined;
+
+    }
+
+    if (Array.isArray(reflection.children)) {
+        for (const child of reflection.children) {
+            normalizeFunctionComments(child);
+        }
+    }
+}
+
+/**
+ * Rewrites signatures for exports tagged with {@link CURRIED_FROM_TAG} so
+ * documentation reflects the curried parameter order.
+ * @param {import("typedoc").ProjectReflection} project
+ */
+function applyCurriedFrom(project) {
+    const functions = project.getReflectionsByKind(ReflectionKind.Function);
+
+    for (const reflection of functions) {
+        if (!reflection.isDeclaration?.()) {
+            continue;
+        }
+
+        tryConvertDeferP0(reflection, project);
+        tryConvertReferenceFunction(reflection, project);
+    }
+}
+
+/**
+ * TypeDoc plugin entry point.
+ * @param {import("typedoc").Application} app
+ */
+export function load(app) {
+    app.converter.on(Converter.EVENT_RESOLVE_END, (context) => {
+        const project = context.project;
+        const variables = project.getReflectionsByKind(ReflectionKind.Variable);
+
+        for (const reflection of variables) {
+            if (!typeHasCallSignature(reflection.type)) {
+                continue;
+            }
+
+            reflection.kind = ReflectionKind.Function;
+            reflection.kindString = "Function";
+        }
+
+        applyCurriedFrom(project);
+        normalizeFunctionComments(project);
+    });
+
+    app.renderer.on(PageEvent.BEGIN, (page) => {
+        if (page.model) {
+            normalizeFunctionComments(page.model);
+        }
+    });
+}

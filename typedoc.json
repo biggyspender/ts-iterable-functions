@@ -1,0 +1,8 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "plugin": [
+        "./typedoc-plugins/reclassify-callables.js",
+        "./typedoc-plugins/custom-sort.js"
+    ],
+    "out": "./docs"
+}

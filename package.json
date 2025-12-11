@@ -12,12 +12,12 @@
   "types": "./build/src/index.d.ts",
   "license": "MIT",
   "engines": {
-    "node": "^18.7.0 || >= 16",
-    "npm": "^8.16.0 || >= 8"
+    "node": ">= 20",
+    "pnpm": ">= 10"
   },
   "volta": {
-    "node": "18.7.0",
-    "npm": "8.16.0"
+    "node": "22.21.1",
+    "pnpm": "10.25.0"
   },
   "publishConfig": {
     "access": "public"
@@ -27,7 +27,8 @@
     "/README.md"
   ],
   "scripts": {
-    "build": "npm run clean && npm run type:dts && npm run build:main",
+    "build": "run-s clean build:all",
+    "build:all": "run-p type:dts build:main",
     "build:main": "node -r ./esbuild-hook ./scripts/build",
     "clean": "node -r ./esbuild-hook ./scripts/clean",
     "type:dts": "tsc --emitDeclarationOnly",
@@ -39,7 +40,6 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
-    "test:setup": "node -r ./esbuild-hook ./scripts/testSetup",
     "spell:check": "cspell \"{README.md,CODE_OF_CONDUCT.md,CONTRIBUTING.md,.github/*.md,src/**/*.ts}\"",
     "cz": "cz",
     "semantic-release": "semantic-release",
@@ -48,39 +48,42 @@
     "serve:docs": "serve -l 5000 docs"
   },
   "devDependencies": {
-    "@ryansonshine/commitizen": "^4.2.8",
-    "@ryansonshine/cz-conventional-changelog": "^3.3.4",
-    "@semantic-release/changelog": "^6.0.1",
-    "@semantic-release/commit-analyzer": "^9.0.2",
-    "@semantic-release/github": "^8.0.6",
-    "@semantic-release/npm": "^9.0.1",
-    "@semantic-release/release-notes-generator": "^10.0.3",
-    "@types/node": "^18.11.0",
-    "@types/prompts": "^2.4.1",
-    "@types/shelljs": "^0.8.11",
-    "@typescript-eslint/eslint-plugin": "^5.40.0",
-    "@typescript-eslint/parser": "^5.40.0",
-    "@vitest/coverage-c8": "^0.24.3",
-    "browserslist": "^4.21.4",
+    "@eslint/js": "^9.39.1",
+    "@ryansonshine/commitizen": "4.2.8",
+    "@ryansonshine/cz-conventional-changelog": "3.3.4",
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/commit-analyzer": "13.0.1",
+    "@semantic-release/github": "12.0.2",
+    "@semantic-release/npm": "13.1.2",
+    "@semantic-release/release-notes-generator": "14.1.0",
+    "@types/node": "^20.0.0",
+    "@types/prompts": "^2.4.9",
+    "@types/shelljs": "^0.8.17",
+    "@typescript-eslint/eslint-plugin": "8.49.0",
+    "@typescript-eslint/parser": "8.49.0",
+    "@vitest/coverage-v8": "4.0.15",
+    "browserslist": "^4.25.1",
     "c8": "^7.12.0",
     "cspell": "^6.12.0",
-    "esbuild": "^0.15.11",
-    "esbuild-node-externals": "^1.5.0",
-    "esbuild-plugin-browserslist": "^0.5.1",
-    "eslint": "^8.25.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-import-resolver-typescript": "^3.5.1",
-    "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-import": "^2.26.0",
+    "esbuild": "0.27.1",
+    "esbuild-node-externals": "1.20.1",
+    "esbuild-plugin-browserslist": "2.0.0",
+    "eslint": "9.39.1",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-import-resolver-typescript": "4.4.4",
+    "eslint-plugin-eslint-comments": "3.2.0",
+    "eslint-plugin-import": "2.32.0",
     "nyc": "^15.1.0",
-    "prettier": "^2.7.1",
-    "semantic-release": "^19.0.5",
-    "serve": "^14.0.1",
-    "shelljs": "^0.8.5",
-    "source-map-support": "^0.5.21",
-    "typedoc": "^0.23.16",
-    "typescript": "^4.8.4",
-    "vitest": "^0.23.4"
+    "prettier": "3.7.4",
+    "semantic-release": "25.0.2",
+    "serve": "14.2.5",
+    "shelljs": "0.10.0",
+    "source-map-support": "0.5.21",
+    "typedoc": "0.28.15",
+    "typedoc-plugin-markdown": "^4.9.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.49.0",
+    "vitest": "4.0.15"
   },
   "peerDependencies": {
     "ts-comparer-builder": "^1.1.1",
@@ -90,5 +93,8 @@
   },
   "overrides": {
     "semver-regex": "3.1.4"
+  },
+  "dependencies": {
+    "npm-run-all2": "^8.0.4"
   }
 }

@@ -22,7 +22,10 @@
     "socio",
     "ts-iterable-functions",
     "undefer",
-    "Vauxhall"
+    "Vauxhall",
+    "frontends",
+    "Materializers",
+    "biggyspender"
   ],
   "flagWords": [],
   "ignorePaths": [
