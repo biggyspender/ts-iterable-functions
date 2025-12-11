@@ -3,7 +3,7 @@
   "author": "Chris Sperry <christophermartinsperry@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/biggyspender/ts-iterable-functions"
+    "url": "git+https://github.com/biggyspender/ts-iterable-functions.git"
   },
   "sideEffects": false,
   "version": "0.0.0-development",
