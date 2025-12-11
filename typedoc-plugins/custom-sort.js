@@ -75,6 +75,7 @@ function buildOptions(app) {
 
     return {
         compare,
+        kinds,
         predicate: (reflection) => shouldSort(reflection, kinds),
     };
 }
@@ -116,7 +117,7 @@ function resolveKinds(names) {
 
 /**
  * @param {import("typedoc").Reflection} root
- * @param {{ compare: (a: import("typedoc").Reflection, b: import("typedoc").Reflection) => number; predicate: (reflection: import("typedoc").Reflection) => boolean; }} options
+ * @param {{ compare: (a: import("typedoc").Reflection, b: import("typedoc").Reflection) => number; predicate: (reflection: import("typedoc").Reflection) => boolean; kinds: Set<number>; }} options
  */
 function applyCustomSort(root, options) {
     if (!root) {
@@ -124,9 +125,19 @@ function applyCustomSort(root, options) {
     }
 
     if (Array.isArray(root.groups)) {
+        const prioritizedGroups = prioritizeGroups(root.groups, options.kinds);
+        if (prioritizedGroups) {
+            root.groups = prioritizedGroups;
+        }
+
         for (const group of root.groups) {
             if (!Array.isArray(group.children) || group.children.length <= 1) {
                 continue;
+            }
+
+            const prioritizedChildren = prioritizeSubset(group.children, options.predicate);
+            if (prioritizedChildren) {
+                group.children = prioritizedChildren;
             }
 
             const reordered = reorderSubset(group.children, options.predicate, options.compare);
@@ -134,10 +145,23 @@ function applyCustomSort(root, options) {
                 group.children = reordered;
             }
 
+            const prioritizedCategories = prioritizeCategories(group.categories, options.kinds);
+            if (prioritizedCategories) {
+                group.categories = prioritizedCategories;
+            }
+
             if (Array.isArray(group.categories)) {
                 for (const category of group.categories) {
                     if (!Array.isArray(category.children) || category.children.length <= 1) {
                         continue;
+                    }
+
+                    const prioritizedCategoryChildren = prioritizeSubset(
+                        category.children,
+                        options.predicate
+                    );
+                    if (prioritizedCategoryChildren) {
+                        category.children = prioritizedCategoryChildren;
                     }
 
                     const reorderedCategory = reorderSubset(
@@ -154,6 +178,11 @@ function applyCustomSort(root, options) {
     }
 
     if (Array.isArray(root.children) && root.children.length > 0) {
+        const prioritizedRootChildren = prioritizeSubset(root.children, options.predicate);
+        if (prioritizedRootChildren) {
+            root.children = prioritizedRootChildren;
+        }
+
         const reorderedChildren = reorderSubset(root.children, options.predicate, options.compare);
         if (reorderedChildren) {
             root.children = reorderedChildren;
@@ -167,6 +196,14 @@ function applyCustomSort(root, options) {
     }
 
     if (Array.isArray(root.childrenIncludingDocuments) && root.childrenIncludingDocuments.length > 0) {
+        const prioritizedAllChildren = prioritizeSubset(
+            root.childrenIncludingDocuments,
+            options.predicate
+        );
+        if (prioritizedAllChildren) {
+            root.childrenIncludingDocuments = prioritizedAllChildren;
+        }
+
         const reorderedAllChildren = reorderSubset(
             root.childrenIncludingDocuments,
             options.predicate,
@@ -178,9 +215,22 @@ function applyCustomSort(root, options) {
     }
 
     if (Array.isArray(root.categories)) {
+        const prioritizedRootCategories = prioritizeCategories(root.categories, options.kinds);
+        if (prioritizedRootCategories) {
+            root.categories = prioritizedRootCategories;
+        }
+
         for (const category of root.categories) {
             if (!Array.isArray(category.children) || category.children.length <= 1) {
                 continue;
+            }
+
+            const prioritizedCategoryChildren = prioritizeSubset(
+                category.children,
+                options.predicate
+            );
+            if (prioritizedCategoryChildren) {
+                category.children = prioritizedCategoryChildren;
             }
 
             const reorderedCategory = reorderSubset(
@@ -235,6 +285,102 @@ function reorderSubset(source, predicate, compare) {
     });
 
     return mutated ? next : undefined;
+}
+
+/**
+ * @param {import("typedoc").ReflectionGroup[]} groups
+ * @param {Set<number>} kinds
+ */
+function prioritizeGroups(groups, kinds) {
+    return prioritizeSubset(groups, (group) => shouldPrioritizeGroup(group, kinds));
+}
+
+/**
+ * @param {import("typedoc").ReflectionCategory[] | undefined} categories
+ * @param {Set<number>} kinds
+ */
+function prioritizeCategories(categories, kinds) {
+    if (!Array.isArray(categories) || categories.length <= 1) {
+        return undefined;
+    }
+
+    return prioritizeSubset(categories, (category) => shouldPrioritizeCategory(category, kinds));
+}
+
+/**
+ * @template T
+ * @param {T[]} source
+ * @param {(item: T) => boolean} predicate
+ * @returns {T[] | undefined}
+ */
+function prioritizeSubset(source, predicate) {
+    if (!Array.isArray(source) || source.length <= 1) {
+        return undefined;
+    }
+
+    const prioritized = [];
+    const others = [];
+
+    for (const item of source) {
+        if (predicate(item)) {
+            prioritized.push(item);
+        } else {
+            others.push(item);
+        }
+    }
+
+    if (prioritized.length === 0) {
+        return undefined;
+    }
+
+    const next = [...prioritized, ...others];
+    for (let index = 0; index < source.length; index++) {
+        if (source[index] !== next[index]) {
+            return next;
+        }
+    }
+
+    return undefined;
+}
+
+/**
+ * @param {import("typedoc").ReflectionGroup} group
+ * @param {Set<number>} kinds
+ */
+function shouldPrioritizeGroup(group, kinds) {
+    if (!group) {
+        return false;
+    }
+
+    if (typeof group.kind === "number") {
+        for (const kind of kinds) {
+            if ((group.kind & kind) !== 0) {
+                return true;
+            }
+        }
+    }
+
+    if (Array.isArray(group.children)) {
+        return group.children.some((child) => shouldSort(child, kinds));
+    }
+
+    if (Array.isArray(group.categories)) {
+        return group.categories.some((category) => shouldPrioritizeCategory(category, kinds));
+    }
+
+    return false;
+}
+
+/**
+ * @param {import("typedoc").ReflectionCategory} category
+ * @param {Set<number>} kinds
+ */
+function shouldPrioritizeCategory(category, kinds) {
+    if (!category || !Array.isArray(category.children)) {
+        return false;
+    }
+
+    return category.children.some((child) => shouldSort(child, kinds));
 }
 
 /**
