@@ -74,6 +74,11 @@ import {
   // _zipAllToTuple,
   zipMap,
   scan,
+  _toMap,
+  _toSet,
+  _zipAll,
+  _unwrapIndexed,
+  unwrapIndexed,
 } from "..";
 import getIdentity from "../transformers/helpers/getIdentity";
 import { Date } from "./Date";
@@ -229,6 +234,15 @@ describe("ts-iterable-functions test", () => {
       map((x) => x.idx)
     );
     expect(pp(items, sequenceEqual(range(0, 100)))).toBeTruthy();
+
+    const stableOrdered = pp(
+      [
+        { category: 1, label: "b" },
+        { category: 1, label: "a" },
+      ],
+      orderBy((entry) => entry.category)
+    );
+    expect(stableOrdered.toJSON()).toEqual([...stableOrdered]);
   });
 
   test("can compose", () => {
@@ -711,6 +725,22 @@ describe("ts-iterable-functions test", () => {
       )
     ).toThrow();
   });
+  test("_toMap overloads", () => {
+    const source = [
+      { id: 1, name: "alpha" },
+      { id: 2, name: "beta" },
+    ];
+    const fromFactory = _toMap(source, (item) => item.id, createMapFactory());
+    expect(fromFactory.get(1)?.name).toBe("alpha");
+
+    const withSelectorAndFactory = _toMap(
+      source,
+      (item) => item.id,
+      (item) => item.name,
+      createMapFactory()
+    );
+    expect([...withSelectorAndFactory.values()]).toEqual(["alpha", "beta"]);
+  });
   test("toSet", () => {
     const set = pp(
       range(0, 10),
@@ -741,6 +771,10 @@ describe("ts-iterable-functions test", () => {
       )
     ).toThrow();
   });
+  test("_toSet with factory", () => {
+    const set = _toSet([1, 2, 3], createSetFactory());
+    expect([...set]).toEqual([1, 2, 3]);
+  });
   test("groupBy", () => {
     const output = pp(
       range(0, 2),
@@ -760,6 +794,14 @@ describe("ts-iterable-functions test", () => {
       [0, 0],
       [1, 1],
     ]);
+
+    const grouped = [
+      ...pp(
+        range(0, 4),
+        groupBy((x) => x % 2)
+      ),
+    ];
+    expect(grouped[0].toJSON()).toEqual([...grouped[0]]);
   });
   test("groupJoin", () => {
     const seq1 = range(0, 5);
@@ -857,7 +899,7 @@ describe("ts-iterable-functions test", () => {
         seq2,
         (x) => x,
         (x) => x,
-         
+
         (lft, rgt, i) => ({ lft: lft && [...lft], rgt: rgt && [...rgt], i })
       )
     );
@@ -871,18 +913,14 @@ describe("ts-iterable-functions test", () => {
     const key0 = lookup.get(0);
     expect(
       key0 &&
-         
         key0.rgt.length === 0 &&
-         
         key0.lft &&
         pp(key0.lft, sequenceEqual([0, 0]))
     ).toBeTruthy();
     const key5 = lookup.get(5);
     expect(
       key5 &&
-         
         key5.lft.length === 0 &&
-         
         key5.rgt &&
         pp(key5.rgt, sequenceEqual([5, 5]))
     ).toBeTruthy();
@@ -1219,6 +1257,22 @@ describe("ts-iterable-functions test", () => {
     ).toEqual([
       [1, 1],
       [2, 2],
+    ]);
+  });
+  test("_zipAll empty source", () => {
+    expect([..._zipAll([])]).toEqual([]);
+  });
+  test("unwrapIndexed restores original order", () => {
+    const source: [string, number][] = [
+      ["beta", 1],
+      ["alpha", 0],
+      ["gamma", 2],
+    ];
+    expect([..._unwrapIndexed(source)]).toEqual(["alpha", "beta", "gamma"]);
+    expect([...pp(source, unwrapIndexed())]).toEqual([
+      "alpha",
+      "beta",
+      "gamma",
     ]);
   });
   test("groupAdjacent", () => {
