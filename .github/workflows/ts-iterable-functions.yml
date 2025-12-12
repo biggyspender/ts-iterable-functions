@@ -2,8 +2,6 @@ name: ts-iterable-functions
 
 on: [push]
 
-env:
-
 jobs:
   ts-iterable-functions:
     runs-on: ubuntu-latest
