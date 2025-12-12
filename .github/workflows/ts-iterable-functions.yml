@@ -3,7 +3,6 @@ name: ts-iterable-functions
 on: [push]
 
 env:
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   VOLTA_FEATURE_PNPM: 1
 
 jobs:
@@ -21,8 +20,8 @@ jobs:
       id-token: write # to enable use of OIDC for trusted publishing and npm provenance
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: volta-cli/action@v1
+      - uses: actions/checkout@v6
+      - uses: volta-cli/action@v4
       - run: pnpm install --frozen-lockfile
 
       - name: Dependencies audit
