@@ -1,99 +1,107 @@
 export { GroupedIterable } from "./types/GroupedIterable";
+export { Indexed } from "./types/Indexed";
 export { IndexedPredicate } from "./types/IndexedPredicate";
 export { IndexedSelector } from "./types/IndexedSelector";
-export { Indexed } from "./types/Indexed";
 export { MapFactory } from "./types/MapFactory";
 export { SetFactory } from "./types/SetFactory";
+export { default as OrderedIterable } from "./transformers/helpers/OrderedIterable";
+export { TypeGuardPredicate } from "./types/TypeGuardPredicate";
 
+export { empty } from "./generators/empty";
+export { fromSingleValue } from "./generators/fromSingleValue";
 export { range } from "./generators/range";
 export { repeat } from "./generators/repeat";
 export { repeatGenerate } from "./generators/repeatGenerate";
-export { empty } from "./generators/empty";
-export { fromSingleValue } from "./generators/fromSingleValue";
 
-export { toIterable } from "./helpers/toIterable";
 export { headTail } from "./helpers/headTail";
+export { toIterable } from "./helpers/toIterable";
 
-export { aggregate, _aggregate } from "./transformers/aggregate";
-export { all, _all } from "./transformers/all";
-export { append, _append } from "./transformers/append";
-export { average, _average } from "./transformers/average";
+export { _aggregate, aggregate } from "./transformers/aggregate";
+export { _all, all } from "./transformers/all";
+export { _append, append } from "./transformers/append";
+export { _average, average } from "./transformers/average";
 export { cartesian } from "./transformers/cartesian";
-export { concat, _concat } from "./transformers/concat";
-export { count, _count } from "./transformers/count";
-export { defaultIfEmpty, _defaultIfEmpty } from "./transformers/defaultIfEmpty";
-export { distinct, _distinct } from "./transformers/distinct";
-export { distinctBy, _distinctBy } from "./transformers/distinctBy";
-export { elementAt, _elementAt } from "./transformers/elementAt";
-export { every, _every } from "./transformers/every";
-export { except, _except } from "./transformers/except";
-export { filter, _filter } from "./transformers/filter";
-export { first, _first } from "./transformers/first";
-export { firstOrDefault, _firstOrDefault } from "./transformers/firstOrDefault";
-export { flatMap, _flatMap } from "./transformers/flatMap";
-export { flatten, _flatten } from "./transformers/flatten";
-export { forEach, _forEach } from "./transformers/forEach";
+export { _concat, concat } from "./transformers/concat";
+export { _count, count } from "./transformers/count";
+export { _defaultIfEmpty, defaultIfEmpty } from "./transformers/defaultIfEmpty";
+export { _distinct, distinct } from "./transformers/distinct";
+export { _distinctBy, distinctBy } from "./transformers/distinctBy";
+export { _elementAt, elementAt } from "./transformers/elementAt";
+export { _every, every } from "./transformers/every";
+export { _except, except } from "./transformers/except";
+export { _filter, filter } from "./transformers/filter";
+export { _first, first } from "./transformers/first";
+export { _firstOrDefault, firstOrDefault } from "./transformers/firstOrDefault";
+export { _flatMap, flatMap } from "./transformers/flatMap";
+export { _flatten, flatten } from "./transformers/flatten";
+export { _forEach, forEach } from "./transformers/forEach";
 export {
-  fullOuterGroupJoin,
   _fullOuterGroupJoin,
+  fullOuterGroupJoin,
 } from "./transformers/fullOuterGroupJoin";
-export { fullOuterJoin, _fullOuterJoin } from "./transformers/fullOuterJoin";
-export { groupAdjacent, _groupAdjacent } from "./transformers/groupAdjacent";
-export { groupBy, _groupBy } from "./transformers/groupBy";
-export { groupJoin, _groupJoin } from "./transformers/groupJoin";
-export { indexed, _indexed } from "./transformers/indexed";
-export { intersect, _intersect } from "./transformers/intersect";
-export { isSubsetOf, _isSubsetOf } from "./transformers/isSubsetOf";
-export { isSupersetOf, _isSupersetOf } from "./transformers/isSupersetOf";
-export { join, _join } from "./transformers/join";
-export { last, _last } from "./transformers/last";
-export { lastOrDefault, _lastOrDefault } from "./transformers/lastOrDefault";
-export { leftOuterJoin, _leftOuterJoin } from "./transformers/leftOuterJoin";
-export { max, _max } from "./transformers/max";
-export { maxBy, _maxBy } from "./transformers/maxBy";
-export { min, _min } from "./transformers/min";
-export { minBy, _minBy } from "./transformers/minBy";
-export { orderBy, _orderBy } from "./transformers/orderBy";
+export { _fullOuterJoin, fullOuterJoin } from "./transformers/fullOuterJoin";
+export { _groupAdjacent, groupAdjacent } from "./transformers/groupAdjacent";
+export { _groupBy, groupBy } from "./transformers/groupBy";
+export { _groupJoin, groupJoin } from "./transformers/groupJoin";
+export { _indexed, indexed } from "./transformers/indexed";
+export { _intersect, intersect } from "./transformers/intersect";
+export { _isSubsetOf, isSubsetOf } from "./transformers/isSubsetOf";
+export { _isSupersetOf, isSupersetOf } from "./transformers/isSupersetOf";
+export { _join, join } from "./transformers/join";
+export { _last, last } from "./transformers/last";
+export { _lastOrDefault, lastOrDefault } from "./transformers/lastOrDefault";
+export { _leftOuterJoin, leftOuterJoin } from "./transformers/leftOuterJoin";
+export { _map, map } from "./transformers/map";
+export { _max, max } from "./transformers/max";
+export { _maxBy, maxBy } from "./transformers/maxBy";
+export { _min, min } from "./transformers/min";
+export { _minBy, minBy } from "./transformers/minBy";
+export { _orderBy, orderBy } from "./transformers/orderBy";
 export {
-  orderByDescending,
   _orderByDescending,
+  orderByDescending,
 } from "./transformers/orderByDescending";
-export { prepend, _prepend } from "./transformers/prepend";
-export { reduce, _reduce } from "./transformers/reduce";
-export { scan, _scan } from "./transformers/scan";
-export { reduceRight, _reduceRight } from "./transformers/reduceRight";
-export { reverse, _reverse } from "./transformers/reverse";
-export { map, _map } from "./transformers/map";
-export { select, _select } from "./transformers/select";
-export { selectMany, _selectMany } from "./transformers/selectMany";
-export { sequenceEqual, _sequenceEqual } from "./transformers/sequenceEqual";
-export { single, _single } from "./transformers/single";
+export { _prepend, prepend } from "./transformers/prepend";
+export { _reduce, reduce } from "./transformers/reduce";
+export { _reduceRight, reduceRight } from "./transformers/reduceRight";
+export { _reverse, reverse } from "./transformers/reverse";
+export { _scan, scan } from "./transformers/scan";
+export { _select, select } from "./transformers/select";
+export { _selectMany, selectMany } from "./transformers/selectMany";
+export { _sequenceEqual, sequenceEqual } from "./transformers/sequenceEqual";
+export { _single, single } from "./transformers/single";
 export {
-  singleOrDefault,
   _singleOrDefault,
+  singleOrDefault,
 } from "./transformers/singleOrDefault";
-export { skip, _skip } from "./transformers/skip";
-export { skipWhile, _skipWhile } from "./transformers/skipWhile";
-export { some, _some } from "./transformers/some";
-export { sum, _sum } from "./transformers/sum";
-export { take, _take } from "./transformers/take";
-export { takeWhile, _takeWhile } from "./transformers/takeWhile";
-export { thenBy, _thenBy } from "./transformers/thenBy";
+export { _skip, skip } from "./transformers/skip";
+export { _skipWhile, skipWhile } from "./transformers/skipWhile";
+export { _some, some } from "./transformers/some";
+export { _sum, sum } from "./transformers/sum";
+export { _take, take } from "./transformers/take";
 export {
-  thenByDescending,
+  _takeToInclusive,
+  takeToInclusive,
+} from "./transformers/takeToInclusive";
+export { _takeWhile, takeWhile } from "./transformers/takeWhile";
+export { _thenBy, thenBy } from "./transformers/thenBy";
+export {
   _thenByDescending,
+  thenByDescending,
 } from "./transformers/thenByDescending";
-export { toArray, _toArray } from "./transformers/toArray";
-export { toLookup, _toLookup } from "./transformers/toLookup";
-export { toMap, _toMap } from "./transformers/toMap";
-export { toSet, _toSet } from "./transformers/toSet";
-export { union, _union } from "./transformers/union";
-export { unwrapIndexed, _unwrapIndexed } from "./transformers/unwrapIndexed";
-export { where, _where } from "./transformers/where";
-export { zip, _zip } from "./transformers/zip";
-export { zipAll, _zipAll } from "./transformers/zipAll";
-export { zipAllToTuple, _zipAllToTuple } from "./transformers/zipAllToTuple";
-export { zipMap, _zipMap } from "./transformers/zipMap";
-export { default as OrderedIterable } from "./transformers/helpers/OrderedIterable";
-export { TypeGuardPredicate } from "./types/TypeGuardPredicate";
-export { Iterablified } from "./transformers/zipAllToTuple";
+export { _toArray, toArray } from "./transformers/toArray";
+export { _toLookup, toLookup } from "./transformers/toLookup";
+export { _toMap, toMap } from "./transformers/toMap";
+export { _toObject, toObject } from "./transformers/toObject";
+export { _toSet, toSet } from "./transformers/toSet";
+export { _union, union } from "./transformers/union";
+export { _unwrapIndexed, unwrapIndexed } from "./transformers/unwrapIndexed";
+export { _where, where } from "./transformers/where";
+export { _zip, zip } from "./transformers/zip";
+export { _zipAll, zipAll } from "./transformers/zipAll";
+export {
+  _zipAllToTuple,
+  Iterablified,
+  zipAllToTuple,
+} from "./transformers/zipAllToTuple";
+export { _zipMap, zipMap } from "./transformers/zipMap";
