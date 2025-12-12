@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: volta-cli/action@v4
-      - run: npm install --frozen-lockfile
+      - run: npm ci
 
       - name: Dependencies audit
         run: npm audit --audit-level=moderate
