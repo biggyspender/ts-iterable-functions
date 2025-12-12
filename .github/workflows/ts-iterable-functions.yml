@@ -3,7 +3,6 @@ name: ts-iterable-functions
 on: [push]
 
 env:
-  VOLTA_FEATURE_PNPM: 1
 
 jobs:
   ts-iterable-functions:
@@ -22,34 +21,34 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: volta-cli/action@v4
-      - run: pnpm install --frozen-lockfile
+      - run: npm install --frozen-lockfile
 
       - name: Dependencies audit
-        run: pnpm audit --audit-level=moderate
+        run: npm audit --audit-level=moderate
 
       - name: Build
-        run: pnpm run build
+        run: npm run build
 
       - name: Format check
-        run: pnpm run format:check
+        run: npm run format:check
 
       - name: Lint check
-        run: pnpm run lint:check
+        run: npm run lint:check
 
       - name: Spell check
-        run: pnpm run spell:check
+        run: npm run spell:check
 
       - name: Test
-        run: pnpm run test
+        run: npm run test
 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm run semantic-release
+        run: npm run semantic-release
 
       - name: Build docs
         if: ${{ github.ref == 'refs/heads/master' }}
-        run: pnpm run build-docs
+        run: npm run build-docs
 
       - name: Release docs
         if: ${{ github.ref == 'refs/heads/master' }}
