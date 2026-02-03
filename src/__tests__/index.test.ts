@@ -11,6 +11,7 @@ import {
   concat,
   cartesian,
   count,
+  deduplicateBy,
   distinctBy,
   elementAt,
   except,
@@ -148,6 +149,20 @@ describe("ts-iterable-functions test", () => {
         count(),
       ),
     ).toBe(200);
+  });
+  test("deduplicateBy", () => {
+    const entries = [
+      { id: 1, value: "first" },
+      { id: 1, value: "second" },
+      { id: 2, value: "third" },
+      { id: 2, value: "fourth" },
+    ];
+    const deduped = pipeInto(
+      entries,
+      deduplicateBy((item) => item.id),
+      toArray(),
+    );
+    expect(deduped).toEqual([entries[0], entries[2]]);
   });
   test("orderBy", () => {
     const values = [

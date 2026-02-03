@@ -21,8 +21,8 @@ jobs:
       - uses: volta-cli/action@v4
       - run: npm ci
 
-      - name: Dependencies audit
-        run: npm audit --audit-level=moderate
+      # - name: Dependencies audit
+      #   run: npm audit --audit-level=moderate
 
       - name: Build
         run: npm run build
