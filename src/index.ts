@@ -23,6 +23,7 @@ export { _average, average } from "./transformers/average";
 export { cartesian } from "./transformers/cartesian";
 export { _concat, concat } from "./transformers/concat";
 export { _count, count } from "./transformers/count";
+export { _deduplicateBy, deduplicateBy } from "./transformers/deduplicateBy";
 export { _defaultIfEmpty, defaultIfEmpty } from "./transformers/defaultIfEmpty";
 export { _distinct, distinct } from "./transformers/distinct";
 export { _distinctBy, distinctBy } from "./transformers/distinctBy";
