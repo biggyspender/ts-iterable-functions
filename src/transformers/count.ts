@@ -24,12 +24,17 @@ import { IndexedPredicate } from "../types/IndexedPredicate";
  */
 export function _count<T>(
   src: Iterable<T>,
-  pred: IndexedPredicate<T> = () => true,
+  pred: IndexedPredicate<T> | undefined,
 ): number {
+  if (!pred && Array.isArray(src)) {
+    return src.length;
+  }
   let c = 0;
   let i = 0;
   for (const item of src) {
-    if (pred(item, i++)) {
+    if (pred && pred(item, i++)) {
+      ++c;
+    } else if (!pred) {
       ++c;
     }
   }
