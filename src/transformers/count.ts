@@ -24,7 +24,7 @@ import { IndexedPredicate } from "../types/IndexedPredicate";
  */
 export function _count<T>(
   src: Iterable<T>,
-  pred: IndexedPredicate<T> | undefined,
+  pred?: IndexedPredicate<T>,
 ): number {
   if (!pred && Array.isArray(src)) {
     return src.length;
